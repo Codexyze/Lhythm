@@ -1,0 +1,6 @@
+package com.example.lhythm.presentation.Navigation
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+object SAMPLESCREEN
