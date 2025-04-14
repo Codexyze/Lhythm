@@ -1,7 +1,10 @@
 package com.example.lhythm.Di
 
 import android.content.Context
+import com.example.lhythm.data.RepoIMPL.GetAllSongsRepoImpl
 import com.example.lhythm.data.UserPrefrence.UserPrefrence
+import com.example.lhythm.domain.Repository.GetAllSongRepository
+import com.example.lhythm.domain.Usecases.GetAllSongUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,4 +20,14 @@ object DiModule {
     fun userPrefObject(@ApplicationContext context: Context): UserPrefrence{
        return UserPrefrence(context = context)
     }
+
+    @Provides
+    fun getAllSongsRepoIntefcae(@ApplicationContext context: Context): GetAllSongRepository{
+        return GetAllSongsRepoImpl(context = context )
+    }
+    @Provides
+    fun getAllSongUseCase(@ApplicationContext context: Context): GetAllSongUseCase{
+        return GetAllSongUseCase(getAllSongRepository = getAllSongsRepoIntefcae(context = context))
+    }
+
 }
