@@ -71,4 +71,6 @@ dependencies {
     implementation ("io.github.shashank02051997:FancyToast:2.0.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("com.airbnb.android:lottie-compose:6.3.0")
+
 }
