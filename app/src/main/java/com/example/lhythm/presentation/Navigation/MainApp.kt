@@ -5,11 +5,14 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.lhythm.presentation.Screens.OnBoardingScreen
+import com.example.lhythm.presentation.Screens.SongPlayerScreen
 import com.example.lhythm.presentation.Screens.TestScreen
 import com.example.lhythm.presentation.ViewModels.OnBoardingViewModel
 
@@ -25,10 +28,14 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
     }else{
         NavHost(navController = navcontroller, startDestination = if (state.value!!)ONBOARDING  else SAMPLESCREEN ){
             composable<SAMPLESCREEN>{
-                TestScreen()
+                TestScreen(navController = navcontroller)
             }
             composable<ONBOARDING>{
                 OnBoardingScreen(navController = navcontroller)
+            }
+            composable<MUSICPLAYERSCREEN> {navData->
+                val data:MUSICPLAYERSCREEN = navData.toRoute()
+                SongPlayerScreen(uri = data.path.toUri())
             }
 
         }

@@ -1,6 +1,7 @@
 package com.example.lhythm.Di
 
 import android.content.Context
+import com.example.lhythm.core.Media.MediaPlayerManager
 import com.example.lhythm.data.RepoIMPL.GetAllSongsRepoImpl
 import com.example.lhythm.data.UserPrefrence.UserPrefrence
 import com.example.lhythm.domain.Repository.GetAllSongRepository
@@ -28,6 +29,11 @@ object DiModule {
     @Provides
     fun getAllSongUseCase(@ApplicationContext context: Context): GetAllSongUseCase{
         return GetAllSongUseCase(getAllSongRepository = getAllSongsRepoIntefcae(context = context))
+    }
+
+    @Provides
+    fun MediaPlayerManagerInstance(@ApplicationContext context: Context): MediaPlayerManager{
+         return MediaPlayerManager(context = context)
     }
 
 }
