@@ -11,9 +11,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.example.lhythm.presentation.Screens.HomeScreen
+import com.example.lhythm.presentation.Screens.ListOfAllSongsScreen
 import com.example.lhythm.presentation.Screens.OnBoardingScreen
 import com.example.lhythm.presentation.Screens.SongPlayerScreen
-import com.example.lhythm.presentation.Screens.TestScreen
 import com.example.lhythm.presentation.ViewModels.OnBoardingViewModel
 
 @Composable
@@ -26,9 +27,9 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
     if (state.value==null){
         CircularProgressIndicator()
     }else{
-        NavHost(navController = navcontroller, startDestination = if (state.value!!)ONBOARDING  else SAMPLESCREEN ){
+        NavHost(navController = navcontroller, startDestination = if (state.value!!)ONBOARDING  else HOMESCREEN ){
             composable<SAMPLESCREEN>{
-                TestScreen(navController = navcontroller)
+                ListOfAllSongsScreen(navController = navcontroller)
             }
             composable<ONBOARDING>{
                 OnBoardingScreen(navController = navcontroller)
@@ -36,6 +37,9 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
             composable<MUSICPLAYERSCREEN> {navData->
                 val data:MUSICPLAYERSCREEN = navData.toRoute()
                 SongPlayerScreen(uri = data.path.toUri())
+            }
+            composable<HOMESCREEN> {
+                HomeScreen(navController = navcontroller)
             }
 
         }

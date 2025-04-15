@@ -33,8 +33,25 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
     }
 
     fun releasePlayer() {
-        exoPlayer?.release()
+        exoPlayer?.apply {
+           this.stop()
+            this.release()
+        }
         exoPlayer = null
     }
+
+    fun isPlaying(): Boolean {
+        // Safely check if exoPlayer is null and return false if it is
+        return exoPlayer?.isPlaying ?: false
+    }
+    fun stop(){
+        exoPlayer.let {
+            it?.stop()
+            it?.release()
+        }
+
+
+    }
+
 
 }

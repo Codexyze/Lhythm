@@ -12,3 +12,6 @@ object ONBOARDING
 data class MUSICPLAYERSCREEN(
     val path: String
 )
+
+@Serializable
+object HOMESCREEN

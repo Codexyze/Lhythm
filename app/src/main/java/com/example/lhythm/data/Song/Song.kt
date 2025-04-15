@@ -1,5 +1,7 @@
 package com.example.lhythm.data.Song
 
+import android.graphics.Bitmap
+
 
 data class Song(
     val id: String ,
@@ -11,4 +13,6 @@ data class Song(
     val duration: String?="0",
     val year: String?="0",
     val composer: String?="Unknown",
+    val albumId: String?="",
+    val albumArt: Bitmap? = null
 )

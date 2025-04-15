@@ -72,5 +72,6 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("com.airbnb.android:lottie-compose:6.3.0")
+    implementation("androidx.compose.material:material-icons-extended:1.6.1")
 
 }
