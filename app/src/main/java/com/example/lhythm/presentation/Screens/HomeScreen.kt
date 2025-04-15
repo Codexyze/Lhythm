@@ -1,9 +1,16 @@
 package com.example.lhythm.presentation.Screens
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LibraryMusic
+import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -17,7 +24,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -28,8 +38,8 @@ fun HomeScreen(navController: NavController) {
             icon = Icons.Outlined.LibraryMusic
         ),
         BottomNaviagtionItem(
-            title = "Nav 2",
-            icon = Icons.Outlined.LibraryMusic
+            title = "Play",
+            icon = Icons.Outlined.MusicNote
         ),
         BottomNaviagtionItem(
             title = "Nav 3",
@@ -84,7 +94,7 @@ fun ContentScreen(navController: NavController,index: Int) {
            ListOfAllSongsScreen(navController = navController)
         }
         1->{
-
+            SongControllerScreen()
         }
         2->{
             Text("3")
@@ -96,3 +106,4 @@ fun ContentScreen(navController: NavController,index: Int) {
     }
 
 }
+

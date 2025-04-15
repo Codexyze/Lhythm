@@ -8,10 +8,6 @@ object SAMPLESCREEN
 @Serializable
 object ONBOARDING
 
-@Serializable
-data class MUSICPLAYERSCREEN(
-    val path: String
-)
 
 @Serializable
 object HOMESCREEN

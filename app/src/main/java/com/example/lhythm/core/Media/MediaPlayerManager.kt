@@ -13,7 +13,7 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
     private var exoPlayer: ExoPlayer? = null
 
     fun initializePlayer(uri: Uri) {
-        releasePlayer() // Clean old instance if any
+        releasePlayer()
 
         exoPlayer = ExoPlayer.Builder(context).build().apply {
             setMediaItem(MediaItem.fromUri(uri))
@@ -44,14 +44,5 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
         // Safely check if exoPlayer is null and return false if it is
         return exoPlayer?.isPlaying ?: false
     }
-    fun stop(){
-        exoPlayer.let {
-            it?.stop()
-            it?.release()
-        }
-
-
-    }
-
 
 }

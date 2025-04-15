@@ -1,6 +1,5 @@
 package com.example.lhythm.presentation.Screens
 
-import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,8 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 
 @Composable
-fun SongPlayerScreen(
-    uri: Uri,
+fun SongControllerScreen(
     viewModel: MediaManagerViewModel = hiltViewModel()
 ) {
     Scaffold {
@@ -31,13 +29,14 @@ fun SongPlayerScreen(
                 Row {
                     // Play/Pause button
                     Button(onClick = {
-                        if (!viewModel.isPlaying()) {
-                            viewModel.playMusic(uri) // Start playing the music if not already playing
-                        } else {
-                            viewModel.pauseMusic() // Pause if already playing
-                        }
+                       viewModel.pauseMusic()
                     }) {
-                        Text(if (viewModel.isPlaying()) "⏸ Pause" else "▶️ Play")
+                        Text("Pause")
+                    }
+                    Button(onClick = {
+                        viewModel.playMusic()
+                    }) {
+                        Text("Play")
                     }
 
                     // Stop button
