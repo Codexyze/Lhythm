@@ -2,13 +2,13 @@ package com.example.lhythm.Di
 
 import android.content.Context
 import com.example.lhythm.core.Media.MediaPlayerManager
-import com.example.lhythm.data.RepoIMPL.GetAllSongsInASCImpl
+import com.example.lhythm.data.RepoIMPL.GetCategoryRepoImpl
 import com.example.lhythm.data.RepoIMPL.GetAllSongsRepoImpl
 import com.example.lhythm.data.UserPrefrence.UserPrefrence
 import com.example.lhythm.domain.Repository.GetAllSongRepository
-import com.example.lhythm.domain.Repository.GetAllSongsASC
+import com.example.lhythm.domain.Repository.GetCategoryRepository
 import com.example.lhythm.domain.Usecases.GetAllSongUseCase
-import com.example.lhythm.domain.Usecases.GetAllSongsASCUseCase
+import com.example.lhythm.domain.Usecases.GetSongCategoryUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,13 +40,13 @@ object DiModule {
     }
 
     @Provides
-    fun getAllSongsASCInterface(@ApplicationContext context: Context): GetAllSongsASC{
-        return GetAllSongsInASCImpl(context = context)
+    fun getCategoryRepoInterface(@ApplicationContext context: Context): GetCategoryRepository{
+        return GetCategoryRepoImpl(context = context)
     }
 
     @Provides
-    fun getAllSongsASCUsecase(@ApplicationContext context: Context): GetAllSongsASCUseCase{
-        return GetAllSongsASCUseCase(getAllSongsASC = getAllSongsASCInterface(context = context))
+    fun getAllSongsASCUsecase(@ApplicationContext context: Context): GetSongCategoryUseCase{
+        return GetSongCategoryUseCase(getCategoryRepository = getCategoryRepoInterface(context = context))
     }
 
 }

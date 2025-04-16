@@ -3,7 +3,7 @@ package com.example.lhythm.presentation.ViewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lhythm.core.StateHandeling.ResultState
-import com.example.lhythm.domain.Usecases.GetAllSongsASCUseCase
+import com.example.lhythm.domain.Usecases.GetSongCategoryUseCase
 import com.example.lhythm.presentation.StateHandeling.GetAllSongsInASCState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GetAllSongsASCViewModel @Inject constructor(private val getAllSongsASCUseCase: GetAllSongsASCUseCase): ViewModel() {
+class GetSongCategoryViewModel @Inject constructor(private val getSongCategoryUseCase: GetSongCategoryUseCase): ViewModel() {
     private  val _songsInASCOrderState = MutableStateFlow(GetAllSongsInASCState())
     val songsInASCOrderState =_songsInASCOrderState.asStateFlow()
 
@@ -22,7 +22,7 @@ class GetAllSongsASCViewModel @Inject constructor(private val getAllSongsASCUseC
     }
     fun getAllSongsInASC(){
         viewModelScope.launch(Dispatchers.IO) {
-            getAllSongsASCUseCase.invoke().collect {result->
+            getSongCategoryUseCase.invoke().collect {result->
                 when(result){
                     is ResultState.Loading->{
                         _songsInASCOrderState.value = GetAllSongsInASCState(isLoading = true)

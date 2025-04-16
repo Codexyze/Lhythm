@@ -4,12 +4,12 @@ import android.content.Context
 import android.provider.MediaStore
 import com.example.lhythm.core.StateHandeling.ResultState
 import com.example.lhythm.data.Song.Song
-import com.example.lhythm.domain.Repository.GetAllSongsASC
+import com.example.lhythm.domain.Repository.GetCategoryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetAllSongsInASCImpl @Inject constructor(private val context: Context): GetAllSongsASC {
+class GetCategoryRepoImpl @Inject constructor(private val context: Context): GetCategoryRepository {
     override suspend fun getAllSongsInASCOrder(): Flow<ResultState<List<Song>>> = flow{
         val listOfASCsongs= mutableListOf<Song>()
         emit(ResultState.Loading)

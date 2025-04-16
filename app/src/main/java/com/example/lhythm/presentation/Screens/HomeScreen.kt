@@ -1,16 +1,10 @@
 package com.example.lhythm.presentation.Screens
 
-import android.net.Uri
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material.icons.outlined.MusicNote
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -93,7 +87,7 @@ fun ContentScreen(navController: NavController,index: Int) {
             SongControllerScreen()
         }
         2->{
-           SongCategoriesScreen()
+           SongCategoriesScreen(navController = navController)
         }
         3->{
             Text("4")
