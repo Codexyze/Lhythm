@@ -19,15 +19,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -42,7 +38,7 @@ fun HomeScreen(navController: NavController) {
             icon = Icons.Outlined.MusicNote
         ),
         BottomNaviagtionItem(
-            title = "Nav 3",
+            title = "Categories",
             icon = Icons.Outlined.LibraryMusic
         ),
         BottomNaviagtionItem(
@@ -97,7 +93,7 @@ fun ContentScreen(navController: NavController,index: Int) {
             SongControllerScreen()
         }
         2->{
-            Text("3")
+           SongCategoriesScreen()
         }
         3->{
             Text("4")

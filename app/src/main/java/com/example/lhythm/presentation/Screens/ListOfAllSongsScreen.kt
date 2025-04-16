@@ -23,12 +23,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.lhythm.presentation.Utils.LoadingScreen
+import com.example.lhythm.presentation.Utils.formatDuration
 import com.example.lhythm.presentation.ViewModels.GetAllSongViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 import com.example.lhythm.ui.theme.BlackColor
@@ -81,7 +84,7 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
 
 @Composable
 fun EachSongItemLook(songTitle: String?="", songArtist: String?="", songDuration: String?="", songYear: String?="") {
-
+    val  duration = rememberSaveable{ mutableStateOf("0") }
     Card (modifier = Modifier.fillMaxWidth().padding(8.dp), elevation = CardDefaults.elevatedCardElevation(8.dp)
     , shape = RoundedCornerShape(16.dp)
     ){
@@ -97,7 +100,9 @@ fun EachSongItemLook(songTitle: String?="", songArtist: String?="", songDuration
 
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Absolute.SpaceEvenly){
-                songDuration?.let { Text(it, maxLines = 1) }
+                songDuration?.let {
+                    duration.value = formatDuration(it.toLong())
+                    Text(duration.value.toString(), maxLines = 1) }
 
             }
         }

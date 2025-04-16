@@ -7,3 +7,9 @@ data class GetAllSongState(
     val data: List<Song> = emptyList(),
     val error: String ? = null
 )
+
+data class GetAllSongsInASCState(
+    val isLoading: Boolean = false,
+    val data: List<Song> = emptyList(),
+    val error: String ? = null
+)
