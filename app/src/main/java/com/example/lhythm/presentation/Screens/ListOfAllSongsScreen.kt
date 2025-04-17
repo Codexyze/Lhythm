@@ -52,24 +52,7 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
                     // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
                     mediaPlayerViewModel.playMusic(song.path.toUri())
                 }){
-                    // Column {
-//                            Text("${song.title}")
-//                            Spacer(modifier = Modifier.height(5.dp))
-//                            Text("${song.artist}")
-//                            Spacer(modifier = Modifier.height(5.dp))
-//                            Text("${song.duration}")
-//                            Spacer(modifier = Modifier.height(5.dp))
-//                            Text("${song.path}")
-//                            Spacer(modifier = Modifier.height(5.dp))
-//                            Text("${song.album}")
-//                            Spacer(modifier = Modifier.height(5.dp))
-//                            Text(text = "${song.year}")
-//                            Spacer(modifier = Modifier.height(5.dp))
-//                            Text("${song.composer}")
-//                            Spacer(modifier = Modifier.height(5.dp))
-//                            Text("Sixe ${song.size}")
 
-                    // }
                     EachSongItemLook(songTitle = song.title, songArtist = song.artist, songDuration = song.duration, songYear = song.year)
                 }
 

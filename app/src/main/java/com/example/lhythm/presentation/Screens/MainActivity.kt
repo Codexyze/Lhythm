@@ -15,7 +15,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LhythmTheme {
-                MainApp()
+               // MainApp()
+                NoSongsFoundScreen()
+
             }
         }
     }

@@ -33,18 +33,36 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
     }else if(!getAllSongsASCState.value.error.isNullOrBlank()){
         Text("Error Loading Songs ${getAllSongsASCState.value.error}")
     }else if(!getAllSongsASCState.value.data.isNullOrEmpty()){
-        LazyColumn(modifier = Modifier.background(color = BlackColor)) {
-            items(getAllSongsASCState.value.data) { song ->
-                Box(modifier = Modifier.wrapContentSize().clickable{
-                    // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
-                    mediaPlayerViewModel.playMusic(song.path.toUri())
-                }){
+        Column(modifier = Modifier.fillMaxSize().background(color = BlackColor)) {
+            Row {
+                Button(
+                    onClick = {
 
-                    EachSongItemLook(songTitle = song.title, songArtist = song.artist, songDuration = song.duration, songYear = song.year)
+                    }
+                ) {
+
+                }
+                Button(
+                    onClick = {
+
+                    }
+                ) {
+
+                }
+            }
+            LazyColumn(modifier = Modifier.background(color = BlackColor)) {
+                items(getAllSongsASCState.value.data) { song ->
+                    Box(modifier = Modifier.wrapContentSize().clickable{
+                        // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
+                        mediaPlayerViewModel.playMusic(song.path.toUri())
+                    }){
+
+                        EachSongItemLook(songTitle = song.title, songArtist = song.artist, songDuration = song.duration, songYear = song.year)
+                    }
+
                 }
 
             }
-
         }
     }
 

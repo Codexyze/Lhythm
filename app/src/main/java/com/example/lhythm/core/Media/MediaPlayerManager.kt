@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,5 +46,18 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
         // Safely check if exoPlayer is null and return false if it is
         return exoPlayer?.isPlaying ?: false
     }
+
+    fun getDuration(): Long? {
+        return exoPlayer?.duration
+    }
+
+    fun getCurrentPosition():Float {
+      return  exoPlayer?.currentPosition!!.toFloat()
+    }
+
+    fun seekTo(position: Long) {
+        exoPlayer?.seekTo(position)
+    }
+
 
 }

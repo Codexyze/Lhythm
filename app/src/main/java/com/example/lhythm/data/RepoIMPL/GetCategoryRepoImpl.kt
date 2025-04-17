@@ -65,4 +65,57 @@ class GetCategoryRepoImpl @Inject constructor(private val context: Context): Get
 
 
     }
+
+    override suspend fun getAllSongsInDESCOrder(): Flow<ResultState<List<Song>>> =flow {
+        val listOfASCsongs= mutableListOf<Song>()
+        emit(ResultState.Loading)
+        val contentResolver = context.contentResolver
+        val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        val selection ="${MediaStore.Audio.Media.IS_MUSIC}!=0"
+        val projection = arrayOf(
+            MediaStore.Audio.Media._ID,
+            MediaStore.Audio.Media.DATA,
+            MediaStore.Audio.Media.SIZE,
+            MediaStore.Audio.Media.ALBUM,
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.ARTIST,
+            MediaStore.Audio.Media.DURATION,
+            MediaStore.Audio.Media.YEAR,
+            MediaStore.Audio.Media.COMPOSER
+        )
+        val sortingOrder = "${MediaStore.Audio.Media.TITLE} DESC"
+        val cursor = contentResolver.query(uri,projection,selection,null,sortingOrder)
+        try {
+          cursor?.use {cursorelement->
+              while(cursorelement.moveToNext()){
+                  val id = cursorelement.getString(0)
+                  val path = cursorelement.getString(1)
+                  val size = cursorelement.getString(2)
+                  val album = cursorelement.getString(3)
+                  val title = cursorelement.getString(4)
+                  val artist = cursorelement.getString(5)
+                  val duration = cursorelement.getString(6)
+                  val year = cursorelement.getString(7)
+                  val composer = cursorelement.getString(8)
+                  val song = Song(
+                      id=id,
+                      path = path,
+                      size = size,
+                      album = album,
+                      title = title,
+                      artist = artist,
+                      duration = duration,
+                      year = year,
+                      composer = composer
+                  )
+                  listOfASCsongs.add(song)
+              }
+              emit(ResultState.Success(listOfASCsongs))
+          }
+
+        }catch (e: Exception){
+
+            emit(ResultState.Error(e.message.toString()))
+        }
+    }
 }

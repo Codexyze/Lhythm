@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lhythm.core.StateHandeling.ResultState
 import com.example.lhythm.domain.Usecases.GetSongCategoryUseCase
+import com.example.lhythm.domain.Usecases.GetSongDESCUsecase
 import com.example.lhythm.presentation.StateHandeling.GetAllSongsInASCState
+import com.example.lhythm.presentation.StateHandeling.GetAllSongsInDSCState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,12 +15,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GetSongCategoryViewModel @Inject constructor(private val getSongCategoryUseCase: GetSongCategoryUseCase): ViewModel() {
+class GetSongCategoryViewModel @Inject constructor(private val getSongCategoryUseCase: GetSongCategoryUseCase,
+    private val getSongDESCUsecase: GetSongDESCUsecase): ViewModel() {
     private  val _songsInASCOrderState = MutableStateFlow(GetAllSongsInASCState())
     val songsInASCOrderState =_songsInASCOrderState.asStateFlow()
+    private  val _songsInDSCOrderState = MutableStateFlow(GetAllSongsInDSCState())
+    val songsInDSCOrderState =_songsInASCOrderState.asStateFlow()
 
     init {
         getAllSongsInASC()
+        getAllSongsInDESC()
     }
     fun getAllSongsInASC(){
         viewModelScope.launch(Dispatchers.IO) {
@@ -32,6 +38,24 @@ class GetSongCategoryViewModel @Inject constructor(private val getSongCategoryUs
                     }
                     is ResultState.Error->{
                         _songsInASCOrderState.value = GetAllSongsInASCState(isLoading = false, error = result.message)
+                    }
+                }
+
+            }
+        }
+    }
+    fun getAllSongsInDESC(){
+        viewModelScope.launch(Dispatchers.IO) {
+            getSongDESCUsecase.invoke().collect {result->
+                when(result){
+                    is ResultState.Loading->{
+                        _songsInDSCOrderState.value = GetAllSongsInDSCState(isLoading = true)
+                    }
+                    is ResultState.Success ->{
+                        _songsInDSCOrderState.value = GetAllSongsInDSCState(isLoading = false, data = result.data)
+                    }
+                    is ResultState.Error->{
+                        _songsInDSCOrderState.value = GetAllSongsInDSCState(isLoading = false, error = result.message)
                     }
                 }
 
