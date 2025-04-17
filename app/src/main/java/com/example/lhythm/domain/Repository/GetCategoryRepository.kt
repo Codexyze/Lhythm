@@ -8,4 +8,5 @@ interface GetCategoryRepository {
     suspend fun getAllSongsInASCOrder(): Flow<ResultState<List<Song>>>
     suspend fun getAllSongsInDESCOrder(): Flow<ResultState<List<Song>>>
     suspend fun getAllSongsWithArtists(): Flow<ResultState<List<Song>>>
+    suspend fun getAllSongsWithYearAsc(): Flow<ResultState<List<Song>>>
 }

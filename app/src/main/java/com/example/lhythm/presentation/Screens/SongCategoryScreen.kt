@@ -24,7 +24,6 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                          navController: NavController,
                          mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel()) {
     val getAllSongsASCState = viewmodel.songsInASCOrderState.collectAsState()
-    //val stateOfScreen = rememberSaveable { mutableStateOf(0) }
     val currentCategory = rememberSaveable { mutableStateOf(SongCategory.ASCENDING) }
     if(getAllSongsASCState.value.isLoading){
         LoadingScreen()
@@ -37,7 +36,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
             Row {
                 Button(
                     onClick = {
-                      SongCategory.ASCENDING
+                        currentCategory.value = SongCategory.ASCENDING
                     }
                 ) {
                     Text("Asc")
@@ -45,17 +44,24 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                 }
                 Button(
                     onClick = {
-                       SongCategory.DESCENDING
+                        currentCategory.value = SongCategory.DESCENDING
                     }
                 ) {
                     Text("Desc")
                 }
                 Button(
                     onClick = {
-                        SongCategory.ARTIST
+                        currentCategory.value = SongCategory.ARTIST
                     }
                 ) {
                     Text("Artist")
+                }
+                Button(
+                    onClick = {
+                      currentCategory.value = SongCategory.YEARASC
+                    }
+                ) {
+                    Text("Year")
                 }
             }
             when(currentCategory.value){
@@ -69,6 +75,9 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                 SongCategory.ARTIST->{
 
                      GetAllSongsByArtistScreen(navController = navController)
+                }
+                SongCategory.YEARASC -> {
+
                 }
             }
         }

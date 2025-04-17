@@ -1,4 +1,4 @@
-package com.example.lhythm.presentation.StateHandeling
+package com.example.lhythm.domain.StateHandeling
 
 import com.example.lhythm.data.Song.Song
 
@@ -25,3 +25,10 @@ data class GetAllSongsByArtistState(
     val data: List<Song> = emptyList(),
     val error: String ? = null
 )
+data class GetAllSongsByYearASCState(
+    val isLoading: Boolean = false,
+    val data: List<Song> = emptyList(),
+    val error: String ? = null
+)
+
+

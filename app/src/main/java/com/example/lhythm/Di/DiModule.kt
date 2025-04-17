@@ -8,6 +8,7 @@ import com.example.lhythm.data.UserPrefrence.UserPrefrence
 import com.example.lhythm.domain.Repository.GetAllSongRepository
 import com.example.lhythm.domain.Repository.GetCategoryRepository
 import com.example.lhythm.domain.Usecases.GetAllSongUseCase
+import com.example.lhythm.domain.Usecases.GetByYearASCUseCase
 import com.example.lhythm.domain.Usecases.GetSongCategoryUseCase
 import com.example.lhythm.domain.Usecases.GetSongDESCUsecase
 import com.example.lhythm.domain.Usecases.GetSongsByArtistUseCase
@@ -59,6 +60,11 @@ object DiModule {
     @Provides
     fun getSongsByArtistUseCase(@ApplicationContext context: Context):GetSongsByArtistUseCase{
         return GetSongsByArtistUseCase(repository = getCategoryRepoInterface(context = context))
+    }
+
+    @Provides
+    fun getSongsByAscUseCase(@ApplicationContext context: Context): GetByYearASCUseCase{
+        return GetByYearASCUseCase(repository = getCategoryRepoInterface(context = context))
     }
 
 }

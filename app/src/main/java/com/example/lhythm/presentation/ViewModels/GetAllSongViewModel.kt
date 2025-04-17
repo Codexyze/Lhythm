@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lhythm.core.StateHandeling.ResultState
 import com.example.lhythm.domain.Usecases.GetAllSongUseCase
-import com.example.lhythm.presentation.StateHandeling.GetAllSongState
+import com.example.lhythm.domain.StateHandeling.GetAllSongState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,5 +1,5 @@
 package com.example.lhythm.presentation.UIModels
 
 enum class SongCategory {
-    ASCENDING, DESCENDING, ARTIST
+    ASCENDING, DESCENDING, ARTIST,YEARASC
 }
