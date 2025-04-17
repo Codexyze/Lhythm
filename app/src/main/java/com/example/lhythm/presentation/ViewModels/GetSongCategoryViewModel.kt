@@ -29,7 +29,13 @@ class GetSongCategoryViewModel @Inject constructor(private val getSongCategoryUs
 
     init {
         getAllSongsInASC()
+
+    }
+    init {
         getAllSongsInDESC()
+    }
+    init {
+        getSongsByArtistSort()
     }
     fun getAllSongsInASC(){
         viewModelScope.launch(Dispatchers.IO) {

@@ -1,23 +1,19 @@
 package com.example.lhythm.presentation.Screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.lhythm.presentation.UIModels.SongCategory
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.ViewModels.GetSongCategoryViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
@@ -28,6 +24,8 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                          navController: NavController,
                          mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel()) {
     val getAllSongsASCState = viewmodel.songsInASCOrderState.collectAsState()
+    //val stateOfScreen = rememberSaveable { mutableStateOf(0) }
+    val currentCategory = rememberSaveable { mutableStateOf(SongCategory.ASCENDING) }
     if(getAllSongsASCState.value.isLoading){
         LoadingScreen()
     }else if(!getAllSongsASCState.value.error.isNullOrBlank()){
@@ -39,7 +37,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
             Row {
                 Button(
                     onClick = {
-
+                      SongCategory.ASCENDING
                     }
                 ) {
                     Text("Asc")
@@ -47,34 +45,33 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                 }
                 Button(
                     onClick = {
-
+                       SongCategory.DESCENDING
                     }
                 ) {
                     Text("Desc")
                 }
                 Button(
                     onClick = {
-
+                        SongCategory.ARTIST
                     }
                 ) {
                     Text("Artist")
                 }
             }
-            LazyColumn(modifier = Modifier.background(color = BlackColor)) {
-                items(getAllSongsASCState.value.data) { song ->
-                    Box(modifier = Modifier
-                        .wrapContentSize()
-                        .clickable {
-                            // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
-                            mediaPlayerViewModel.playMusic(song.path.toUri())
-                        }){
-
-                        EachSongItemLook(songTitle = song.title, songArtist = song.artist, songDuration = song.duration, songYear = song.year)
-                    }
-
+            when(currentCategory.value){
+                SongCategory.ASCENDING ->{
+                    GetAllSongASCScreen(navController = navController)
                 }
+               SongCategory.DESCENDING->{
+                    GetAllSongsDESC(navController = navController)
+               }
 
+                SongCategory.ARTIST->{
+
+                     GetAllSongsByArtistScreen(navController = navController)
+                }
             }
         }
+
     }
 }
