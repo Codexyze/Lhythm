@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.lhythm.core.StateHandeling.ResultState
 import com.example.lhythm.domain.Usecases.GetSongCategoryUseCase
 import com.example.lhythm.domain.Usecases.GetSongDESCUsecase
+import com.example.lhythm.domain.Usecases.GetSongsByArtistUseCase
+import com.example.lhythm.presentation.StateHandeling.GetAllSongsByArtistState
 import com.example.lhythm.presentation.StateHandeling.GetAllSongsInASCState
 import com.example.lhythm.presentation.StateHandeling.GetAllSongsInDSCState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,11 +18,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GetSongCategoryViewModel @Inject constructor(private val getSongCategoryUseCase: GetSongCategoryUseCase,
-    private val getSongDESCUsecase: GetSongDESCUsecase): ViewModel() {
+    private val getSongDESCUsecase: GetSongDESCUsecase,
+    private  val getSongsByArtistUseCase: GetSongsByArtistUseCase): ViewModel() {
     private  val _songsInASCOrderState = MutableStateFlow(GetAllSongsInASCState())
     val songsInASCOrderState =_songsInASCOrderState.asStateFlow()
     private  val _songsInDSCOrderState = MutableStateFlow(GetAllSongsInDSCState())
     val songsInDSCOrderState =_songsInASCOrderState.asStateFlow()
+    private val _getAllSongsByArtist = MutableStateFlow(GetAllSongsByArtistState())
+    val getAllSongsByArtist = _getAllSongsByArtist.asStateFlow()
 
     init {
         getAllSongsInASC()
@@ -61,6 +66,26 @@ class GetSongCategoryViewModel @Inject constructor(private val getSongCategoryUs
 
             }
         }
+    }
+    fun getSongsByArtistSort(){
+        viewModelScope.launch (Dispatchers.IO){
+            getSongsByArtistUseCase.invoke().collect {result->
+                when(result){
+                    is ResultState.Loading->{
+                        _getAllSongsByArtist.value = GetAllSongsByArtistState(isLoading = true)
+                    }
+                    is ResultState.Success ->{
+                        _getAllSongsByArtist.value = GetAllSongsByArtistState(isLoading = false, data = result.data)
+                    }
+                    is ResultState.Error->{
+                        _getAllSongsByArtist.value = GetAllSongsByArtistState(isLoading = false, error = result.message)
+                    }
+                }
+
+            }
+
+        }
+
     }
 
 }

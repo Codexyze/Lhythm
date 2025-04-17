@@ -19,3 +19,9 @@ data class GetAllSongsInDSCState(
     val data: List<Song> = emptyList(),
     val error: String ? = null
 )
+
+data class GetAllSongsByArtistState(
+    val isLoading: Boolean = false,
+    val data: List<Song> = emptyList(),
+    val error: String ? = null
+)

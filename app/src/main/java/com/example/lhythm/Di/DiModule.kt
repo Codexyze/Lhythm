@@ -10,6 +10,7 @@ import com.example.lhythm.domain.Repository.GetCategoryRepository
 import com.example.lhythm.domain.Usecases.GetAllSongUseCase
 import com.example.lhythm.domain.Usecases.GetSongCategoryUseCase
 import com.example.lhythm.domain.Usecases.GetSongDESCUsecase
+import com.example.lhythm.domain.Usecases.GetSongsByArtistUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,6 +54,11 @@ object DiModule {
     @Provides
     fun getAllSongsDESCUsecase(@ApplicationContext context: Context): GetSongDESCUsecase{
         return GetSongDESCUsecase(getCategoryRepository = getCategoryRepoInterface(context = context))
+    }
+
+    @Provides
+    fun getSongsByArtistUseCase(@ApplicationContext context: Context):GetSongsByArtistUseCase{
+        return GetSongsByArtistUseCase(repository = getCategoryRepoInterface(context = context))
     }
 
 }
