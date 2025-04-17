@@ -77,7 +77,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                      GetAllSongsByArtistScreen(navController = navController)
                 }
                 SongCategory.YEARASC -> {
-
+                    GetSongsByYearASCScreen(navController = navController)
                 }
             }
         }
