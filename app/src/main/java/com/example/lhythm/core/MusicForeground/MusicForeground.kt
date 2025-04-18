@@ -3,12 +3,9 @@ package com.example.lhythm.core.MusicForeground
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import androidx.core.net.toUri
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lhythm.core.LocalNotification.buildNotification
 import com.example.lhythm.core.LocalNotification.createNotificationChannel
 import com.example.lhythm.core.Media.MediaPlayerManager
-import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

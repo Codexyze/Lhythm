@@ -1,7 +1,9 @@
 package com.example.lhythm.core.Media
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.net.Uri
+import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import javax.inject.Inject
@@ -56,5 +58,25 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
     fun seekTo(position: Long) {
         exoPlayer?.seekTo(position)
     }
+    object MediaPlayerManager {
+        private var mediaPlayer: MediaPlayer? = null
+
+        fun releasePlayer() {
+            mediaPlayer?.release()
+            mediaPlayer = null
+        }
+
+        fun pausePlayer() {
+            mediaPlayer?.let {
+                if (it.isPlaying) {
+                    it.pause()
+                }
+            } ?: Log.e("MediaPlayerManager", "pausePlayer() called but mediaPlayer is null")
+        }
+
+
+        // Optional: add create/start functions too
+    }
+
 
 }

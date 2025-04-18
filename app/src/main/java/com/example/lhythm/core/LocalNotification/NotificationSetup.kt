@@ -28,11 +28,22 @@ fun createNotificationChannel(context: Context){
 
 }
  fun buildNotification(context: Context): Notification {
-     val stopIntent = Intent(context, StopServiceReciver::class.java)
+     val stopIntent = Intent(context, StopServiceReciver::class.java).apply {
+         action="STOPPLAYER"
+     }
+     val pauseIntent = Intent(context,StopServiceReciver::class.java).apply {
+         action="PAUSEPLAYER"
+     }
      val pendingIntent= PendingIntent.getBroadcast(
          context,
          0,
          stopIntent,
+         PendingIntent.FLAG_IMMUTABLE
+     )
+     val pendingPauseIntent = PendingIntent.getBroadcast(
+         context,
+         1,
+         pauseIntent,
          PendingIntent.FLAG_IMMUTABLE
      )
 
@@ -42,5 +53,6 @@ fun createNotificationChannel(context: Context){
         .setSmallIcon(R.drawable.lythmlogoasset)
         .setOngoing(true)
         .addAction(R.drawable.lythmlogoasset, "Stop", pendingIntent)
+        .addAction(R.drawable.lythmlogoasset, "Pause", pendingPauseIntent)//i want pause
         .build()
 }
