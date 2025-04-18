@@ -4,9 +4,11 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lhythm.core.LocalNotification.buildNotification
 import com.example.lhythm.core.LocalNotification.createNotificationChannel
 import com.example.lhythm.core.Media.MediaPlayerManager
+import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -18,12 +20,17 @@ class MusicForeground:Service() {
        return null
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val songUri = intent?.getStringExtra("SONG_URI") ?: return START_NOT_STICKY
-       mediaPlayerManager.initializePlayer(uri = songUri.toUri())
-        startForeground(101, buildNotification(this))
-        return START_STICKY
-    }
+//    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+//        val songUri = intent?.getStringExtra("SONG_URI") ?: return START_NOT_STICKY
+//       mediaPlayerManager.initializePlayer(uri = songUri.toUri())
+//        startForeground(101, buildNotification(this))
+//        return START_STICKY
+//    }
+     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+      startForeground(101, buildNotification(this))
+      return START_STICKY
+     }
+
 
 
     override fun onDestroy() {

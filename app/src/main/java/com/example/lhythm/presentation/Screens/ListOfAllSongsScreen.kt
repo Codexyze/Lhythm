@@ -2,8 +2,10 @@ package com.example.lhythm.presentation.Screens
 
 import android.Manifest
 import android.content.Intent
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -46,6 +48,7 @@ import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 import com.example.lhythm.ui.theme.BlackColor
 import com.shashank.sony.fancytoastlib.FancyToast
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navController: NavController,
                           mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel()){
@@ -85,8 +88,9 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
                     // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
                    // mediaPlayerViewModel.playMusic(song.path.toUri())
                     val intent = Intent(context, MusicForeground::class.java)
-                    intent.putExtra("SONG_URI", song.path)
-                    ContextCompat.startForegroundService(context, intent)
+                    context.startForegroundService(intent)
+                    // THEN, play music
+                    mediaPlayerViewModel.playMusic(song.path.toUri()) // <- use actual uri here
                 }){
 
                     EachSongItemLook(songTitle = song.title, songArtist = song.artist, songDuration = song.duration, songYear = song.year)
