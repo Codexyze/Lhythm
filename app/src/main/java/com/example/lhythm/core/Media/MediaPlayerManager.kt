@@ -4,8 +4,6 @@ import android.content.Context
 import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -58,6 +56,5 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
     fun seekTo(position: Long) {
         exoPlayer?.seekTo(position)
     }
-
 
 }

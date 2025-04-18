@@ -1,5 +1,9 @@
 package com.example.lhythm.presentation.Screens
 
+import android.Manifest
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,25 +26,54 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.lhythm.core.MusicForeground.MusicForeground
 import com.example.lhythm.presentation.Utils.LoadingScreen
+import com.example.lhythm.presentation.Utils.checkPermission
 import com.example.lhythm.presentation.Utils.formatDuration
 import com.example.lhythm.presentation.ViewModels.GetAllSongViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 import com.example.lhythm.ui.theme.BlackColor
+import com.shashank.sony.fancytoastlib.FancyToast
 
 @Composable
 fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navController: NavController,
                           mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel()){
     val state = viewmodel.getAllSongsState.collectAsState()
 
+    //
+    val context = LocalContext.current
+    val permissionstate= rememberSaveable { mutableStateOf(false) }
+    val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+        if(it){
+            permissionstate.value = it
+        }else{
+
+        }
+    }
+    LaunchedEffect(Unit) {
+        if( checkPermission(context = context, permission = Manifest.permission.POST_NOTIFICATIONS)){
+            FancyToast.makeText(
+                context, "Loading Songs",
+                FancyToast.LENGTH_SHORT,
+                FancyToast.CONFUSING, false
+            ).show()
+        }else{
+            permission.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+
+    }
+//
     if(state.value.isLoading){
         LoadingScreen()
     }else if(!state.value.error.isNullOrEmpty()){
@@ -50,7 +83,10 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
             items(state.value.data) { song ->
                 Box(modifier = Modifier.wrapContentSize().clickable{
                     // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
-                    mediaPlayerViewModel.playMusic(song.path.toUri())
+                   // mediaPlayerViewModel.playMusic(song.path.toUri())
+                    val intent = Intent(context, MusicForeground::class.java)
+                    intent.putExtra("SONG_URI", song.path)
+                    ContextCompat.startForegroundService(context, intent)
                 }){
 
                     EachSongItemLook(songTitle = song.title, songArtist = song.artist, songDuration = song.duration, songYear = song.year)
