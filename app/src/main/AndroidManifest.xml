@@ -36,9 +36,8 @@
             android:foregroundServiceType="mediaPlayback"
             android:exported="false"
             tools:ignore="ForegroundServicePermission" />
+        <receiver android:name=".core.BroadCastReciver.StopServiceReciver"/>
 
     </application>
-
-
 
 </manifest>

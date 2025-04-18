@@ -20,12 +20,7 @@ class MusicForeground:Service() {
        return null
     }
 
-//    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-//        val songUri = intent?.getStringExtra("SONG_URI") ?: return START_NOT_STICKY
-//       mediaPlayerManager.initializePlayer(uri = songUri.toUri())
-//        startForeground(101, buildNotification(this))
-//        return START_STICKY
-//    }
+
      override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
       startForeground(101, buildNotification(this))
       return START_STICKY
@@ -34,8 +29,9 @@ class MusicForeground:Service() {
 
 
     override fun onDestroy() {
-        mediaPlayerManager.releasePlayer()
         super.onDestroy()
+        mediaPlayerManager.pause()
+        mediaPlayerManager.releasePlayer()
     }
     override fun onCreate() {
         super.onCreate()
@@ -44,3 +40,4 @@ class MusicForeground:Service() {
 
 
 }
+
