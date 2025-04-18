@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -22,7 +21,6 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.lhythm.R
 import com.example.lhythm.ui.theme.BlackColor
 import com.shashank.sony.fancytoastlib.FancyToast
-import kotlin.time.Duration
 
 @Composable
 fun LoadingScreen() {

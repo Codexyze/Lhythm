@@ -16,6 +16,8 @@ import javax.inject.Inject
 class MediaManagerViewModel @Inject constructor(private val mediaMananger: MediaPlayerManager): ViewModel() {
     private val _currentSongPositionState = MutableStateFlow<Float>(value = 0F)
     val currentSongPositionState =_currentSongPositionState.asStateFlow()
+    private val _isplayingState = MutableStateFlow<Boolean>(value = false)
+    val isplayingState =_isplayingState.asStateFlow()
 
    init {
       viewModelScope.launch {
@@ -34,10 +36,12 @@ class MediaManagerViewModel @Inject constructor(private val mediaMananger: Media
 
     fun pauseMusic(){
         mediaMananger.pause()
+        _isplayingState.value = false
     }
 
     fun playMusic(){
         mediaMananger.play()
+        _isplayingState.value = true
     }
     fun releasePlayerResources(){
         mediaMananger.releasePlayer()
@@ -55,9 +59,18 @@ class MediaManagerViewModel @Inject constructor(private val mediaMananger: Media
     fun getDuration(): Long? {
         return mediaMananger.getDuration()
     }
-    fun getCurrentPosition(){
-            _currentSongPositionState.value = mediaMananger.getCurrentPosition()
+
+
+fun getCurrentPosition() {
+    val player = mediaMananger.getPlayer()
+    if (player != null) {
+        _currentSongPositionState.value = mediaMananger.getCurrentPosition()
+    } else {
+        _currentSongPositionState.value = 0f // fallback when player not ready
     }
+}
+
+
 
 
 }
