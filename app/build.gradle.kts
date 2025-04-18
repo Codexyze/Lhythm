@@ -61,6 +61,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     val nav_version = "2.8.3"
+    val room_version = "2.6.1"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation ("androidx.media3:media3-exoplayer:1.5.0")
     implementation ("androidx.media3:media3-ui:1.5.0")
@@ -73,5 +74,10 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("com.airbnb.android:lottie-compose:6.3.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.1")
+
+
+    implementation("androidx.room:room-runtime:$room_version")
+    kapt("androidx.room:room-compiler:$room_version") // Use kapt for Kotlin.
+    implementation("androidx.room:room-ktx:$room_version")
 
 }
