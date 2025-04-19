@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface SongPlayListRepository {
 
-    suspend fun insertSongToPlayList(songEntity: SongEntity)
+    suspend fun insertSongToPlayList(songEntity: SongEntity): Flow<ResultState<String>>
 
     suspend fun getSongsFromPlayList(): Flow<ResultState<List<SongEntity>>>
 }

@@ -1,22 +1,30 @@
 package com.example.lhythm.Di
 
 import android.content.Context
+import androidx.room.Room
+import com.example.lhythm.constants.Constants
 import com.example.lhythm.core.Media.MediaPlayerManager
+import com.example.lhythm.data.Local.SongPlayListDataBase
 import com.example.lhythm.data.RepoIMPL.GetCategoryRepoImpl
 import com.example.lhythm.data.RepoIMPL.GetAllSongsRepoImpl
+import com.example.lhythm.data.RepoIMPL.SongPlayListRepoImpl
 import com.example.lhythm.data.UserPrefrence.UserPrefrence
 import com.example.lhythm.domain.Repository.GetAllSongRepository
 import com.example.lhythm.domain.Repository.GetCategoryRepository
+import com.example.lhythm.domain.Repository.SongPlayListRepository
 import com.example.lhythm.domain.Usecases.GetAllSongUseCase
 import com.example.lhythm.domain.Usecases.GetByYearASCUseCase
 import com.example.lhythm.domain.Usecases.GetSongCategoryUseCase
 import com.example.lhythm.domain.Usecases.GetSongDESCUsecase
 import com.example.lhythm.domain.Usecases.GetSongsByArtistUseCase
+import com.example.lhythm.domain.Usecases.GetSongsFromPlayListUseCase
+import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 
 @Module
@@ -66,5 +74,28 @@ object DiModule {
     fun getSongsByAscUseCase(@ApplicationContext context: Context): GetByYearASCUseCase{
         return GetByYearASCUseCase(repository = getCategoryRepoInterface(context = context))
     }
+
+    @Singleton
+    @Provides
+    fun provideDataBaseBuilderObj(@ApplicationContext context: Context): SongPlayListDataBase{
+        return Room.databaseBuilder(context = context, SongPlayListDataBase::class.java,
+            name = Constants.PLAYLIST).build()
+    }
+
+    @Provides
+    fun SongPlayListRepoInterfaceObj(@ApplicationContext context: Context): SongPlayListRepository{
+        return SongPlayListRepoImpl(dataBase = provideDataBaseBuilderObj(context = context))
+    }
+
+    @Provides
+    fun GetSongsFromPlayListUseCaseObj(@ApplicationContext context: Context): GetSongsFromPlayListUseCase{
+        return GetSongsFromPlayListUseCase(songPlayListRepository = SongPlayListRepoInterfaceObj(context = context))
+    }
+
+    @Provides
+    fun InsertSongToPlayListUseCaseObj(@ApplicationContext context: Context): InsertSongToPlayListUseCase{
+        return InsertSongToPlayListUseCase(songPlayListRepository = SongPlayListRepoInterfaceObj(context = context))
+    }
+
 
 }
