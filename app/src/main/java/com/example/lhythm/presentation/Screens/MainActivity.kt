@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.example.lhythm.core.Media.MediaPlayerManager
 import com.example.lhythm.presentation.Navigation.MainApp
 import com.example.lhythm.ui.theme.LhythmTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,9 +17,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             LhythmTheme {
                 MainApp()
-               // NoSongsFoundScreen()
-
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        MediaPlayerManager.MediaPlayerManager.releasePlayer()
     }
 }
