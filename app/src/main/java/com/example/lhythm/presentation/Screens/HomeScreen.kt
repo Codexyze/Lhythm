@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material.icons.outlined.PlaylistAddCheck
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -47,8 +48,8 @@ fun HomeScreen(navController: NavController) {
             icon = Icons.Outlined.LibraryMusic
         ),
         BottomNaviagtionItem(
-            title = "Nav 3",
-            icon = Icons.Outlined.LibraryMusic
+            title = "PlayList",
+            icon = Icons.Outlined.PlaylistAddCheck
         )
 
     )

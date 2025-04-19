@@ -9,4 +9,6 @@ interface SongPlayListRepository {
     suspend fun insertSongToPlayList(songEntity: SongEntity): Flow<ResultState<String>>
 
     suspend fun getSongsFromPlayList(): Flow<ResultState<List<SongEntity>>>
+
+    suspend fun deleteClickedSongFromPlayList(songEntity: SongEntity): Flow<ResultState<String>>
 }

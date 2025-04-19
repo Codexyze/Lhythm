@@ -45,3 +45,8 @@ data class InsertSongsToPlayListState(
     val error: String ? = null
 )
 
+data class DeleteSongFromPlayListState(
+    val isLoading: Boolean = false,
+    val data: String= "",
+    val error: String ? = null
+)

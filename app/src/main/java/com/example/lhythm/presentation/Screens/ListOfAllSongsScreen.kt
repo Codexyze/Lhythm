@@ -25,6 +25,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -61,27 +63,6 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
 
     //
     val context = LocalContext.current
-//    val permissionstate= rememberSaveable { mutableStateOf(false) }
-//    val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
-//        if(it){
-//            permissionstate.value = it
-//        }else{
-//
-//        }
-//    }
-//    LaunchedEffect(Unit) {
-//        if( checkPermission(context = context, permission = Manifest.permission.POST_NOTIFICATIONS)){
-//            FancyToast.makeText(
-//                context, "Loading Songs",
-//                FancyToast.LENGTH_SHORT,
-//                FancyToast.CONFUSING, false
-//            ).show()
-//        }else{
-//            permission.launch(Manifest.permission.POST_NOTIFICATIONS)
-//        }
-//
-//    }
-//
     if(state.value.isLoading){
         LoadingScreen()
     }else if(!state.value.error.isNullOrEmpty()){
@@ -92,10 +73,10 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
                 Box(modifier = Modifier.wrapContentSize().clickable{
                     // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
                    // mediaPlayerViewModel.playMusic(song.path.toUri())
-                    val intent = Intent(context, MusicForeground::class.java)
-                    context.startForegroundService(intent)
+//                    val intent = Intent(context, MusicForeground::class.java)
+//                    context.startForegroundService(intent)
                     // THEN, play music
-                    mediaPlayerViewModel.playMusic(song.path.toUri()) // <- use actual uri here
+                 //   mediaPlayerViewModel.playMusic(song.path.toUri()) // <- use actual uri here
                 }){
 
                     EachSongItemLook(songid = song.id, songTitle = song.title, songArtist = song.artist,
@@ -122,14 +103,27 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                      songSize: String?="",
                      album: String?="Unknown",
                      composer: String?="Unknown",
-                     playListViewModel: PlayListViewModel=hiltViewModel()) {
-    val context = LocalContext.current
-    val inserToPlayListState = playListViewModel.insertSongToPlaListState.collectAsState()
-    val allSongsState = playListViewModel.getSongFromPlayListState.collectAsState()
+                     playListViewModel: PlayListViewModel=hiltViewModel(),
+                     mediaManagerViewModel: MediaManagerViewModel=hiltViewModel()) {
+         val context = LocalContext.current
+         val showDialogueBox = rememberSaveable { mutableStateOf(false) }
+        val inserToPlayListState = playListViewModel.insertSongToPlaListState.collectAsState()
 
         val  duration = rememberSaveable{ mutableStateOf("0") }
 
-        Card (modifier = Modifier.fillMaxWidth().padding(8.dp), elevation = CardDefaults.elevatedCardElevation(8.dp)
+        Card (modifier = Modifier.fillMaxWidth().padding(8.dp).clickable{
+            if (songPath.isNullOrEmpty()){
+                FancyToast.makeText(
+                    context, "Error Loading Song",
+                    FancyToast.LENGTH_SHORT,
+                    FancyToast.ERROR, false
+                ).show()
+            }else{
+                mediaManagerViewModel.playMusic(songPath.toUri())
+            }
+
+
+        }, elevation = CardDefaults.elevatedCardElevation(8.dp)
             , shape = RoundedCornerShape(16.dp)
         ){
             Column(modifier = Modifier.padding(8.dp)) {
@@ -149,7 +143,7 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                         Text(duration.value.toString(), maxLines = 1) }
                     Icon(imageVector = Icons.Filled.Info, contentDescription = "Info",
                         modifier = Modifier.clickable{
-
+                            showDialogueBox.value = true
                         }
                     )
                     Icon(imageVector = Icons.Filled.Add, contentDescription = "Add to playlist",
@@ -189,6 +183,78 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                     )
 
                 }
+                if(showDialogueBox.value){
+                    AlertDialog(
+                        onDismissRequest = { showDialogueBox.value = false },
+                        title = { Text("Add to playlist") },
+                        confirmButton = {
+                            Button(onClick = {
+                                showDialogueBox.value = false
+                            }) {
+                                Text("Okay")
+                            }
+                        },
+                        dismissButton = {
+                            Button(onClick = {
+                                val songEntity= SongEntity(
+                                    path = songPath.toString(),
+                                    album = album,
+                                    artist = songArtist,
+                                    composer = composer,
+                                    duration = songDuration,
+                                    size = songSize,
+                                    title = songTitle,
+                                    year = songYear,
+                                )
+                                playListViewModel.insertSongToPlayList(songEntity = songEntity)
+                                if(inserToPlayListState.value.isLoading){
+                                    FancyToast.makeText(
+                                        context, "Saving",
+                                        FancyToast.LENGTH_SHORT,
+                                        FancyToast.WARNING, false
+                                    ).show()
+                                }else if(!inserToPlayListState.value.error.isNullOrEmpty()){
+                                    FancyToast.makeText(
+                                        context, "Error Saving",
+                                        FancyToast.LENGTH_SHORT,
+                                        FancyToast.ERROR, false
+                                    ).show()
+                                }else if(!inserToPlayListState.value.data.isNullOrEmpty()){
+                                    FancyToast.makeText(
+                                        context, "Saved",
+                                        FancyToast.LENGTH_SHORT,
+                                        FancyToast.SUCCESS, false
+                                    ).show()
+                                }
+
+                            }) {
+                                Text("Add to playlist")
+                            }
+                        },
+                        text = {
+                            Column {
+                                LazyColumn {
+                                    item {
+                                        Text("All Detail ")
+                                        Text("Album : $album")
+                                        Text("Artist : $songArtist")
+                                        Text("Composer : $composer")
+                                        Text("Duration of :" +
+                                                duration.value.toString())
+                                        Text("Size : $songSize")
+                                        Text("Title : $songTitle")
+                                        Text("Year : $songYear")
+                                        Text("This $songTitle was published in year $songYear by $songArtist and composed by $composer." +
+                                                " It has a duration of $duration and is $songSize in size.")
+                                    }
+                                }
+
+
+                            }
+                        }
+                    )
+                }
+
             }
         }
     }

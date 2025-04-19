@@ -12,6 +12,7 @@ import com.example.lhythm.data.UserPrefrence.UserPrefrence
 import com.example.lhythm.domain.Repository.GetAllSongRepository
 import com.example.lhythm.domain.Repository.GetCategoryRepository
 import com.example.lhythm.domain.Repository.SongPlayListRepository
+import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetAllSongUseCase
 import com.example.lhythm.domain.Usecases.GetByYearASCUseCase
 import com.example.lhythm.domain.Usecases.GetSongCategoryUseCase
@@ -96,6 +97,9 @@ object DiModule {
     fun InsertSongToPlayListUseCaseObj(@ApplicationContext context: Context): InsertSongToPlayListUseCase{
         return InsertSongToPlayListUseCase(songPlayListRepository = SongPlayListRepoInterfaceObj(context = context))
     }
-
+    @Provides
+    fun deleteSongFromPlayListUseCaseObj(@ApplicationContext context: Context): DeleteClickedPlayListUseCase{
+        return DeleteClickedPlayListUseCase(songPlayListRepository = SongPlayListRepoInterfaceObj(context = context))
+    }
 
 }

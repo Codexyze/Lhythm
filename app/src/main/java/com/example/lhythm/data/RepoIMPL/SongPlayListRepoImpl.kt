@@ -34,4 +34,14 @@ class SongPlayListRepoImpl @Inject constructor(private val dataBase: SongPlayLis
             Log.d("DATABASE", "Error ${e.message}")
         }
     }
+
+    override suspend fun deleteClickedSongFromPlayList(songEntity: SongEntity): Flow<ResultState<String>> =flow{
+        emit(ResultState.Loading)
+        try {
+            dataBase.SongPlayListDao().deleteClickedSong(songEntity = songEntity)
+            emit(ResultState.Success("Sucessfully deleted"))
+        }catch (e: Exception){
+            emit(ResultState.Error(e.message.toString()))
+        }
+    }
 }

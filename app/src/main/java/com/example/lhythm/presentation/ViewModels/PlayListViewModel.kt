@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lhythm.core.StateHandeling.ResultState
 import com.example.lhythm.data.Local.SongEntity
+import com.example.lhythm.domain.StateHandeling.DeleteSongFromPlayListState
 import com.example.lhythm.domain.StateHandeling.GetSongsFromPlayListState
 import com.example.lhythm.domain.StateHandeling.InsertSongsToPlayListState
+import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetSongsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,16 +21,16 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayListViewModel @Inject constructor(
     private val getSongsFromPlayListUseCase: GetSongsFromPlayListUseCase,
-    private val insertSongToPlayListUseCase: InsertSongToPlayListUseCase
+    private val insertSongToPlayListUseCase: InsertSongToPlayListUseCase,
+    private val deleteSongFromPlayListUseCase: DeleteClickedPlayListUseCase
 )  : ViewModel() {
     private val _getSongFromPlayListState = MutableStateFlow(GetSongsFromPlayListState())
     val getSongFromPlayListState = _getSongFromPlayListState.asStateFlow()
     private val _insertSongToPlaListState = MutableStateFlow(InsertSongsToPlayListState())
     val insertSongToPlaListState = _insertSongToPlaListState.asStateFlow()
+    private val _deleteSongFromPlayListState = MutableStateFlow(DeleteSongFromPlayListState())
+    val deleteSongFromPlayListState = _deleteSongFromPlayListState.asStateFlow()
 
-    init {
-        getSongsFromPlayList()
-    }
 
     fun getSongsFromPlayList(){
         viewModelScope.launch(Dispatchers.IO) {
@@ -71,6 +73,26 @@ class PlayListViewModel @Inject constructor(
 
             }
 
+        }
+    }
+
+    fun deleteSongFromPlayList(songEntity: SongEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteSongFromPlayListUseCase.invoke(songEntity = songEntity).collect { result ->
+                when(result){
+                    is ResultState.Loading->{
+                        _deleteSongFromPlayListState.value = DeleteSongFromPlayListState(isLoading = true)
+                    }
+                    is ResultState.Success->{
+                        _deleteSongFromPlayListState.value = DeleteSongFromPlayListState(isLoading = false, data = result.data)
+                        Log.d("DATABASE","Sucessfully Deleted")
+                    }
+                    is ResultState.Error->{
+                        _deleteSongFromPlayListState.value = DeleteSongFromPlayListState(isLoading = false, error = result.message)
+                    }
+                }
+
+            }
         }
     }
 
