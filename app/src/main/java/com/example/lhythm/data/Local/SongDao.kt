@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SongDao {
     @Upsert
-    suspend fun insertSongToPlayList(songEntity: SongEntity)
+   suspend fun insertSongToPlayList(songEntity: SongEntity)
     @Query("SELECT * FROM ${Constants.PLAYLIST}")
 
-    suspend fun getSongsFromPlayList(): Flow<ResultState<List<SongEntity>>>
+   suspend fun getSongsFromPlayList(): List<SongEntity>
 }

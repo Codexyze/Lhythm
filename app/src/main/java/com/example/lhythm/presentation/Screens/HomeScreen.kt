@@ -1,7 +1,12 @@
 package com.example.lhythm.presentation.Screens
 
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material.icons.outlined.MusicNote
@@ -11,14 +16,20 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.lhythm.presentation.Utils.LoadingScreen
+import com.example.lhythm.presentation.ViewModels.PlayListViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(navController: NavController) {
     var selectedindex by rememberSaveable { mutableStateOf(0) }
@@ -77,6 +88,7 @@ data class BottomNaviagtionItem(
     val icon: ImageVector
 )
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ContentScreen(navController: NavController,index: Int) {
     when(index){
@@ -90,10 +102,9 @@ fun ContentScreen(navController: NavController,index: Int) {
            SongCategoriesScreen(navController = navController)
         }
         3->{
-            Text("4")
+            PlayListExample(navController = navController)
         }
 
     }
 
 }
-

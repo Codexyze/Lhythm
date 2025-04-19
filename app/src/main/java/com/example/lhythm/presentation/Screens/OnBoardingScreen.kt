@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -47,6 +48,8 @@ import com.example.lhythm.R
 import com.example.lhythm.presentation.Utils.checkPermission
 import com.example.lhythm.ui.theme.BlackColor
 import com.example.lhythm.ui.theme.RedThemeSuit1
+import com.shashank.sony.fancytoastlib.FancyToast
+
 
 @Composable
 fun OnBoardingScreen(
@@ -54,27 +57,44 @@ fun OnBoardingScreen(
     navController: NavController
 ) {
     val context = LocalContext.current
-    val permission = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+    val permission1 = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
         Manifest.permission.READ_MEDIA_AUDIO
     }else{
         Manifest.permission.READ_EXTERNAL_STORAGE
     }
-    val launchPermission = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()
-    , onResult = {
-        if (it){
-            Toast.makeText(context, "Permission Granted" , Toast.LENGTH_SHORT).show()
-        }else{
-            Toast.makeText(context, "Please grant Permission", Toast.LENGTH_SHORT).show()
-        }
-        })
+    val permission2 = Manifest.permission.POST_NOTIFICATIONS
+
+
+
 
     val permissionState = rememberSaveable { mutableStateOf(false) }
+    val launchPermission = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()
+        , onResult = {
+            it.entries.forEach{
+                if(it.value){
+                    permissionState.value = true
+                }else{
+                    permissionState.value = false
+                    FancyToast.makeText(
+                        context, "Grant all permission",
+                        FancyToast.LENGTH_SHORT,
+                        FancyToast.CONFUSING, false
+                    ).show()
+                }
+
+            }
+        })
 
     LaunchedEffect(permissionState.value) {
-        if(ContextCompat.checkSelfPermission(context,permission)== PackageManager.PERMISSION_GRANTED){
-            Toast.makeText(context, "PermissionGranted", Toast.LENGTH_SHORT).show()
+        if(ContextCompat.checkSelfPermission(context,permission1)== PackageManager.PERMISSION_GRANTED){
+
         }else{
-            launchPermission.launch(permission)
+            launchPermission.launch(arrayOf(permission2,permission2))
+            FancyToast.makeText(
+                context, "Grant all permissions",
+                FancyToast.LENGTH_SHORT,
+                FancyToast.WARNING, false
+            ).show()
         }
     }
 
@@ -86,54 +106,7 @@ fun OnBoardingScreen(
         composition = composition,
         iterations = LottieConstants.IterateForever
     )
-    BoxWithConstraints(modifier = Modifier
-        .fillMaxSize()
-        .background(color = BlackColor)) {this
-        val screenWidth = maxWidth
-        if(screenWidth>=400.dp && screenWidth<600.dp ){
-            //regular mid phone
-                      Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .background(color = BlackColor),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text("Welcome to Lhythm", fontSize = 35.sp , fontFamily = FontFamily.Cursive , color = RedThemeSuit1)
-                Text(
-                    screenWidth.toString(),
-                    fontSize = 35.sp,
-                    fontFamily = FontFamily.Cursive,
-                    color = Color.Green
-                )
 
-                LottieAnimation(
-                    composition = composition,
-                    progress = { progress },
-                    modifier = Modifier
-                        .size(250.dp)
-                        .background(color = Color.Black)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-                          Button(onClick = {
-                              permissionState.value = checkPermission(context = context,permission=permission)
-                              if(permissionState.value){
-                                  viewmodel.upDateOnBoardingPref()
-                                  navController.navigate(SAMPLESCREEN) {
-                                      popUpTo(0)
-                                  }
-                              }else{
-                                  launchPermission.launch(permission)
-                                  Toast.makeText(context, "Please grant Permission", Toast.LENGTH_SHORT).show()
-                              }
-
-                          }, colors = ButtonDefaults.buttonColors(containerColor = RedThemeSuit1)) {
-                              Text("getting Started")
-                          }
-            }
-        }else if(screenWidth < 400.dp){
                         Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -149,7 +122,7 @@ fun OnBoardingScreen(
                     color = Color.Green
                 )
                 Text(
-                    screenWidth.toString(),
+                    "Lose yourself in music",
                     fontSize = 24.sp,
                     fontFamily = FontFamily.Cursive,
                     color = Color.Green
@@ -166,68 +139,23 @@ fun OnBoardingScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                             Button(onClick = {
-                                permissionState.value = checkPermission(context = context,permission=permission)
+                                permissionState.value = checkPermission(context = context,permission=permission1)
                                 if(permissionState.value){
                                     viewmodel.upDateOnBoardingPref()
                                     navController.navigate(SAMPLESCREEN) {
                                         popUpTo(0)
                                     }
                                 }else{
-                                    launchPermission.launch(permission)
-                                    Toast.makeText(context, "Please grant Permission", Toast.LENGTH_SHORT).show()
+                                   launchPermission.launch(arrayOf(permission1,permission2))
+
                                 }
 
                             }, colors = ButtonDefaults.buttonColors(containerColor = RedThemeSuit1)) {
                                 Text("getting Started")
                             }
             }
-        }else if(screenWidth >=600.dp){
-
-                        Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(32.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                // Tablet: Bigger layout, maybe add more stuff here?
-                Text("Welcome to Lhythm", fontSize = 35.sp , fontFamily = FontFamily.Cursive , color = Color(0xFFFF0B55))
-                LottieAnimation(
-                    composition = composition,
-                    progress = { progress },
-                    modifier = Modifier
-                        .size(450.dp)
-                        .background(Color.Black)
-                )
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-
-
-                    Button(onClick = {
-                        permissionState.value = checkPermission(context = context,permission=permission)
-                        if(permissionState.value){
-                            viewmodel.upDateOnBoardingPref()
-                            navController.navigate(SAMPLESCREEN) {
-                                popUpTo(0)
-                            }
-                        }else{
-                            launchPermission.launch(permission)
-                            Toast.makeText(context, "Please grant Permission", Toast.LENGTH_SHORT).show()
-                        }
-
-                    }, colors = ButtonDefaults.buttonColors(containerColor = RedThemeSuit1)) {
-                        Text("getting Started")
-                    }
-                }
-            }
-
-        }
 
 
     }
 
-}
 

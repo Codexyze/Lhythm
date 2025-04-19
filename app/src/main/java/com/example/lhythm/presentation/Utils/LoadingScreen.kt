@@ -20,16 +20,10 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.lhythm.R
 import com.example.lhythm.ui.theme.BlackColor
-import com.shashank.sony.fancytoastlib.FancyToast
 
 @Composable
 fun LoadingScreen() {
     val context = LocalContext.current
-    FancyToast.makeText(
-        context, "Loading Songs",
-        FancyToast.LENGTH_SHORT,
-        FancyToast.CONFUSING, false
-    ).show()
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     Column(modifier = Modifier.fillMaxSize().background(color = BlackColor), verticalArrangement = Arrangement.Center
     , horizontalAlignment = Alignment.CenterHorizontally) {

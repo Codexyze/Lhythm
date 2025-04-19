@@ -1,5 +1,6 @@
 package com.example.lhythm.data.RepoIMPL
 
+import android.util.Log
 import com.example.lhythm.core.StateHandeling.ResultState
 import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.data.Local.SongPlayListDataBase
@@ -13,9 +14,11 @@ class SongPlayListRepoImpl @Inject constructor(private val dataBase: SongPlayLis
          emit(ResultState.Loading)
         try {
             dataBase.SongPlayListDao().insertSongToPlayList(songEntity = songEntity)
-            ResultState.Success("Sucessfully added to playlist")
+            emit(ResultState.Success("Sucessfully added to playlist"))
+            Log.d("DATABASE", "Sucessfully added to playlist")
         }catch (e: Exception){
-            ResultState.Error(e.message.toString())
+            emit(ResultState.Error(e.message.toString()))
+            Log.d("DATABASE", "Error ${e.message}")
         }
     }
 
@@ -23,9 +26,12 @@ class SongPlayListRepoImpl @Inject constructor(private val dataBase: SongPlayLis
         emit(ResultState.Loading)
         try {
            val data = dataBase.SongPlayListDao().getSongsFromPlayList()
-            ResultState.Success(data)
+            Log.d("DATABASE", "${data.toString()}")
+            emit(ResultState.Success(data))
         }catch (e: Exception){
-            ResultState.Error(e.message.toString())
+            emit( ResultState.Error(e.message.toString()))
+
+            Log.d("DATABASE", "Error ${e.message}")
         }
     }
 }

@@ -7,7 +7,7 @@ import com.example.lhythm.constants.Constants
 @Entity(tableName = Constants.PLAYLIST)
 data class SongEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int=0,
     val path: String,
     val size: String?="",
     val album: String?="Unknown",
