@@ -71,7 +71,7 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
         LoadingScreen()
     }else if(!state.value.error.isNullOrEmpty()){
         Text("Error Loading Sonhs")
-    }else if(!state.value.data.isNullOrEmpty()){
+    }else if(state.value.data.isNotEmpty()){
         LazyColumn(modifier = Modifier.background(color = BlackColor)) {
             items(state.value.data) { song ->
                 Box(modifier = Modifier.wrapContentSize().clickable{
@@ -135,7 +135,9 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
             Column(modifier = Modifier.padding(8.dp)) {
                 Row {
                     songTitle?.let { Text(it, maxLines = 2) }
+
                 }
+
                 Row {
                     songArtist?.let { Text(it, maxLines = 1) }
                 }

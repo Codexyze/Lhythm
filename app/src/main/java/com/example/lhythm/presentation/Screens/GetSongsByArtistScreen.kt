@@ -43,7 +43,7 @@ fun GetAllSongsByArtistScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel
                             mediaPlayerViewModel.playMusic(song.path.toUri())
                         }){
 
-                        EachSongItemLook(songTitle = song.title, songArtist = song.artist, songDuration = song.duration, songYear = song.year)
+                        EachSongItemLook(songPath = song.path, songTitle = song.title, songArtist = song.artist, songDuration = song.duration, songYear = song.year)
                     }
 
                 }
