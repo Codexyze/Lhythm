@@ -119,7 +119,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                 //here
                             }, horizontalAlignment = Alignment.CenterHorizontally) {
                                 Image(
-                                    painter = painterResource(R.drawable.ascasset),
+                                    painter = painterResource(R.drawable.favsongasset),
                                     contentDescription = "Artist",
                                     modifier = Modifier.size(60.dp)
                                 )
@@ -151,6 +151,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                     GetSongsByYearASCScreen(navController = navController)
                 }
                 SongCategory.FAVSONG -> {
+                    FavSongScreen()
 
                 }
             }

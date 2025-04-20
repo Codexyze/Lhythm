@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material3.AlertDialog
@@ -37,6 +38,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -45,10 +47,12 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.lhythm.core.MusicForeground.MusicForeground
+import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.Utils.checkPermission
 import com.example.lhythm.presentation.Utils.formatDuration
+import com.example.lhythm.presentation.ViewModels.FavSongViewModel
 import com.example.lhythm.presentation.ViewModels.GetAllSongViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 import com.example.lhythm.presentation.ViewModels.PlayListViewModel
@@ -104,10 +108,12 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                      album: String?="Unknown",
                      composer: String?="Unknown",
                      playListViewModel: PlayListViewModel=hiltViewModel(),
-                     mediaManagerViewModel: MediaManagerViewModel=hiltViewModel()) {
+                     mediaManagerViewModel: MediaManagerViewModel=hiltViewModel(),
+                     favSongViewModel: FavSongViewModel=hiltViewModel()) {
          val context = LocalContext.current
          val showDialogueBox = rememberSaveable { mutableStateOf(false) }
         val inserToPlayListState = playListViewModel.insertSongToPlaListState.collectAsState()
+         val insertOrUpdateFavSongState =favSongViewModel.inserOrUpdateFavState.collectAsState()
 
         val  duration = rememberSaveable{ mutableStateOf("0") }
 
@@ -141,13 +147,17 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                     songDuration?.let {
                         duration.value = formatDuration(it.toLong())
                         Text(duration.value.toString(), maxLines = 1) }
+
+
+                }
+                Row(modifier = Modifier, horizontalArrangement = Arrangement.Absolute.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
                     Icon(imageVector = Icons.Filled.Info, contentDescription = "Info",
-                        modifier = Modifier.clickable{
+                        modifier = Modifier.weight(1f).clickable{
                             showDialogueBox.value = true
                         }
                     )
                     Icon(imageVector = Icons.Filled.Add, contentDescription = "Add to playlist",
-                        modifier = Modifier.clickable{
+                        modifier = Modifier.weight(1f).clickable{
                             val songEntity= SongEntity(
                                 path = songPath.toString(),
                                 album = album,
@@ -159,29 +169,43 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                                 year = songYear,
                             )
                             playListViewModel.insertSongToPlayList(songEntity = songEntity)
-                            if(inserToPlayListState.value.isLoading){
-                                FancyToast.makeText(
-                                    context, "Saving",
-                                    FancyToast.LENGTH_SHORT,
-                                    FancyToast.WARNING, false
-                                ).show()
-                            }else if(!inserToPlayListState.value.error.isNullOrEmpty()){
-                                FancyToast.makeText(
-                                    context, "Error Saving",
-                                    FancyToast.LENGTH_SHORT,
-                                    FancyToast.ERROR, false
-                                ).show()
-                            }else if(!inserToPlayListState.value.data.isNullOrEmpty()){
+
+                        }
+                    )
+                    Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Favorite",
+                        modifier = Modifier.weight(1f).clickable{
+                            //Fav impl here
+                           val favSongEntity= FavSongEntity(
+                               path = songPath.toString(),
+                               album = album,
+                               artist = songArtist,
+                               composer = composer,
+                               duration = songDuration,
+                               size = songSize,
+                               title = songTitle,
+                               year = songYear,
+                               albumId = "",
+                               lyrics = "Unknown"
+
+                           )
+                            favSongViewModel.insertOrUpdateFavSong(favSongEntity = favSongEntity)
+                            if(!insertOrUpdateFavSongState.value.data.isNullOrEmpty()){
                                 FancyToast.makeText(
                                     context, "Saved",
                                     FancyToast.LENGTH_SHORT,
                                     FancyToast.SUCCESS, false
                                 ).show()
+                            }else if(!insertOrUpdateFavSongState.value.error.isNullOrEmpty()){
+                                FancyToast.makeText(
+                                    context, "Error Saving",
+                                    FancyToast.LENGTH_SHORT,
+                                    FancyToast.ERROR, false
+                                ).show()
                             }
+
 
                         }
                     )
-
                 }
                 if(showDialogueBox.value){
                     AlertDialog(
@@ -207,26 +231,6 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                                     year = songYear,
                                 )
                                 playListViewModel.insertSongToPlayList(songEntity = songEntity)
-                                if(inserToPlayListState.value.isLoading){
-                                    FancyToast.makeText(
-                                        context, "Saving",
-                                        FancyToast.LENGTH_SHORT,
-                                        FancyToast.WARNING, false
-                                    ).show()
-                                }else if(!inserToPlayListState.value.error.isNullOrEmpty()){
-                                    FancyToast.makeText(
-                                        context, "Error Saving",
-                                        FancyToast.LENGTH_SHORT,
-                                        FancyToast.ERROR, false
-                                    ).show()
-                                }else if(!inserToPlayListState.value.data.isNullOrEmpty()){
-                                    FancyToast.makeText(
-                                        context, "Saved",
-                                        FancyToast.LENGTH_SHORT,
-                                        FancyToast.SUCCESS, false
-                                    ).show()
-                                }
-
                             }) {
                                 Text("Add to playlist")
                             }
