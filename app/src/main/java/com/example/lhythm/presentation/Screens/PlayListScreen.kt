@@ -1,15 +1,21 @@
 package com.example.lhythm.presentation.Screens
 
+import android.widget.Space
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Lyrics
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -26,12 +32,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.lhythm.R
+import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.presentation.Utils.LoadingScreen
+import com.example.lhythm.presentation.ViewModels.FavSongViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 import com.example.lhythm.presentation.ViewModels.PlayListViewModel
 import com.shashank.sony.fancytoastlib.FancyToast
@@ -65,7 +75,7 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
                         size = listelementvalue.size.toString(),
                         title = listelementvalue.title.toString(),
                         year = listelementvalue.year.toString(),
-                        lyricsString = listelementvalue.lyrics.toString()
+                        lyricsString = listelementvalue.lyrics.toString(),
                     )
 
                 }
@@ -79,7 +89,7 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
 @Composable
 fun EachPlayListItem(
     id: Int,
-    path : String="",
+    path : String,
     album : String="Unknown",
     artist : String="Unknown",
     composer : String="Unknown",
@@ -89,16 +99,18 @@ fun EachPlayListItem(
     year : String="0",
     lyricsString : String="",
     mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel(),
-    playListViewModel: PlayListViewModel=hiltViewModel()
+    playListViewModel: PlayListViewModel=hiltViewModel(),
+    favSongViewModel: FavSongViewModel= hiltViewModel()
 ) {
     val lyrics=rememberSaveable { mutableStateOf("") }
     val showLyricsSavingDailog = rememberSaveable { mutableStateOf(false) }
     val deletePlayListSongState = playListViewModel.getSongFromPlayListState.collectAsState()
     val context = LocalContext.current
     val insertState=playListViewModel.insertSongToPlaListState.collectAsState()
-   if (insertState.value.isLoading || deletePlayListSongState.value.isLoading){
+    val addToFavState= favSongViewModel.inserOrUpdateFavState.collectAsState()
+   if (insertState.value.isLoading || deletePlayListSongState.value.isLoading||addToFavState.value.isLoading){
        LoadingScreen()
-   }else if(insertState.value.error!=null || deletePlayListSongState.value.error!=null){
+   }else if(insertState.value.error!=null || deletePlayListSongState.value.error!=null||addToFavState.value.error!=null){
        Text("Error ${insertState.value.error}")
    }else{
        playListViewModel.getSongsFromPlayList()
@@ -118,64 +130,104 @@ fun EachPlayListItem(
            , shape = RoundedCornerShape(16.dp)
        ){
            Column(modifier = Modifier.padding(8.dp)) {
-               Row {
-                   Text(title, maxLines = 2)
-               }
-               Row {
-                   Text(artist, maxLines = 1)
-               }
-               Row {
-                   Text(year, maxLines = 1)
-               }
-               Row {
-                   Text(lyricsString)
-               }
-               Row {
-                   Icon(imageVector = Icons.Filled.Delete, contentDescription = "Info",
-                       modifier = Modifier.clickable{
-                           val songEntity= SongEntity(
-                               id=id,
-                               size = size,
-                               title = title,
-                               artist = artist,
-                               duration = duration,
-                               year = year,
-                               album = album,
-                               path = path,
-                               composer = composer
+
+               Row(modifier = Modifier.padding(5.dp)) {
+                   Image(
+                       painter = painterResource(R.drawable.lythmlogoasset),
+                       contentDescription = "Logo",
+                       modifier = Modifier.weight(0.25f)
+                   )
+                   Spacer(modifier = Modifier.width(20.dp))
+                   Column(modifier = Modifier.weight(0.75f)) {
+                       Text(title, maxLines = 2)
+                       Row {
+                           Text(artist, maxLines = 1)
+                       }
+                       Row {
+                           Text(year, maxLines = 1)
+                       }
+                       Row {
+                           Text(lyricsString)
+                       }
+                       Row {
+                           Icon(
+                               imageVector = Icons.Filled.Favorite, contentDescription = "Favorite",
+                               modifier = Modifier.weight(1f).clickable{
+                                   val favSongEntity =
+                                       FavSongEntity(
+                                           id = id,
+                                           size = size,
+                                           title = title,
+                                           artist = artist,
+                                           duration = duration,
+                                           year = year,
+                                           album = album,
+                                           path = path,
+                                           composer = composer,
+                                           lyrics = lyricsString,
+                                           albumId = "",
+                                       )
+                                   favSongViewModel.insertOrUpdateFavSong(favSongEntity = favSongEntity)
+                                   if(!addToFavState.value.data.isNullOrEmpty()){
+                                       FancyToast.makeText(
+                                           context, "Song Added to Favorites",
+                                           FancyToast.LENGTH_SHORT,
+                                           FancyToast.SUCCESS, false
+                                       ).show()
+                                   }
+
+                               }
                            )
-                           playListViewModel.deleteSongFromPlayList(songEntity = songEntity)
-                           if (!deletePlayListSongState.value.error.isNullOrEmpty()) {
-                               FancyToast.makeText(
-                                   context, "Error Deleting Song",
-                                   FancyToast.LENGTH_SHORT,
-                                   FancyToast.ERROR, false
-                               ).show()
-                           }else if (deletePlayListSongState.value.isLoading){
-                               FancyToast.makeText(
-                                   context, "Deleting...",
-                                   FancyToast.LENGTH_SHORT,
-                                   FancyToast.WARNING, false
-                               ).show()
-                           }else if(deletePlayListSongState.value.data!=null){
-                               playListViewModel.getSongsFromPlayList()
-                               FancyToast.makeText(
-                                   context, "Successfully Deleted",
-                                   FancyToast.LENGTH_SHORT,
-                                   FancyToast.SUCCESS, false
-                               ).show()
-                           }
-                       }
-                   )
-                   Icon(
-                       imageVector = Icons.Filled.Lyrics, contentDescription = "lyrics",
-                       modifier = Modifier.clickable{
+                           Icon(imageVector = Icons.Filled.Delete, contentDescription = "Info",
+                               modifier = Modifier.weight(1f).clickable{
+                                   val songEntity= SongEntity(
+                                       id=id,
+                                       size = size,
+                                       title = title,
+                                       artist = artist,
+                                       duration = duration,
+                                       year = year,
+                                       album = album,
+                                       path = path,
+                                       composer = composer
+                                   )
+                                   playListViewModel.deleteSongFromPlayList(songEntity = songEntity)
+                                   if (!deletePlayListSongState.value.error.isNullOrEmpty()) {
+                                       FancyToast.makeText(
+                                           context, "Error Deleting Song",
+                                           FancyToast.LENGTH_SHORT,
+                                           FancyToast.ERROR, false
+                                       ).show()
+                                   }else if (deletePlayListSongState.value.isLoading){
+                                       FancyToast.makeText(
+                                           context, "Deleting...",
+                                           FancyToast.LENGTH_SHORT,
+                                           FancyToast.WARNING, false
+                                       ).show()
+                                   }else if(deletePlayListSongState.value.data!=null){
+                                       playListViewModel.getSongsFromPlayList()
+                                       FancyToast.makeText(
+                                           context, "Successfully Deleted",
+                                           FancyToast.LENGTH_SHORT,
+                                           FancyToast.SUCCESS, false
+                                       ).show()
+                                   }
+                               }
+                           )
+                           Icon(
+                               imageVector = Icons.Filled.Lyrics, contentDescription = "lyrics",
+                               modifier = Modifier.weight(1f).clickable{
 
-                           showLyricsSavingDailog.value=true
+                                   showLyricsSavingDailog.value=true
 
+                               }
+                           )
                        }
-                   )
+                   }
+
                }
+
+
                if (showLyricsSavingDailog.value){
                    AlertDialog(
                        onDismissRequest = {

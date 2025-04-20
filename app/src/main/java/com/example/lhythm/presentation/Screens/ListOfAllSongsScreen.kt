@@ -1,12 +1,8 @@
 package com.example.lhythm.presentation.Screens
 
-import android.Manifest
-import android.content.Intent
 import android.os.Build
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,8 +11,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,32 +21,28 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.lhythm.core.MusicForeground.MusicForeground
+import com.example.lhythm.R
 import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.presentation.Utils.LoadingScreen
-import com.example.lhythm.presentation.Utils.checkPermission
 import com.example.lhythm.presentation.Utils.formatDuration
 import com.example.lhythm.presentation.ViewModels.FavSongViewModel
 import com.example.lhythm.presentation.ViewModels.GetAllSongViewModel
@@ -133,81 +125,94 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
             , shape = RoundedCornerShape(16.dp)
         ){
             Column(modifier = Modifier.padding(8.dp)) {
-                Row {
-                    songTitle?.let { Text(it, maxLines = 2) }
 
-                }
-
-                Row {
-                    songArtist?.let { Text(it, maxLines = 1) }
-                }
-                Row{
-                    songYear?.let { Text("year : $it", maxLines = 1) }
-
-                }
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Absolute.SpaceEvenly){
-                    songDuration?.let {
-                        duration.value = formatDuration(it.toLong())
-                        Text(duration.value.toString(), maxLines = 1) }
-
-
-                }
-                Row(modifier = Modifier, horizontalArrangement = Arrangement.Absolute.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Filled.Info, contentDescription = "Info",
-                        modifier = Modifier.weight(1f).clickable{
-                            showDialogueBox.value = true
-                        }
+                Row (modifier = Modifier.padding(5.dp)){
+                    Image(
+                        painter = painterResource(R.drawable.lythmlogoasset),
+                        contentDescription = "Logo",
+                        modifier = Modifier.weight(0.25f)
                     )
-                    Icon(imageVector = Icons.Filled.Add, contentDescription = "Add to playlist",
-                        modifier = Modifier.weight(1f).clickable{
-                            val songEntity= SongEntity(
-                                path = songPath.toString(),
-                                album = album,
-                                artist = songArtist,
-                                composer = composer,
-                                duration = songDuration,
-                                size = songSize,
-                                title = songTitle,
-                                year = songYear,
+                    Spacer(modifier = Modifier.width(20.dp))
+                    Column(modifier = Modifier.weight(0.75f)) {
+                        Row {
+                            songTitle?.let { Text(it, maxLines = 2) }
+
+                        }
+
+                        Row {
+                            songArtist?.let { Text(it, maxLines = 1) }
+                        }
+                        Row{
+                            songYear?.let { Text("year : $it", maxLines = 1) }
+
+                        }
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Absolute.SpaceEvenly){
+                            songDuration?.let {
+                                duration.value = formatDuration(it.toLong())
+                                Text(duration.value.toString(), maxLines = 1) }
+
+
+                        }
+                        Row(modifier = Modifier, horizontalArrangement = Arrangement.Absolute.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
+                            Icon(imageVector = Icons.Filled.Info, contentDescription = "Info",
+                                modifier = Modifier.weight(1f).clickable{
+                                    showDialogueBox.value = true
+                                }
                             )
-                            playListViewModel.insertSongToPlayList(songEntity = songEntity)
+                            Icon(imageVector = Icons.Filled.Add, contentDescription = "Add to playlist",
+                                modifier = Modifier.weight(1f).clickable{
+                                    val songEntity= SongEntity(
+                                        path = songPath.toString(),
+                                        album = album,
+                                        artist = songArtist,
+                                        composer = composer,
+                                        duration = songDuration,
+                                        size = songSize,
+                                        title = songTitle,
+                                        year = songYear,
+                                    )
+                                    playListViewModel.insertSongToPlayList(songEntity = songEntity)
 
-                        }
-                    )
-                    Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Favorite",
-                        modifier = Modifier.weight(1f).clickable{
-                            //Fav impl here
-                           val favSongEntity= FavSongEntity(
-                               path = songPath.toString(),
-                               album = album,
-                               artist = songArtist,
-                               composer = composer,
-                               duration = songDuration,
-                               size = songSize,
-                               title = songTitle,
-                               year = songYear,
-                               albumId = "",
-                               lyrics = "Unknown"
+                                }
+                            )
+                            Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Favorite",
+                                modifier = Modifier.weight(1f).clickable{
+                                    //Fav impl here
+                                    val favSongEntity= FavSongEntity(
+                                        path = songPath.toString(),
+                                        album = album,
+                                        artist = songArtist,
+                                        composer = composer,
+                                        duration = songDuration,
+                                        size = songSize,
+                                        title = songTitle,
+                                        year = songYear,
+                                        albumId = "",
+                                        lyrics = "Unknown"
 
-                           )
-                            favSongViewModel.insertOrUpdateFavSong(favSongEntity = favSongEntity)
-                            if(!insertOrUpdateFavSongState.value.data.isNullOrEmpty()){
-                                FancyToast.makeText(
-                                    context, "Saved",
-                                    FancyToast.LENGTH_SHORT,
-                                    FancyToast.SUCCESS, false
-                                ).show()
-                            }else if(!insertOrUpdateFavSongState.value.error.isNullOrEmpty()){
-                                FancyToast.makeText(
-                                    context, "Error Saving",
-                                    FancyToast.LENGTH_SHORT,
-                                    FancyToast.ERROR, false
-                                ).show()
-                            }
+                                    )
+                                    favSongViewModel.insertOrUpdateFavSong(favSongEntity = favSongEntity)
+                                    if(!insertOrUpdateFavSongState.value.data.isNullOrEmpty()){
+                                        FancyToast.makeText(
+                                            context, "Saved",
+                                            FancyToast.LENGTH_SHORT,
+                                            FancyToast.SUCCESS, false
+                                        ).show()
+                                    }else if(!insertOrUpdateFavSongState.value.error.isNullOrEmpty()){
+                                        FancyToast.makeText(
+                                            context, "Error Saving",
+                                            FancyToast.LENGTH_SHORT,
+                                            FancyToast.ERROR, false
+                                        ).show()
+                                    }
 
 
-                        }
-                    )
+                                }
+                            )
+                    }
+
+                }
+
                 }
                 if(showDialogueBox.value){
                     AlertDialog(

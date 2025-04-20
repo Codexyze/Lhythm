@@ -16,4 +16,8 @@ interface SongDao {
    suspend fun getSongsFromPlayList(): List<SongEntity>
    @Delete
    suspend fun deleteClickedSong(songEntity: SongEntity)
+
+   @Query("SELECT * FROM ${Constants.PLAYLIST} WHERE title LIKE '%' || :query || '%' ")
+   suspend fun searchFromPlaylist(query: String): List<SongEntity>
+
 }
