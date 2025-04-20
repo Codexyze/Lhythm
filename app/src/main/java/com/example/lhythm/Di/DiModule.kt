@@ -5,10 +5,12 @@ import androidx.room.Room
 import com.example.lhythm.constants.Constants
 import com.example.lhythm.core.Media.MediaPlayerManager
 import com.example.lhythm.data.Local.SongPlayListDataBase
+import com.example.lhythm.data.RepoIMPL.FavSongRepoImpl
 import com.example.lhythm.data.RepoIMPL.GetCategoryRepoImpl
 import com.example.lhythm.data.RepoIMPL.GetAllSongsRepoImpl
 import com.example.lhythm.data.RepoIMPL.SongPlayListRepoImpl
 import com.example.lhythm.data.UserPrefrence.UserPrefrence
+import com.example.lhythm.domain.Repository.FavSongRepository
 import com.example.lhythm.domain.Repository.GetAllSongRepository
 import com.example.lhythm.domain.Repository.GetCategoryRepository
 import com.example.lhythm.domain.Repository.SongPlayListRepository
@@ -80,7 +82,7 @@ object DiModule {
     @Provides
     fun provideDataBaseBuilderObj(@ApplicationContext context: Context): SongPlayListDataBase{
         return Room.databaseBuilder(context = context, SongPlayListDataBase::class.java,
-            name = Constants.PLAYLIST).build()
+            name = Constants.PLAYLIST) .fallbackToDestructiveMigration().build()
     }
 
     @Provides
@@ -100,6 +102,11 @@ object DiModule {
     @Provides
     fun deleteSongFromPlayListUseCaseObj(@ApplicationContext context: Context): DeleteClickedPlayListUseCase{
         return DeleteClickedPlayListUseCase(songPlayListRepository = SongPlayListRepoInterfaceObj(context = context))
+    }
+
+    @Provides
+    fun provideFavSongInterfaceObj(@ApplicationContext context: Context): FavSongRepository{
+        return FavSongRepoImpl(dataBase = provideDataBaseBuilderObj(context = context))
     }
 
 }
