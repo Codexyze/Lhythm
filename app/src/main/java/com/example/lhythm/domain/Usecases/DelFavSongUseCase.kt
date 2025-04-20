@@ -6,8 +6,8 @@ import com.example.lhythm.domain.Repository.FavSongRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class InsertOrUpdateFavSongUseCase @Inject constructor(private val repository: FavSongRepository) {
-    suspend  operator fun invoke(favSongEntity: FavSongEntity): Flow<ResultState<String>>{
-        return  repository.insertOrUpdateFavSong(favSongEntity = favSongEntity)
+class DelFavSongUseCase @Inject constructor(private val repository: FavSongRepository) {
+    suspend operator fun invoke(favSongEntity: FavSongEntity) : Flow<ResultState<String>>{
+        return repository.deleteFavSong(favSongEntity = favSongEntity)
     }
 }

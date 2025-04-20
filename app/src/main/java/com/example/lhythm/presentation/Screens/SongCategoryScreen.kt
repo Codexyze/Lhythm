@@ -109,6 +109,24 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                 Text("Year")
                             }
                         }
+                        Box(modifier = Modifier.wrapContentSize().clickable{
+                            //here
+                            currentCategory.value = SongCategory.FAVSONG
+
+                        }){
+                            Column(modifier = Modifier.clickable{
+                                currentCategory.value = SongCategory.FAVSONG
+                                //here
+                            }, horizontalAlignment = Alignment.CenterHorizontally) {
+                                Image(
+                                    painter = painterResource(R.drawable.ascasset),
+                                    contentDescription = "Artist",
+                                    modifier = Modifier.size(60.dp)
+                                )
+                                Text("Favorite Song")
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
 
 
 
@@ -131,6 +149,9 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                 }
                 SongCategory.YEARASC -> {
                     GetSongsByYearASCScreen(navController = navController)
+                }
+                SongCategory.FAVSONG -> {
+
                 }
             }
         }
