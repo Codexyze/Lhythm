@@ -1,5 +1,6 @@
 package com.example.lhythm.presentation.Screens
 
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -30,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,6 +58,7 @@ import com.shashank.sony.fancytoastlib.FancyToast
 fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navController: NavController,
                           mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel()){
     val state = viewmodel.getAllSongsState.collectAsState()
+    val listOfPlayListUri = remember { mutableListOf<Uri>() }
 
     //
     val context = LocalContext.current
@@ -64,6 +67,7 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
     }else if(!state.value.error.isNullOrEmpty()){
         Text("Error Loading Sonhs")
     }else if(state.value.data.isNotEmpty()){
+
         LazyColumn(modifier = Modifier.background(color = BlackColor)) {
             items(state.value.data) { song ->
                 Box(modifier = Modifier.wrapContentSize().clickable{
@@ -80,11 +84,14 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
                         songYear = song.year,songPath= song.path,
                         songSize = song.size, album = song.album
                     , composer = song.composer)
+                    listOfPlayListUri.add(song.path.toUri())
+
                 }
 
             }
 
         }
+
     }else{
         Text("No Songs Found")
     }
@@ -256,7 +263,7 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                                         Text("Title : $songTitle")
                                         Text("Year : $songYear")
                                         Text("This $songTitle was published in year $songYear by $songArtist and composed by $composer." +
-                                                " It has a duration of $duration and is $songSize in size.")
+                                                " It has a duration of ${duration.value} and is $songSize in size.")
                                     }
                                 }
 

@@ -1,5 +1,6 @@
 package com.example.lhythm.presentation.Screens
 
+import android.net.Uri
 import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -48,10 +49,12 @@ import com.shashank.sony.fancytoastlib.FancyToast
 
 
 @Composable
-fun PlayListExample(navController: NavController,playListViewModel: PlayListViewModel= hiltViewModel()) {
+fun PlayListExample(navController: NavController,playListViewModel: PlayListViewModel= hiltViewModel()
+,mediaManagerViewModel: MediaManagerViewModel =hiltViewModel()) {
     LaunchedEffect(Unit) {
         playListViewModel.getSongsFromPlayList()
     }
+    var listOfSongs = remember { mutableListOf<Uri>() }//playlistplay setup
 
     val getAllSongsState = playListViewModel.getSongFromPlayListState.collectAsState()
 
@@ -62,9 +65,13 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
     }else{
 
             val list=getAllSongsState.value.data
+
             LazyColumn {
+
                 items(count = list.size) {int->
                     val listelementvalue=list[int]
+                    listOfSongs.add(listelementvalue.path.toUri())
+
                     EachPlayListItem(
                         id = listelementvalue.id,
                         path = listelementvalue.path,

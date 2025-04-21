@@ -70,6 +70,10 @@ fun getCurrentPosition() {
     }
 }
 
+    fun playPlayList(listOfSongsUri: List<Uri>) {
+        mediaMananger.playListPlay(listOfSongsUri)
+    }
+
 
 
 

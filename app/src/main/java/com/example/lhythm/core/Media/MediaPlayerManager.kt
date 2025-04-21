@@ -4,7 +4,9 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,7 +38,7 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
 
     fun releasePlayer() {
         exoPlayer?.apply {
-           this.stop()
+            this.stop()
             this.release()
         }
         exoPlayer = null
@@ -51,13 +53,14 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
         return exoPlayer?.duration
     }
 
-    fun getCurrentPosition():Float {
-      return  exoPlayer?.currentPosition!!.toFloat()
+    fun getCurrentPosition(): Float {
+        return exoPlayer?.currentPosition!!.toFloat()
     }
 
     fun seekTo(position: Long) {
         exoPlayer?.seekTo(position)
     }
+
     object MediaPlayerManager {
         private var mediaPlayer: MediaPlayer? = null
 
@@ -78,5 +81,34 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
         // Optional: add create/start functions too
     }
 
+    fun playListPlay(listOfSongsUri: List<Uri>) {
+        releasePlayer()
+        val mediaItemList = mutableListOf<MediaItem>()
+        for (uri in listOfSongsUri) {
+            val mediaItem = MediaItem.fromUri(uri.path!!.toUri())
+            mediaItemList.add(mediaItem)
+        }
+        exoPlayer = ExoPlayer.Builder(context).build().apply {
+            setMediaItems(mediaItemList)
+            prepare()
+            playWhenReady = true
 
+            addListener(object : Player.Listener {
+                override fun onPlaybackStateChanged(state: Int) {
+                    if (state == Player.STATE_ENDED) {
+                        Log.d("MediaPlayerManager", "Playlist ended.")
+                    }
+                }
+
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    val currentIndex = this@apply.currentMediaItemIndex
+                    Log.d("MediaPlayerManager", "Now playing index: $currentIndex")
+                }
+            })
+        }
+
+    }
 }
+
+
+ 
