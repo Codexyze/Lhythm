@@ -32,7 +32,13 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F),
     */
 )
+val darkColorPallete =darkColorScheme(
+   //here we can change the color pallete
+)
 
+val lightColorPallete = lightColorScheme(
+
+)
 @Composable
 fun LhythmTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -55,4 +61,18 @@ fun LhythmTheme(
         typography = Typography,
         content = content
     )
+}
+
+@Composable
+fun LhythmCustomTheme(
+    darktheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+){
+    val colourScheme = if(darktheme) darkColorPallete else lightColorPallete
+    MaterialTheme(
+        colorScheme = colourScheme,
+        typography = Typography,
+        content = content
+    )
+
 }

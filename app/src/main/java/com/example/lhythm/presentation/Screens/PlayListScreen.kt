@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,11 +19,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Lyrics
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,7 +58,9 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
     LaunchedEffect(Unit) {
         playListViewModel.getSongsFromPlayList()
     }
-    var listOfSongs = remember { mutableListOf<Uri>() }//playlistplay setup
+    val context =LocalContext.current
+    var listOfSongs = remember { mutableListOf<Uri>() }//playlist
+    val searchSong = rememberSaveable { mutableStateOf("") }
 
     val getAllSongsState = playListViewModel.getSongFromPlayListState.collectAsState()
 
@@ -65,8 +71,45 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
     }else{
 
             val list=getAllSongsState.value.data
+        Column(modifier = Modifier.fillMaxSize()) {
+            Row(modifier = Modifier.weight(0.10f), horizontalArrangement = Arrangement.Center) {
+                OutlinedTextField(
+                    value =searchSong.value ,
+                    onValueChange = {
+                        searchSong.value=it
+                    },
+                    label = {
+                        Text("Search Song")
+                    },
+                    modifier = Modifier.weight(0.85f)
+                )
+//  Play Song PlayList              Button(
+//                    onClick = {
+//                        if(listOfSongs.isNotEmpty()){
+//                            mediaManagerViewModel.playPlayList(listOfSongs)
+//                        }else{
+//                            FancyToast.makeText(
+//                                context, "No songs found in playlist",
+//                                FancyToast.LENGTH_SHORT,
+//                                FancyToast.ERROR, false
+//                            ).show()
+//                        }
+//
+//                    }
+//                ) {
+//                    Text("Play")
+//                }
 
-            LazyColumn {
+                IconButton(
+                    onClick = {
+
+                    },
+                    modifier = Modifier.weight(0.15f)
+                ) {
+                    Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+                }
+            }
+            LazyColumn(modifier = Modifier.weight(0.90f)) {
 
                 items(count = list.size) {int->
                     val listelementvalue=list[int]
@@ -87,6 +130,10 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
 
                 }
             }
+
+        }
+
+
 
 
     }
@@ -111,6 +158,7 @@ fun EachPlayListItem(
 ) {
     val lyrics=rememberSaveable { mutableStateOf("") }
     val showLyricsSavingDailog = rememberSaveable { mutableStateOf(false) }
+    val showLyricsDialogue = rememberSaveable { mutableStateOf(false) }
     val deletePlayListSongState = playListViewModel.getSongFromPlayListState.collectAsState()
     val context = LocalContext.current
     val insertState=playListViewModel.insertSongToPlaListState.collectAsState()
@@ -154,7 +202,12 @@ fun EachPlayListItem(
                            Text(year, maxLines = 1)
                        }
                        Row {
-                           Text(lyricsString)
+                           if(lyricsString== "Empty Lyrics"){
+                               Text(lyricsString)
+                           }else{
+
+                           }
+
                        }
                        Row {
                            Icon(
@@ -229,6 +282,12 @@ fun EachPlayListItem(
 
                                }
                            )
+                           Icon(
+                               imageVector = Icons.Filled.TextFields, contentDescription = "lyrics",
+                               modifier = Modifier.weight(1f).clickable{
+                                   showLyricsDialogue.value=true
+                               }
+                           )
                        }
                    }
 
@@ -299,6 +358,49 @@ fun EachPlayListItem(
 
                                    }
                                }
+                           }
+                       }
+                   )
+
+
+
+               }
+               if (showLyricsDialogue.value){
+                   AlertDialog(
+                       text = {
+                           LazyColumn(modifier = Modifier.padding(12.dp)) {
+                               item {
+                                   if(lyricsString=="Empty Lyrics"){
+                                       Text("No Lyrics Found")
+                                   }else{
+                                       Text(text = lyricsString)
+                                   }
+
+                               }
+                           }
+                       },
+                       onDismissRequest = {
+
+                           showLyricsDialogue.value=false
+
+
+                       },
+                       confirmButton = {
+                           Button(
+                               onClick = {
+
+                               }
+                           ) {
+
+                           }
+                       },
+                       dismissButton = {
+                           Button(
+                               onClick = {
+                                   showLyricsDialogue.value = false
+                               }
+                           ) {
+                               Text("Close")
                            }
                        }
                    )

@@ -1,6 +1,7 @@
 package com.example.lhythm.presentation.Screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -21,7 +21,6 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.lhythm.R
 import com.example.lhythm.ui.theme.BlackColor
-import com.example.lhythm.ui.theme.RedThemeSuit1
 
 @Preview(showBackground = true)
 @Composable
@@ -35,9 +34,10 @@ fun NoSongsFoundScreen() {
         iterations = LottieConstants.IterateForever
     )
     Column(modifier = Modifier.fillMaxSize().background(color = BlackColor),
-        horizontalAlignment = Alignment.CenterHorizontally) {
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center) {
         Spacer(modifier = Modifier.size(26.dp))
-        Text("No songs Found", fontSize = 48.sp, color = RedThemeSuit1)
+        Text("No songs Found")
         LottieAnimation(
             composition = composition,
             progress = {
@@ -45,9 +45,6 @@ fun NoSongsFoundScreen() {
             },
             modifier = Modifier.fillMaxWidth(0.9f)
         )
-
-
-
 
     }
 

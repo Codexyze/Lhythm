@@ -108,6 +108,33 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
         }
 
     }
+    fun playPlayListWithIndex(listOfSongsUri: List<Uri>,index: Int=0) {
+        releasePlayer()
+        val mediaItemList = mutableListOf<MediaItem>()
+        for (uri in listOfSongsUri) {
+            val mediaItem = MediaItem.fromUri(uri.path!!.toUri())
+            mediaItemList.add(mediaItem)
+        }
+        exoPlayer = ExoPlayer.Builder(context).build().apply {
+            setMediaItems(mediaItemList)
+            prepare()
+            playWhenReady = true
+
+            addListener(object : Player.Listener {
+                override fun onPlaybackStateChanged(state: Int) {
+                    if (state == Player.STATE_ENDED) {
+                        Log.d("MediaPlayerManager", "Playlist ended.")
+                    }
+                }
+
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    val currentIndex = this@apply.currentMediaItemIndex
+                    Log.d("MediaPlayerManager", "Now playing index: $currentIndex")
+                }
+            })
+        }
+
+    }
 }
 
 
