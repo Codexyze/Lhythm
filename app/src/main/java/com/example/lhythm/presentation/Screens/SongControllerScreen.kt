@@ -112,7 +112,8 @@ fun SongControllerScreen(
             }
         }
     }else{
-        NoSongsFoundScreen()
+      //  NoSongsFoundScreen()
+        NoSongPlaying()
     }
 
 
