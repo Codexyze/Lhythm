@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -60,6 +62,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                         painter = painterResource(R.drawable.ascasset),
                                         contentDescription = "ascending",
                                         modifier = Modifier.size(60.dp)
+                                            .clip(CircleShape)
                                     )
                                     Text("Asscending")
                                 }
@@ -74,7 +77,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                 Image(
                                     painter = painterResource(R.drawable.descasset),
                                     contentDescription = "decending",
-                                    modifier = Modifier.size(60.dp)
+                                    modifier = Modifier.size(60.dp) .clip(CircleShape)
                                 )
                                 Text("Descending")
                             }
@@ -89,7 +92,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                 Image(
                                     painter = painterResource(R.drawable.artistasset),
                                     contentDescription = "artist",
-                                    modifier = Modifier.size(60.dp)
+                                    modifier = Modifier.size(60.dp) .clip(CircleShape)
                                 )
                                 Text(".  Artist  .")
                             }
@@ -104,7 +107,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                 Image(
                                     painter = painterResource(R.drawable.yearaaset),
                                     contentDescription = ".   year   .",
-                                    modifier = Modifier.size(60.dp)
+                                    modifier = Modifier.size(60.dp) .clip(CircleShape)
                                 )
                                 Text("Year")
                             }
@@ -121,7 +124,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                 Image(
                                     painter = painterResource(R.drawable.favsongasset),
                                     contentDescription = "Artist",
-                                    modifier = Modifier.size(60.dp)
+                                    modifier = Modifier.size(60.dp) .clip(CircleShape)
                                 )
                                 Text("Favorite Song")
                             }

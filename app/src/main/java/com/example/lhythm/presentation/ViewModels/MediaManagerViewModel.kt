@@ -1,6 +1,9 @@
 package com.example.lhythm.presentation.ViewModels
 
+import android.content.Context
 import android.net.Uri
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.exoplayer.ExoPlayer
@@ -13,11 +16,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MediaManagerViewModel @Inject constructor(private val mediaMananger: MediaPlayerManager): ViewModel() {
+class MediaManagerViewModel @Inject constructor(private val mediaMananger: MediaPlayerManager, ): ViewModel() {
     private val _currentSongPositionState = MutableStateFlow<Float>(value = 0F)
     val currentSongPositionState =_currentSongPositionState.asStateFlow()
     private val _isplayingState = MutableStateFlow<Boolean>(value = false)
     val isplayingState =_isplayingState.asStateFlow()
+
 
    init {
       viewModelScope.launch {
@@ -27,6 +31,7 @@ class MediaManagerViewModel @Inject constructor(private val mediaMananger: Media
           }
 
       }
+
    }
 
     fun playMusic(uri: Uri){
@@ -72,6 +77,12 @@ fun getCurrentPosition() {
 
     fun playPlayList(listOfSongsUri: List<Uri>) {
         mediaMananger.playListPlay(listOfSongsUri)
+    }
+
+    fun playPlayListWithIndex(listOfSongsUri: List<Uri>,index: Int=0 ,context: Context) {
+        Toast.makeText(context, "Hello context test", Toast.LENGTH_SHORT).show()
+        mediaMananger.playPlayListWithIndex(listOfSongsUri,index)
+
     }
 
 

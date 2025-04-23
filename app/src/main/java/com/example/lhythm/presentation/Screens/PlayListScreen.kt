@@ -1,6 +1,7 @@
 package com.example.lhythm.presentation.Screens
 
 import android.net.Uri
+import android.util.Log
 import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -68,9 +69,15 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
         LoadingScreen()
     }else if(!getAllSongsState.value.error.isNullOrEmpty()){
         Text("Error loading songs ${getAllSongsState.value.error}")
-    }else{
-
-            val list=getAllSongsState.value.data
+    }else if(getAllSongsState.value.data==null){
+        Text("No songs found in playlist")
+    }
+    else{
+        if (getAllSongsState.value.data.isNotEmpty()) {
+            listOfSongs.addAll(getAllSongsState.value.data.map { it.path.toUri() })
+        }
+        var list=getAllSongsState.value.data
+        Log.d("PLAYLIST", "${listOfSongs.toString()}")
         Column(modifier = Modifier.fillMaxSize()) {
             Row(modifier = Modifier.weight(0.10f), horizontalArrangement = Arrangement.Center) {
                 OutlinedTextField(
@@ -113,7 +120,7 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
 
                 items(count = list.size) {int->
                     val listelementvalue=list[int]
-                    listOfSongs.add(listelementvalue.path.toUri())
+                   // listOfSongs.add(listelementvalue.path.toUri())
 
                     EachPlayListItem(
                         id = listelementvalue.id,
@@ -126,15 +133,18 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
                         title = listelementvalue.title.toString(),
                         year = listelementvalue.year.toString(),
                         lyricsString = listelementvalue.lyrics.toString(),
+                        playListUris=if (!listOfSongs.isNullOrEmpty()){
+                            listOfSongs
+                        }else{
+                            return@items
+                        },
+                        indexOfCurrentSong = int
                     )
 
                 }
             }
 
         }
-
-
-
 
     }
 
@@ -154,7 +164,10 @@ fun EachPlayListItem(
     lyricsString : String="",
     mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel(),
     playListViewModel: PlayListViewModel=hiltViewModel(),
-    favSongViewModel: FavSongViewModel= hiltViewModel()
+    favSongViewModel: FavSongViewModel= hiltViewModel(),
+    playListUris: List<Uri>,
+    indexOfCurrentSong:Int=0
+
 ) {
     val lyrics=rememberSaveable { mutableStateOf("") }
     val showLyricsSavingDailog = rememberSaveable { mutableStateOf(false) }
@@ -179,7 +192,22 @@ fun EachPlayListItem(
                        FancyToast.ERROR, false
                    ).show()
                }else{
-                   mediaPlayerViewModel.playMusic(path!!.toUri())
+
+                   //Play single song here ....
+                   //mediaPlayerViewModel.playMusic(path!!.toUri())
+                   if(!playListUris.isNullOrEmpty()){
+                      // mediaPlayerViewModel.playPlayList(listOfSongsUri = playListUris)
+                       mediaPlayerViewModel.playPlayListWithIndex(listOfSongsUri =playListUris,
+                           index = indexOfCurrentSong,
+                           context = context)
+                   }else{
+                       FancyToast.makeText(
+                           context, "Error Loading Song",
+                           FancyToast.LENGTH_SHORT,
+                           FancyToast.ERROR, false
+                       ).show()
+                   }
+
                }
            }, elevation = CardDefaults.elevatedCardElevation(8.dp)
            , shape = RoundedCornerShape(16.dp)
