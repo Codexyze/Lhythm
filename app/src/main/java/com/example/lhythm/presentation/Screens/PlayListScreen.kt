@@ -66,132 +66,112 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
     var listOfSongs = remember { mutableListOf<Uri>() }//playlist
     val searchSong = rememberSaveable { mutableStateOf("") }
     val searchSongState = playListViewModel.searchSongState.collectAsState()
-    val isSearching =rememberSaveable { mutableStateOf(false) }
+    val isSearching = rememberSaveable { mutableStateOf(false) }
 
     val getAllSongsState = playListViewModel.getSongFromPlayListState.collectAsState()
-
-    if (getAllSongsState.value.isLoading) {
-        LoadingScreen()
-    } else if (!getAllSongsState.value.error.isNullOrEmpty()) {
-        Text("Error loading songs ${getAllSongsState.value.error}")
-    } else if (getAllSongsState.value.data == null) {
-        Text("No songs found in playlist")
-    } else {
-        if (getAllSongsState.value.data.isNotEmpty()) {
-            listOfSongs.addAll(getAllSongsState.value.data.map { it.path.toUri() })
+    when {
+        getAllSongsState.value.isLoading -> {
+            LoadingScreen()
         }
-        var list = getAllSongsState.value.data
-        Log.d("PLAYLIST", "${listOfSongs.toString()}")
-        Column(modifier = Modifier.fillMaxSize()) {
-            Row(modifier = Modifier.weight(0.10f), horizontalArrangement = Arrangement.Center) {
-                OutlinedTextField(
-                    value = searchSong.value,
-                    onValueChange = {
-                        searchSong.value = it
-                    },
-                    label = {
-                        Text("Search Song")
-                    },
-                    modifier = Modifier.weight(0.85f)
-                )
 
-                IconButton(
-                    onClick = {
-                        playListViewModel.searchFromPlayList(searchSong.value)
-                        isSearching.value = true
-                        Log.d("SEARCHLOG", searchSongState.value.data.toString())
+        !getAllSongsState.value.error.isNullOrEmpty() -> {
+            Text("Error loading songs ${getAllSongsState.value.error}")
+        }
 
-                    },
-                    modifier = Modifier.weight(0.15f)
-                ) {
-                    Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
-                }
+        getAllSongsState.value.data == null -> {
+            Text("No songs found in playlist")
+        }
+
+        else -> {
+            if (getAllSongsState.value.data.isNotEmpty()) {
+                listOfSongs.addAll(getAllSongsState.value.data.map { it.path.toUri() })
             }
-            if(isSearching.value){
-                LazyColumn(modifier = Modifier.weight(0.90f)) {
-                    if (!searchSongState.value.data.isNullOrEmpty()) {
-                        items(searchSongState.value.data) { song ->
-                           EachItemFromSearchScreen(song = song)
-                        }
-                        item {
-                            Button(
-                                onClick = {
-                                    isSearching.value = false
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp)
-                            ) {
-                                Text("Go Back")
+            var list = getAllSongsState.value.data
+            Log.d("PLAYLIST", "${listOfSongs.toString()}")
+            Column(modifier = Modifier.fillMaxSize()) {
+                Row(modifier = Modifier.weight(0.10f), horizontalArrangement = Arrangement.Center) {
+                    OutlinedTextField(
+                        value = searchSong.value,
+                        onValueChange = {
+                            searchSong.value = it
+                        },
+                        label = {
+                            Text("Search Song")
+                        },
+                        modifier = Modifier.weight(0.85f)
+                    )
+
+                    IconButton(
+                        onClick = {
+                            playListViewModel.searchFromPlayList(searchSong.value)
+                            isSearching.value = true
+                            Log.d("SEARCHLOG", searchSongState.value.data.toString())
+
+                        },
+                        modifier = Modifier.weight(0.15f)
+                    ) {
+                        Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+                    }
+                }
+                if (isSearching.value) {
+                    LazyColumn(modifier = Modifier.weight(0.90f)) {
+                        if (!searchSongState.value.data.isNullOrEmpty()) {
+                            items(searchSongState.value.data) { song ->
+                                EachItemFromSearchScreen(song = song)
+                            }
+                            item {
+                                Button(
+                                    onClick = {
+                                        isSearching.value = false
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp)
+                                ) {
+                                    Text("Go Back")
+                                }
+                            }
+                        } else {
+                            item {
+                                Text("No results found")
                             }
                         }
-                    }else{
-                      item {
-                          Text("No results found")
-                      }
+
+                    }
+                } else {
+                    LazyColumn(modifier = Modifier.weight(0.90f)) {
+
+                        items(count = list.size) { int ->
+                            val listelementvalue = list[int]
+                            // listOfSongs.add(listelementvalue.path.toUri())
+
+                            EachPlayListItem(
+                                id = listelementvalue.id,
+                                path = listelementvalue.path,
+                                album = listelementvalue.album.toString(),
+                                artist = listelementvalue.artist.toString(),
+                                composer = listelementvalue.composer.toString(),
+                                duration = listelementvalue.duration.toString(),
+                                size = listelementvalue.size.toString(),
+                                title = listelementvalue.title.toString(),
+                                year = listelementvalue.year.toString(),
+                                lyricsString = listelementvalue.lyrics.toString(),
+                                playListUris = if (!listOfSongs.isNullOrEmpty()) {
+                                    listOfSongs
+                                } else {
+                                    return@items
+                                },
+                                indexOfCurrentSong = int
+                            )
+
+                        }
                     }
 
                 }
-            }else{
-                LazyColumn(modifier = Modifier.weight(0.90f)) {
-//                // ✅ Search Results First
-//                if (!searchSongState.value.data.isNullOrEmpty()) {
-//                    items(searchSongState.value.data) { song ->
-//                        Text(
-//                            text = "🔍 ${song.title}",
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(8.dp)
-//                        )
-//                    }
-//
-//                    item {
-//                        Divider(
-//                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-//                            thickness = 1.dp
-//                        )
-//                    }
-//                } else {
-
-
-                    items(count = list.size) { int ->
-                        val listelementvalue = list[int]
-                        // listOfSongs.add(listelementvalue.path.toUri())
-
-                        EachPlayListItem(
-                            id = listelementvalue.id,
-                            path = listelementvalue.path,
-                            album = listelementvalue.album.toString(),
-                            artist = listelementvalue.artist.toString(),
-                            composer = listelementvalue.composer.toString(),
-                            duration = listelementvalue.duration.toString(),
-                            size = listelementvalue.size.toString(),
-                            title = listelementvalue.title.toString(),
-                            year = listelementvalue.year.toString(),
-                            lyricsString = listelementvalue.lyrics.toString(),
-                            playListUris = if (!listOfSongs.isNullOrEmpty()) {
-                                listOfSongs
-                            } else {
-                                return@items
-                            },
-                            indexOfCurrentSong = int
-                        )
-
-                    }
-                }
-
             }
-
-
-
-
-
-            }
-
         }
-
     }
-//}
+}
 
 @Composable
 fun EachPlayListItem(
@@ -219,6 +199,8 @@ fun EachPlayListItem(
     val context = LocalContext.current
     val insertState=playListViewModel.insertSongToPlaListState.collectAsState()
     val addToFavState= favSongViewModel.inserOrUpdateFavState.collectAsState()
+
+
    if (insertState.value.isLoading || deletePlayListSongState.value.isLoading||addToFavState.value.isLoading){
        LoadingScreen()
    }else if(insertState.value.error!=null || deletePlayListSongState.value.error!=null||addToFavState.value.error!=null){
@@ -496,12 +478,13 @@ fun EachPlayListItem(
 }
 
 @Composable
-fun EachItemFromSearchScreen(song: SongEntity) {
+fun EachItemFromSearchScreen(song: SongEntity, mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel()) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
+               mediaPlayerViewModel.playMusic(song.path.toUri())
 
             }) {
         Column(modifier = Modifier.padding(8.dp)) {
@@ -562,7 +545,6 @@ fun EachItemFromSearchScreen(song: SongEntity) {
                         )
                     }
                 }
-
 
             }
         }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -22,11 +23,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -59,6 +63,8 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
                           mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel()){
     val state = viewmodel.getAllSongsState.collectAsState()
     val listOfPlayListUri = remember { mutableListOf<Uri>() }
+    val searchSong = rememberSaveable { mutableStateOf("") }
+    val isSearching = rememberSaveable { mutableStateOf(false) }
 
     //
     val context = LocalContext.current
@@ -70,69 +76,81 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
             LoadingScreen()
         }
         state.value.data.isNotEmpty()->{
-            LazyColumn(modifier = Modifier.background(color = BlackColor)) {
-                items(state.value.data) { song ->
-                    Box(modifier = Modifier.wrapContentSize().clickable{
-                        // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
-                        // mediaPlayerViewModel.playMusic(song.path.toUri())
-//                    val intent = Intent(context, MusicForeground::class.java)
-//                    context.startForegroundService(intent)
-                        // THEN, play music
-                        //   mediaPlayerViewModel.playMusic(song.path.toUri()) // <- use actual uri here
-                    }){
+            Column(modifier = Modifier.fillMaxSize()) {
+                Row(modifier = Modifier.weight(0.10f), horizontalArrangement = Arrangement.Center) {
+                    OutlinedTextField(
+                        value = searchSong.value,
+                        onValueChange = {
+                            searchSong.value = it
+                        },
+                        label = {
+                            Text("Search Song")
+                        },
+                        modifier = Modifier.weight(0.85f)
+                    )
+                    IconButton(
+                        onClick = {
+                            isSearching.value = true
 
-                        EachSongItemLook(songid = song.id, songTitle = song.title, songArtist = song.artist,
-                            songDuration = song.duration,
-                            songYear = song.year,songPath= song.path,
-                            songSize = song.size, album = song.album
-                            , composer = song.composer)
-                        listOfPlayListUri.add(song.path.toUri())
-
+                        }
+                    ) {
+                        Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
                     }
 
                 }
+                if(isSearching.value){
+                    if(!searchSong.value.isNullOrEmpty()) {
+                        val filterList = state.value.data.filter { song ->
+                            song.title?.contains(searchSong.value, ignoreCase = true) == true
+                        }
+
+                        LazyColumn (modifier = Modifier.weight(0.90F)){
+                           items(filterList){songsFiltered->
+                               EachSongItemLook(songid = songsFiltered.id, songTitle = songsFiltered.title,
+                                   songArtist = songsFiltered.artist,
+                                   songDuration = songsFiltered.duration,
+                                   songYear = songsFiltered.year,songPath= songsFiltered.path,
+                                   songSize = songsFiltered.size, album = songsFiltered.album
+                                   , composer = songsFiltered.composer)
+                               listOfPlayListUri.add(songsFiltered.path.toUri())
+                           }
+                        }
+                    }
+
+
+                }else{
+                    LazyColumn(modifier = Modifier.background(color = BlackColor).weight(0.90f)) {
+                        items(state.value.data) { song ->
+                            Box(modifier = Modifier.wrapContentSize().clickable{
+                                // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
+                                // mediaPlayerViewModel.playMusic(song.path.toUri())
+//                    val intent = Intent(context, MusicForeground::class.java)
+//                    context.startForegroundService(intent)
+                                // THEN, play music
+                                //   mediaPlayerViewModel.playMusic(song.path.toUri()) // <- use actual uri here
+                            }){
+
+                                EachSongItemLook(songid = song.id, songTitle = song.title, songArtist = song.artist,
+                                    songDuration = song.duration,
+                                    songYear = song.year,songPath= song.path,
+                                    songSize = song.size, album = song.album
+                                    , composer = song.composer)
+                                listOfPlayListUri.add(song.path.toUri())
+
+                            }
+
+                        }
+
+                    }
+                }
 
             }
+
         }else->{
             Text("No Songs Found")
         }
 
     }
-    // with if else handeling
-//    if(state.value.isLoading){
-//        LoadingScreen()
-//    }else if(!state.value.error.isNullOrEmpty()){
-//        Text("Error Loading Sonhs")
-//    }else if(state.value.data.isNotEmpty()){
-//
-//        LazyColumn(modifier = Modifier.background(color = BlackColor)) {
-//            items(state.value.data) { song ->
-//                Box(modifier = Modifier.wrapContentSize().clickable{
-//                    // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
-//                   // mediaPlayerViewModel.playMusic(song.path.toUri())
-////                    val intent = Intent(context, MusicForeground::class.java)
-////                    context.startForegroundService(intent)
-//                    // THEN, play music
-//                 //   mediaPlayerViewModel.playMusic(song.path.toUri()) // <- use actual uri here
-//                }){
-//
-//                    EachSongItemLook(songid = song.id, songTitle = song.title, songArtist = song.artist,
-//                        songDuration = song.duration,
-//                        songYear = song.year,songPath= song.path,
-//                        songSize = song.size, album = song.album
-//                    , composer = song.composer)
-//                    listOfPlayListUri.add(song.path.toUri())
-//
-//                }
-//
-//            }
-//
-//        }
-//
-//    }else{
-//        Text("No Songs Found")
-//    }
-
 }
 
 @Composable
