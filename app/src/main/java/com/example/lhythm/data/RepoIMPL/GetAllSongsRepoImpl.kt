@@ -22,7 +22,8 @@ class GetAllSongsRepoImpl @Inject constructor(private val context: Context): Get
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.YEAR,
-            MediaStore.Audio.Media.COMPOSER
+            MediaStore.Audio.Media.COMPOSER,
+            MediaStore.Audio.Media.ALBUM_ID
 
         )
         val contentResolver = context.contentResolver
@@ -41,6 +42,7 @@ class GetAllSongsRepoImpl @Inject constructor(private val context: Context): Get
                     val duration = cursorelement.getString(6)
                     val year = cursorelement.getString(7)
                     val composer = cursorelement.getString(8)
+                    val albumID = cursorelement.getString(9)
                     val song = Song(
                         id=id,
                         path = path,
@@ -50,7 +52,8 @@ class GetAllSongsRepoImpl @Inject constructor(private val context: Context): Get
                         artist = artist,
                         duration = duration,
                         year = year,
-                        composer = composer
+                        composer = composer,
+                        albumId = albumID
                     )
                     songs.add(song)
                 }

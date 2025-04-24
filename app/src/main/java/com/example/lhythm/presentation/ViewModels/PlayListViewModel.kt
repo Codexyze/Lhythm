@@ -35,6 +35,9 @@ class PlayListViewModel @Inject constructor(
     val deleteSongFromPlayListState = _deleteSongFromPlayListState.asStateFlow()
     private val _searchSongState = MutableStateFlow(SearchPlayListSongState())
     val searchSongState = _searchSongState.asStateFlow()
+    init {
+        getSongsFromPlayList()
+    }
 
 
     fun getSongsFromPlayList(){

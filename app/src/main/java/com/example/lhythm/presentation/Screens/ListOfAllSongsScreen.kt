@@ -1,5 +1,6 @@
 package com.example.lhythm.presentation.Screens
 
+import android.content.ContentUris
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -48,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import com.example.lhythm.R
 import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.SongEntity
@@ -137,7 +139,7 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
                                     songDuration = song.duration,
                                     songYear = song.year,songPath= song.path,
                                     songSize = song.size, album = song.album
-                                    , composer = song.composer)
+                                    , composer = song.composer, albumID = song.albumId)
                                 listOfPlayListUri.add(song.path.toUri())
 
                             }
@@ -164,6 +166,7 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                      songSize: String?="",
                      album: String?="Unknown",
                      composer: String?="Unknown",
+                     albumID: String?=null,
                      playListViewModel: PlayListViewModel=hiltViewModel(),
                      mediaManagerViewModel: MediaManagerViewModel=hiltViewModel(),
                      favSongViewModel: FavSongViewModel=hiltViewModel()) {
@@ -172,16 +175,12 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
         val inserToPlayListState = playListViewModel.insertSongToPlaListState.collectAsState()
          val insertOrUpdateFavSongState =favSongViewModel.inserOrUpdateFavState.collectAsState()
          val getAllPlayListSongs =  playListViewModel.getSongFromPlayListState.collectAsState()
+         val favSongsState = favSongViewModel.getAllFavSongState.collectAsState()
         val  duration = rememberSaveable{ mutableStateOf("0") }
         LaunchedEffect(getAllPlayListSongs.value.data) {
-        playListViewModel.getSongsFromPlayList()
+            playListViewModel.getSongsFromPlayList()
+            favSongViewModel.getAllFavSong()
         }
-    when{
-        getAllPlayListSongs.value.isLoading || insertOrUpdateFavSongState.value.isLoading->{
-            LoadingScreen()
-        }
-
-    }
 
 
         Card (modifier = Modifier.fillMaxWidth().padding(8.dp).clickable{
@@ -202,11 +201,36 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
             Column(modifier = Modifier.padding(8.dp)) {
 
                 Row (modifier = Modifier.padding(5.dp)){
-                    Image(
-                        painter = painterResource(R.drawable.lythmlogoasset),
-                        contentDescription = "Logo",
-                        modifier = Modifier.weight(0.25f)
-                    )
+                    val songUri = if(albumID==null){
+                      null
+                    }else{
+                        ContentUris.withAppendedId(
+                            Uri.parse("content://media/external/audio/albumart"),
+                            albumID.toLong()
+                        )
+                    }
+                    if(songUri!=null) {
+                        AsyncImage(
+                            model = songUri,
+                            contentDescription = "AlbumArt",
+                            modifier = Modifier
+                                .weight(0.25f),
+                            placeholder = painterResource(R.drawable.lythmlogoasset)
+                        )
+                    }else{
+                        Image(
+                            painter = painterResource(R.drawable.lythmlogoasset),
+                            contentDescription = "Logo",
+                            modifier = Modifier.weight(0.25f)
+                        )
+                    }
+
+
+//                    Image(
+//                        painter = painterResource(R.drawable.lythmlogoasset),
+//                        contentDescription = "Logo",
+//                        modifier = Modifier.weight(0.25f)
+//                    )
                     Spacer(modifier = Modifier.width(20.dp))
                     Column(modifier = Modifier.weight(0.75f)) {
                         Row {
