@@ -212,6 +212,7 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                     if(songUri!=null) {
                         AsyncImage(
                             model = songUri,
+                            error = painterResource(R.drawable.noalbumimgasset),
                             contentDescription = "AlbumArt",
                             modifier = Modifier
                                 .weight(0.25f),
@@ -219,7 +220,7 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                         )
                     }else{
                         Image(
-                            painter = painterResource(R.drawable.lythmlogoasset),
+                            painter = painterResource(R.drawable.noalbumimgasset),
                             contentDescription = "Logo",
                             modifier = Modifier.weight(0.25f)
                         )

@@ -24,7 +24,8 @@ class GetCategoryRepoImpl @Inject constructor(private val context: Context): Get
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.YEAR,
-            MediaStore.Audio.Media.COMPOSER
+            MediaStore.Audio.Media.COMPOSER,
+            MediaStore.Audio.Media.ALBUM_ID
         )
         val selection = "${MediaStore.Audio.Media.IS_MUSIC}!=0"
         val sortingOrder ="${MediaStore.Audio.Media.TITLE} ASC"
@@ -41,6 +42,7 @@ class GetCategoryRepoImpl @Inject constructor(private val context: Context): Get
                      val duration = cursorelement.getString(6)
                      val year = cursorelement.getString(7)
                      val composer = cursorelement.getString(8)
+                     val albumID= cursorelement.getString(9)
                      val song = Song(
                          id=id,
                          path = path,
@@ -50,7 +52,8 @@ class GetCategoryRepoImpl @Inject constructor(private val context: Context): Get
                          artist = artist,
                          duration = duration,
                          year = year,
-                         composer = composer
+                         composer = composer,
+                         albumId = albumID
                      )
                      listOfASCsongs.add(song)
                  }
@@ -81,7 +84,8 @@ class GetCategoryRepoImpl @Inject constructor(private val context: Context): Get
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.YEAR,
-            MediaStore.Audio.Media.COMPOSER
+            MediaStore.Audio.Media.COMPOSER,
+            MediaStore.Audio.Media.ALBUM_ID
         )
         val sortingOrder = "${MediaStore.Audio.Media.TITLE} DESC"
         val cursor = contentResolver.query(uri,projection,selection,null,sortingOrder)
@@ -97,6 +101,7 @@ class GetCategoryRepoImpl @Inject constructor(private val context: Context): Get
                   val duration = cursorelement.getString(6)
                   val year = cursorelement.getString(7)
                   val composer = cursorelement.getString(8)
+                  val albumID= cursorelement.getString(9)
                   val song = Song(
                       id=id,
                       path = path,
@@ -106,7 +111,8 @@ class GetCategoryRepoImpl @Inject constructor(private val context: Context): Get
                       artist = artist,
                       duration = duration,
                       year = year,
-                      composer = composer
+                      composer = composer,
+                      albumId = albumID
                   )
                   listOfASCsongs.add(song)
               }
@@ -133,7 +139,8 @@ class GetCategoryRepoImpl @Inject constructor(private val context: Context): Get
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.YEAR,
-            MediaStore.Audio.Media.COMPOSER
+            MediaStore.Audio.Media.COMPOSER,
+            MediaStore.Audio.Media.ALBUM_ID
         )
         val selection= "${MediaStore.Audio.Media.IS_MUSIC}!=0"
         val sortOrder ="${MediaStore.Audio.Media.ARTIST} ASC"
@@ -150,6 +157,7 @@ class GetCategoryRepoImpl @Inject constructor(private val context: Context): Get
                     val duration = cursorelement.getString(6)
                     val year = cursorelement.getString(7)
                     val composer = cursorelement.getString(8)
+                    val albumID= cursorelement.getString(9)
                     val song = Song(
                         id=id,
                         path = path,
@@ -159,7 +167,8 @@ class GetCategoryRepoImpl @Inject constructor(private val context: Context): Get
                         artist = artist,
                         duration = duration,
                         year = year,
-                        composer = composer
+                        composer = composer,
+                        albumId = albumID
                     )
                     listOfSongsByArtist.add(song)
                 }
@@ -185,7 +194,8 @@ class GetCategoryRepoImpl @Inject constructor(private val context: Context): Get
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.YEAR,
-            MediaStore.Audio.Media.COMPOSER
+            MediaStore.Audio.Media.COMPOSER,
+            MediaStore.Audio.Media.ALBUM_ID
         )
         val selection= "${MediaStore.Audio.Media.IS_MUSIC}!=0"
         val sortOrder ="${MediaStore.Audio.Media.YEAR} ASC"
@@ -202,6 +212,7 @@ class GetCategoryRepoImpl @Inject constructor(private val context: Context): Get
                     val duration = cursorelement.getString(6)
                     val year = cursorelement.getString(7)
                     val composer = cursorelement.getString(8)
+                    val albumID= cursorelement.getString(9)
                     val song = Song(
                         id=id,
                         path = path,
@@ -211,7 +222,8 @@ class GetCategoryRepoImpl @Inject constructor(private val context: Context): Get
                         artist = artist,
                         duration = duration,
                         year = year,
-                        composer = composer
+                        composer = composer,
+                        albumId = albumID
                     )
                     listOfSongsByYearASC.add(song)
                 }
