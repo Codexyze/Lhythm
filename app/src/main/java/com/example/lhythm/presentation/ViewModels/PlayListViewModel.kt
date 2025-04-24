@@ -8,9 +8,11 @@ import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.domain.StateHandeling.DeleteSongFromPlayListState
 import com.example.lhythm.domain.StateHandeling.GetSongsFromPlayListState
 import com.example.lhythm.domain.StateHandeling.InsertSongsToPlayListState
+import com.example.lhythm.domain.StateHandeling.SearchPlayListSongState
 import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetSongsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
+import com.example.lhythm.domain.Usecases.SearchFromPlayListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +24,8 @@ import javax.inject.Inject
 class PlayListViewModel @Inject constructor(
     private val getSongsFromPlayListUseCase: GetSongsFromPlayListUseCase,
     private val insertSongToPlayListUseCase: InsertSongToPlayListUseCase,
-    private val deleteSongFromPlayListUseCase: DeleteClickedPlayListUseCase
+    private val deleteSongFromPlayListUseCase: DeleteClickedPlayListUseCase,
+    private val searchSongUseCase:SearchFromPlayListUseCase
 )  : ViewModel() {
     private val _getSongFromPlayListState = MutableStateFlow(GetSongsFromPlayListState())
     val getSongFromPlayListState = _getSongFromPlayListState.asStateFlow()
@@ -30,6 +33,8 @@ class PlayListViewModel @Inject constructor(
     val insertSongToPlaListState = _insertSongToPlaListState.asStateFlow()
     private val _deleteSongFromPlayListState = MutableStateFlow(DeleteSongFromPlayListState())
     val deleteSongFromPlayListState = _deleteSongFromPlayListState.asStateFlow()
+    private val _searchSongState = MutableStateFlow(SearchPlayListSongState())
+    val searchSongState = _searchSongState.asStateFlow()
 
 
     fun getSongsFromPlayList(){
@@ -92,6 +97,25 @@ class PlayListViewModel @Inject constructor(
                     }
                 }
 
+            }
+        }
+    }
+
+    fun searchFromPlayList(query: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            searchSongUseCase.invoke(query = query).collect {result->
+                when(result){
+                    is ResultState.Loading->{
+                        _searchSongState.value = SearchPlayListSongState(isLoading = true)
+                    }
+                    is ResultState.Success->{
+                        _searchSongState.value = SearchPlayListSongState(isLoading = false, data = result.data)
+                    }
+                    is ResultState.Error->{
+                        _searchSongState.value = SearchPlayListSongState(isLoading = false, error = result.message)
+                    }
+
+                }
             }
         }
     }

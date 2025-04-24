@@ -69,3 +69,9 @@ data class DeleteFavSongState(
     val data: String= "",
     val error: String ? = null
 )
+
+data class SearchPlayListSongState(
+    val isLoading: Boolean = false,
+    val data: List<SongEntity> = emptyList(),
+    val error: String ? = null
+)

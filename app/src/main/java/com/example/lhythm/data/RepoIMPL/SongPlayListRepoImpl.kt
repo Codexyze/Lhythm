@@ -44,4 +44,15 @@ class SongPlayListRepoImpl @Inject constructor(private val dataBase: SongPlayLis
             emit(ResultState.Error(e.message.toString()))
         }
     }
+
+    override suspend fun searchFromPlaylist(query: String): Flow<ResultState<List<SongEntity>>> =flow{
+        emit(ResultState.Loading)
+        try {
+           val searchdata = dataBase.SongPlayListDao().searchFromPlaylist(query = query)
+            emit(ResultState.Success(searchdata))
+
+        }catch (e: Exception){
+            emit(ResultState.Error(e.message.toString()))
+        }
+    }
 }

@@ -62,39 +62,76 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
 
     //
     val context = LocalContext.current
-    if(state.value.isLoading){
-        LoadingScreen()
-    }else if(!state.value.error.isNullOrEmpty()){
-        Text("Error Loading Sonhs")
-    }else if(state.value.data.isNotEmpty()){
-
-        LazyColumn(modifier = Modifier.background(color = BlackColor)) {
-            items(state.value.data) { song ->
-                Box(modifier = Modifier.wrapContentSize().clickable{
-                    // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
-                   // mediaPlayerViewModel.playMusic(song.path.toUri())
+    when{
+        !state.value.error.isNullOrEmpty() ->{
+            Text(text = state.value.error.toString())
+        }
+        state.value.isLoading->{
+            LoadingScreen()
+        }
+        state.value.data.isNotEmpty()->{
+            LazyColumn(modifier = Modifier.background(color = BlackColor)) {
+                items(state.value.data) { song ->
+                    Box(modifier = Modifier.wrapContentSize().clickable{
+                        // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
+                        // mediaPlayerViewModel.playMusic(song.path.toUri())
 //                    val intent = Intent(context, MusicForeground::class.java)
 //                    context.startForegroundService(intent)
-                    // THEN, play music
-                 //   mediaPlayerViewModel.playMusic(song.path.toUri()) // <- use actual uri here
-                }){
+                        // THEN, play music
+                        //   mediaPlayerViewModel.playMusic(song.path.toUri()) // <- use actual uri here
+                    }){
 
-                    EachSongItemLook(songid = song.id, songTitle = song.title, songArtist = song.artist,
-                        songDuration = song.duration,
-                        songYear = song.year,songPath= song.path,
-                        songSize = song.size, album = song.album
-                    , composer = song.composer)
-                    listOfPlayListUri.add(song.path.toUri())
+                        EachSongItemLook(songid = song.id, songTitle = song.title, songArtist = song.artist,
+                            songDuration = song.duration,
+                            songYear = song.year,songPath= song.path,
+                            songSize = song.size, album = song.album
+                            , composer = song.composer)
+                        listOfPlayListUri.add(song.path.toUri())
+
+                    }
 
                 }
 
             }
-
+        }else->{
+            Text("No Songs Found")
         }
 
-    }else{
-        Text("No Songs Found")
     }
+    // with if else handeling
+//    if(state.value.isLoading){
+//        LoadingScreen()
+//    }else if(!state.value.error.isNullOrEmpty()){
+//        Text("Error Loading Sonhs")
+//    }else if(state.value.data.isNotEmpty()){
+//
+//        LazyColumn(modifier = Modifier.background(color = BlackColor)) {
+//            items(state.value.data) { song ->
+//                Box(modifier = Modifier.wrapContentSize().clickable{
+//                    // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
+//                   // mediaPlayerViewModel.playMusic(song.path.toUri())
+////                    val intent = Intent(context, MusicForeground::class.java)
+////                    context.startForegroundService(intent)
+//                    // THEN, play music
+//                 //   mediaPlayerViewModel.playMusic(song.path.toUri()) // <- use actual uri here
+//                }){
+//
+//                    EachSongItemLook(songid = song.id, songTitle = song.title, songArtist = song.artist,
+//                        songDuration = song.duration,
+//                        songYear = song.year,songPath= song.path,
+//                        songSize = song.size, album = song.album
+//                    , composer = song.composer)
+//                    listOfPlayListUri.add(song.path.toUri())
+//
+//                }
+//
+//            }
+//
+//        }
+//
+//    }else{
+//        Text("No Songs Found")
+//    }
 
 }
 

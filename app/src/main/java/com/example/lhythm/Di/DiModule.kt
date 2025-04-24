@@ -22,6 +22,7 @@ import com.example.lhythm.domain.Usecases.GetSongDESCUsecase
 import com.example.lhythm.domain.Usecases.GetSongsByArtistUseCase
 import com.example.lhythm.domain.Usecases.GetSongsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
+import com.example.lhythm.domain.Usecases.SearchFromPlayListUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -107,6 +108,11 @@ object DiModule {
     @Provides
     fun provideFavSongInterfaceObj(@ApplicationContext context: Context): FavSongRepository{
         return FavSongRepoImpl(dataBase = provideDataBaseBuilderObj(context = context))
+    }
+
+    @Provides
+    fun SearchFromPlayListUseCaseObj(@ApplicationContext context: Context):SearchFromPlayListUseCase{
+       return SearchFromPlayListUseCase(repository = SongPlayListRepoInterfaceObj(context = context))
     }
 
 }
