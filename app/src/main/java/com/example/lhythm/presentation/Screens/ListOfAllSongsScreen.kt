@@ -2,6 +2,8 @@ package com.example.lhythm.presentation.Screens
 
 import android.net.Uri
 import android.os.Build
+import android.util.Log
+import android.widget.Spinner
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,6 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -168,8 +171,18 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
          val showDialogueBox = rememberSaveable { mutableStateOf(false) }
         val inserToPlayListState = playListViewModel.insertSongToPlaListState.collectAsState()
          val insertOrUpdateFavSongState =favSongViewModel.inserOrUpdateFavState.collectAsState()
-
+         val getAllPlayListSongs =  playListViewModel.getSongFromPlayListState.collectAsState()
         val  duration = rememberSaveable{ mutableStateOf("0") }
+        LaunchedEffect(getAllPlayListSongs.value.data) {
+        playListViewModel.getSongsFromPlayList()
+        }
+    when{
+        getAllPlayListSongs.value.isLoading || insertOrUpdateFavSongState.value.isLoading->{
+            LoadingScreen()
+        }
+
+    }
+
 
         Card (modifier = Modifier.fillMaxWidth().padding(8.dp).clickable{
             if (songPath.isNullOrEmpty()){
@@ -223,6 +236,8 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                             )
                             Icon(imageVector = Icons.Filled.Add, contentDescription = "Add to playlist",
                                 modifier = Modifier.weight(1f).clickable{
+                                    val data = getAllPlayListSongs.value.data
+                                    //check if exists
                                     val songEntity= SongEntity(
                                         path = songPath.toString(),
                                         album = album,
@@ -233,8 +248,19 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                                         title = songTitle,
                                         year = songYear,
                                     )
-                                    playListViewModel.insertSongToPlayList(songEntity = songEntity)
-
+                                    val doesExist: Boolean =data.any {
+                                        it.title== songEntity.title
+                                    }
+                                    Log.d("DOESEXIST", "$doesExist")
+                                    if(doesExist){
+                                        FancyToast.makeText(
+                                            context, "Song Already Exists",
+                                            FancyToast.LENGTH_SHORT,
+                                            FancyToast.WARNING, false
+                                        ).show()
+                                    }else{
+                                        playListViewModel.insertSongToPlayList(songEntity = songEntity)
+                                    }
                                 }
                             )
                             Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Favorite",
@@ -330,4 +356,4 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
 
             }
         }
-    }
+ }
