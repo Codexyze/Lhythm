@@ -17,5 +17,6 @@ data class FavSongEntity(
     val year: String?="0",
     val composer: String?="Unknown",
     val albumId: String?="",
-    val lyrics: String?="Empty Lyrics"
+    val lyrics: String?="Empty Lyrics",
+    val imagePersonal : String?=""
 )
