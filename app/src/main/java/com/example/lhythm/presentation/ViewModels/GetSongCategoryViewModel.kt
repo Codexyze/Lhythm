@@ -3,6 +3,7 @@ package com.example.lhythm.presentation.ViewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lhythm.core.StateHandeling.ResultState
+import com.example.lhythm.domain.StateHandeling.GetAllComposerSongASCState
 import com.example.lhythm.domain.Usecases.GetByYearASCUseCase
 import com.example.lhythm.domain.Usecases.GetSongCategoryUseCase
 import com.example.lhythm.domain.Usecases.GetSongDESCUsecase
@@ -11,6 +12,7 @@ import com.example.lhythm.domain.StateHandeling.GetAllSongsByArtistState
 import com.example.lhythm.domain.StateHandeling.GetAllSongsByYearASCState
 import com.example.lhythm.domain.StateHandeling.GetAllSongsInASCState
 import com.example.lhythm.domain.StateHandeling.GetAllSongsInDSCState
+import com.example.lhythm.domain.Usecases.GetAllSongComposerASCUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +24,8 @@ import javax.inject.Inject
 class GetSongCategoryViewModel @Inject constructor(private val getSongCategoryUseCase: GetSongCategoryUseCase,
     private val getSongDESCUsecase: GetSongDESCUsecase,
     private  val getSongsByArtistUseCase: GetSongsByArtistUseCase,
-    private val getSongsByYearASCUsecase: GetByYearASCUseCase): ViewModel() {
+    private val getSongsByYearASCUsecase: GetByYearASCUseCase,
+    private val getAllSongComposerASCUseCase: GetAllSongComposerASCUseCase): ViewModel() {
     private  val _songsInASCOrderState = MutableStateFlow(GetAllSongsInASCState())
     val songsInASCOrderState =_songsInASCOrderState.asStateFlow()
     private  val _songsInDSCOrderState = MutableStateFlow(GetAllSongsInDSCState())
@@ -31,6 +34,8 @@ class GetSongCategoryViewModel @Inject constructor(private val getSongCategoryUs
     val getAllSongsByArtist = _getAllSongsByArtist.asStateFlow()
     private val _getSongsByYearASCState = MutableStateFlow(GetAllSongsByYearASCState())
     val getSongsByYearASCState = _getSongsByYearASCState.asStateFlow()
+    private val _getSongByComposerASCState = MutableStateFlow(GetAllComposerSongASCState())
+    val getSongByComposerASCState = _getSongByComposerASCState.asStateFlow()
 
     init {
         getAllSongsInASC()
@@ -44,6 +49,9 @@ class GetSongCategoryViewModel @Inject constructor(private val getSongCategoryUs
     }
     init {
         getSongsByYearASC()
+    }
+    init {
+        getSongByComposerASC()
     }
     fun getAllSongsInASC(){
         viewModelScope.launch(Dispatchers.IO) {
@@ -121,6 +129,32 @@ class GetSongCategoryViewModel @Inject constructor(private val getSongCategoryUs
 
         }
 
+    }
+
+    fun getSongByComposerASC(){
+        viewModelScope.launch (Dispatchers.IO){
+            getAllSongComposerASCUseCase.invoke().collect {result->
+                when(result){
+                    is ResultState.Success->{
+                        _getSongByComposerASCState.value = GetAllComposerSongASCState(
+                            isLoading = false, data = result.data
+                        )
+                    }
+                    is ResultState.Loading->{
+                        _getSongByComposerASCState.value = GetAllComposerSongASCState(
+                            isLoading = true
+                        )
+                    }
+                    is ResultState.Error->{
+                        _getSongByComposerASCState.value = GetAllComposerSongASCState(
+                            isLoading = false,
+                            error = result.message
+                        )
+                    }
+                }
+
+            }
+        }
     }
 
 }

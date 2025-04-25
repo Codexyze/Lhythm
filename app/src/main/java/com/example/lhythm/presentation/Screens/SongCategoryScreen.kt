@@ -109,7 +109,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                     contentDescription = ".   year   .",
                                     modifier = Modifier.size(60.dp) .clip(CircleShape)
                                 )
-                                Text("Year")
+                                Text("  Year  ")
                             }
                         }
                         Box(modifier = Modifier.wrapContentSize().clickable{
@@ -123,16 +123,29 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                             }, horizontalAlignment = Alignment.CenterHorizontally) {
                                 Image(
                                     painter = painterResource(R.drawable.favsongasset),
-                                    contentDescription = "Artist",
+                                    contentDescription = "fAvSong",
                                     modifier = Modifier.size(60.dp) .clip(CircleShape)
                                 )
-                                Text("Favorite Song")
+                                Text(" Favorite")
                             }
                         }
                         Spacer(modifier = Modifier.width(16.dp))
-
-
-
+                        Box(modifier = Modifier.wrapContentSize().clickable{
+                            currentCategory.value = SongCategory.ASCENDING
+                        }){
+                            Column(modifier = Modifier.clickable{
+                                currentCategory.value = SongCategory.COMPOSER
+                            }, horizontalAlignment = Alignment.CenterHorizontally) {
+                                Image(
+                                    painter = painterResource(R.drawable.composerasset),
+                                    contentDescription = "composer",
+                                    modifier = Modifier.size(60.dp)
+                                        .clip(CircleShape)
+                                )
+                                Text("Composer")
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
 
                     }
 
@@ -156,6 +169,9 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                 SongCategory.FAVSONG -> {
                     FavSongScreen()
 
+                }
+                SongCategory.COMPOSER -> {
+                    ComposerCategory(navController = navController)
                 }
             }
         }

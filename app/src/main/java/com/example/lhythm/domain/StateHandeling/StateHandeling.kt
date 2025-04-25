@@ -75,3 +75,10 @@ data class SearchPlayListSongState(
     val data: List<SongEntity> = emptyList(),
     val error: String ? = null
 )
+
+data class GetAllComposerSongASCState(
+    val  isLoading: Boolean = false,
+    val data: List<Song> = emptyList(),
+    val error: String ? = null
+
+)
