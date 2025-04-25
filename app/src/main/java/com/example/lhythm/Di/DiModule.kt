@@ -15,6 +15,7 @@ import com.example.lhythm.domain.Repository.GetAllSongRepository
 import com.example.lhythm.domain.Repository.GetCategoryRepository
 import com.example.lhythm.domain.Repository.SongPlayListRepository
 import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
+import com.example.lhythm.domain.Usecases.GetAllSongComposerASCUseCase
 import com.example.lhythm.domain.Usecases.GetAllSongUseCase
 import com.example.lhythm.domain.Usecases.GetByYearASCUseCase
 import com.example.lhythm.domain.Usecases.GetSongCategoryUseCase
@@ -114,5 +115,10 @@ object DiModule {
     fun SearchFromPlayListUseCaseObj(@ApplicationContext context: Context):SearchFromPlayListUseCase{
        return SearchFromPlayListUseCase(repository = SongPlayListRepoInterfaceObj(context = context))
     }
+
+   @Provides
+   fun GetAllSongsByComposerAscObjUseCase(@ApplicationContext context: Context): GetAllSongComposerASCUseCase{
+       return GetAllSongComposerASCUseCase(getCategoryRepository = GetCategoryRepoImpl(context = context))
+   }
 
 }

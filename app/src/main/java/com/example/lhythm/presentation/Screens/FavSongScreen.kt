@@ -43,83 +43,72 @@ fun FavSongScreen(favSongsViewModel: FavSongViewModel = hiltViewModel(),mediaMan
         favSongsViewModel.getAllFavSong()
     }
     val favSongsState = favSongsViewModel.getAllFavSongState.collectAsState()
+    when{
+        favSongsState.value.isLoading->{
+            LoadingScreen()
+        }
+        !favSongsState.value.error.isNullOrEmpty()||!delFavSongState.value.error.isNullOrEmpty()->{
+            NoSongsFoundScreen()
+        }
+        favSongsState.value.data.isNullOrEmpty()->{
+            NoSongsFoundScreen()
+        }
+        !favSongsState.value.data.isNullOrEmpty()|| delFavSongState.value.data!=null->{
+            LazyColumn(modifier = Modifier.fillMaxSize()){
+                items(favSongsState.value.data) {favSong->
+                    // EachFavItem(favSong = favSongs)
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .clickable {
+                                mediaManagerViewModel.playMusic(favSong.path.toUri())
 
-    if(favSongsState.value.isLoading ){
-        LoadingScreen()
-    }else if(!favSongsState.value.error.isNullOrEmpty()||!delFavSongState.value.error.isNullOrEmpty()){
-        //Error Screen here
-    }else if(favSongsState.value.data.isEmpty()){
-        NoSongsFoundScreen()
-    }else if(!favSongsState.value.data.isNullOrEmpty()|| delFavSongState.value.data!=null){
-        favSongsViewModel.getAllFavSong()
-        LazyColumn(modifier = Modifier.fillMaxSize()){
-            items(favSongsState.value.data) {favSong->
-               // EachFavItem(favSong = favSongs)
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .clickable {
-                           mediaManagerViewModel.playMusic(favSong.path.toUri())
+                            },
+                        elevation = CardDefaults.elevatedCardElevation(8.dp),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Column(modifier = Modifier.padding(8.dp)) {
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                Text(favSong.title.toString(), maxLines = 2)
+                            }
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                Text(text = favSong.artist.toString(), maxLines = 1)
+                            }
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                Text(text = favSong.composer.toString(), maxLines = 1)
+                            }
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                Text(text = formatDuration(favSong.duration!!.toLong()), maxLines = 1)
+                            }
+                            Row(
+                                modifier = Modifier, horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
 
-                        },
-                    elevation = CardDefaults.elevatedCardElevation(8.dp),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Column(modifier = Modifier.padding(8.dp)) {
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            Text(favSong.title.toString(), maxLines = 2)
-                        }
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            Text(text = favSong.artist.toString(), maxLines = 1)
-                        }
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            Text(text = favSong.composer.toString(), maxLines = 1)
-                        }
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            Text(text = formatDuration(favSong.duration!!.toLong()), maxLines = 1)
-                        }
-                        Row(
-                            modifier = Modifier, horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Favorite,
-                                contentDescription = "Favorite",
-                                modifier = Modifier.weight(1f).clickable {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = "Delete",
+                                    modifier = Modifier.weight(1f).clickable {
+                                        val favSongEntity = favSong
+                                        favSongsViewModel.deleteFavSong(favSongEntity)
+                                       // favSongsViewModel.getAllFavSong()
+                                    },
+                                    tint = WhiteColor
 
-                                },
-                                tint = if (liked.value) {
-                                    RedThemeSuit1
-                                } else {
-                                    WhiteColor
-                                }
-                            )
+                                )
+                            }
 
-                            Icon(
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = "Delete",
-                                modifier = Modifier.weight(1f).clickable {
-                                    val favSongEntity = favSong
-                                    favSongsViewModel.deleteFavSong(favSongEntity)
-                                    favSongsViewModel.getAllFavSong()
-                                },
-                                tint = if (liked.value) {
-                                    RedThemeSuit1
-                                } else {
-                                    WhiteColor
-                                }
-                            )
+
                         }
-
 
                     }
-
                 }
+
             }
-
+        }else->{
+            NoSongsFoundScreen()
         }
-
     }
 
 }
