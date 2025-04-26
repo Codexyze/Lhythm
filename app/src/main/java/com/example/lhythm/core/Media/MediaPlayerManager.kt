@@ -57,17 +57,25 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
 
     fun isPlaying(): Boolean {
         // Safely check if exoPlayer is null and return false if it is
-        showToastMessage(context = context, text = "Playing",type = Constants.TOASTSUCCESS)
         return exoPlayer?.isPlaying ?: false
     }
 
-    fun getDuration(): Long? {
-        return exoPlayer?.duration
+    fun getDuration(): Long {
+       val duration = exoPlayer?.duration
+        if(duration != null && duration >= 0L) {
+            return duration
+        }else{
+            return 0L
+        }
     }
 
+//    fun getCurrentPosition(): Float {
+//        return exoPlayer?.currentPosition!!.toFloat()
+//    }
     fun getCurrentPosition(): Float {
-        return exoPlayer?.currentPosition!!.toFloat()
+        return exoPlayer?.currentPosition?.toFloat() ?: 0f
     }
+
 
     fun seekTo(position: Long) {
         exoPlayer?.seekTo(position)

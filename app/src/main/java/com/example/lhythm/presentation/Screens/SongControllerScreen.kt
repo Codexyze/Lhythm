@@ -272,7 +272,7 @@ fun SongControllerScreen(
         }
     }
 
-    val duration = viewModel.getDuration()?.toFloat() ?: 1f
+    var duration = viewModel.getDuration()?.toFloat() ?: 1f
     val currentPosition = viewModel.currentSongPositionState.collectAsState()
     val index = viewModel.index.collectAsState()
     val list = viewModel.songQueue.collectAsState()
@@ -309,13 +309,19 @@ fun SongControllerScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                //  Slider - seek inside the song
-//                Slider(
-//                    value = currentPosition.value.coerceAtMost(duration),
-//                    onValueChange = { viewModel.getExoplayer()?.seekTo(it.toLong()) },
-//                    valueRange = 0f..duration,
-//                    modifier = Modifier.fillMaxWidth()
-//                )
+                if (isPlaying.value) {
+                    duration = viewModel.getDuration()?.toFloat() ?: 1f
+                    Slider(
+                        value = currentPosition.value.coerceAtMost(duration),
+                        onValueChange = { viewModel.getExoplayer()?.seekTo(it.toLong()) },
+                        valueRange = 0f..duration,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    // Maybe show loading or disabled slider
+                    duration=viewModel.getDuration()?.toFloat() ?: 1f
+                }
+
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -328,14 +334,12 @@ fun SongControllerScreen(
                     IconButton(onClick = {
                         if (player != null) {
                             if (index.value > 0) {
-                                // 👉 Move to previous song
                                 viewModel.playPlayListWithIndex(
                                     listOfSongsUri = list.value,
                                     index = index.value - 1,
                                     context = context
                                 )
                             } else {
-                                // 🚫 Already at first song
                                 showToastMessage(
                                     context = context,
                                     text = "Already at the first song!",

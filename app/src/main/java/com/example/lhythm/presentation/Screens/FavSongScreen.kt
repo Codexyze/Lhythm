@@ -1,5 +1,6 @@
 package com.example.lhythm.presentation.Screens
 
+import android.content.ContentUris
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -118,12 +119,10 @@ fun EachFavItemScreen(favSong: FavSongEntity,favSongsViewModel: FavSongViewModel
     Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.fillMaxSize(0.25f)) {
+
                 Log.d("ImagePersonal",favSong.imagePersonal.toString())
                 AsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(favSong.imagePersonal) // content:// URI
-                        .crossfade(true)
-                        .build(),
+                    model = favSong.album,
                     placeholder = painterResource(R.drawable.lythmlogoasset),
                     contentDescription = "Personal Image",
                     error = painterResource(R.drawable.noalbumimgasset),
