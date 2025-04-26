@@ -53,6 +53,7 @@ import coil3.compose.AsyncImage
 import com.example.lhythm.R
 import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.SongEntity
+import com.example.lhythm.data.Song.Song
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.Utils.formatDuration
 import com.example.lhythm.presentation.ViewModels.FavSongViewModel
@@ -73,6 +74,7 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
 
     //
     val context = LocalContext.current
+    val listOfAllSongs = remember { mutableListOf<Uri>() }
     when{
         !state.value.error.isNullOrEmpty() ->{
             Text(text = state.value.error.toString())
@@ -81,6 +83,10 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
             LoadingScreen()
         }
         state.value.data.isNotEmpty()->{
+            state.value.data.forEach {
+                listOfAllSongs.add(it.path.toUri())
+            }
+
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.weight(0.10f), horizontalArrangement = Arrangement.Center) {
                     OutlinedTextField(
@@ -115,7 +121,8 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
                                    songArtist = songsFiltered.artist,
                                    songDuration = songsFiltered.duration,
                                    songYear = songsFiltered.year,songPath= songsFiltered.path,
-                                   songSize = songsFiltered.size, album = songsFiltered.album
+                                   songSize = songsFiltered.size, album = songsFiltered.album,
+                                   albumID = songsFiltered.albumId
                                    , composer = songsFiltered.composer)
                                listOfPlayListUri.add(songsFiltered.path.toUri())
                            }
@@ -138,8 +145,10 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
                                 EachSongItemLook(songid = song.id, songTitle = song.title, songArtist = song.artist,
                                     songDuration = song.duration,
                                     songYear = song.year,songPath= song.path,
-                                    songSize = song.size, album = song.album
-                                    , composer = song.composer, albumID = song.albumId)
+                                    songSize = song.size, album = song.album,
+                                    songUriList = listOfAllSongs
+                                    , composer = song.composer, albumID = song.albumId,
+                                    index = state.value.data.indexOf(song))
                                 listOfPlayListUri.add(song.path.toUri())
 
                             }
@@ -167,6 +176,8 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                      album: String?="Unknown",
                      composer: String?="Unknown",
                      albumID: String?=null,
+                     songUriList: List<Uri>?=null,
+                      index: Int = 0,
                      playListViewModel: PlayListViewModel=hiltViewModel(),
                      mediaManagerViewModel: MediaManagerViewModel=hiltViewModel(),
                      favSongViewModel: FavSongViewModel=hiltViewModel()) {
@@ -184,7 +195,10 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
 
 
         Card (modifier = Modifier.fillMaxWidth().padding(8.dp).clickable{
-            if (songPath.isNullOrEmpty()){
+            if (!songUriList.isNullOrEmpty()){
+                mediaManagerViewModel.playPlayListWithIndex(listOfSongsUri = songUriList, index = index, context = context)
+            }
+            else if (songPath.isNullOrEmpty()){
                 FancyToast.makeText(
                     context, "Error Loading Song",
                     FancyToast.LENGTH_SHORT,
@@ -272,6 +286,7 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                                         size = songSize,
                                         title = songTitle,
                                         year = songYear,
+                                        albumId = albumID,
                                     )
                                     val doesExist: Boolean =data.any {
                                         it.title== songEntity.title
@@ -300,7 +315,7 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                                         size = songSize,
                                         title = songTitle,
                                         year = songYear,
-                                        albumId = "",
+                                        albumId = albumID,
                                         lyrics = "Unknown"
 
                                     )
@@ -382,3 +397,4 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
             }
         }
  }
+

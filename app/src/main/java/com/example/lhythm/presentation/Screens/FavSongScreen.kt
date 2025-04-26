@@ -1,10 +1,12 @@
 package com.example.lhythm.presentation.Screens
 
 import android.content.ContentUris
+import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,8 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.example.lhythm.R
 import com.example.lhythm.constants.Constants
 import com.example.lhythm.data.Local.FavSongEntity
@@ -48,14 +48,13 @@ import com.example.lhythm.presentation.Utils.formatDuration
 import com.example.lhythm.presentation.Utils.showToastMessage
 import com.example.lhythm.presentation.ViewModels.FavSongViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
-import com.example.lhythm.ui.theme.RedThemeSuit1
 import com.example.lhythm.ui.theme.WhiteColor
 
 @Composable
 fun FavSongScreen(favSongsViewModel: FavSongViewModel = hiltViewModel(),mediaManagerViewModel: MediaManagerViewModel = hiltViewModel()) {
     val liked = rememberSaveable { mutableStateOf(true) }
     val delFavSongState = favSongsViewModel.deleteFavSongState.collectAsState()
-    LaunchedEffect(delFavSongState.value) {
+    LaunchedEffect(Unit) {
         favSongsViewModel.getAllFavSong()
     }
     val favSongsState = favSongsViewModel.getAllFavSongState.collectAsState()
@@ -69,7 +68,7 @@ fun FavSongScreen(favSongsViewModel: FavSongViewModel = hiltViewModel(),mediaMan
         favSongsState.value.data.isNullOrEmpty()->{
             NoSongsFoundScreen()
         }
-        !favSongsState.value.data.isNullOrEmpty()|| delFavSongState.value.data!=null->{
+        !favSongsState.value.data.isNullOrEmpty()->{
             LazyColumn(modifier = Modifier.fillMaxSize()){
                 items(favSongsState.value.data) {favSong->
                     Log.d("IMAGEURI",favSong.imagePersonal.toString())
@@ -116,18 +115,36 @@ fun EachFavItemScreen(favSong: FavSongEntity,favSongsViewModel: FavSongViewModel
             showToastMessage(context = context,type = Constants.TOASTSUCCESS,text = "Image selected successfully")
         }
     }
+
     Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.fillMaxSize(0.25f)) {
+                val songUri = if(favSong.albumId.isNullOrEmpty()){
+                    null
+                }else{
+                    ContentUris.withAppendedId(
+                        Uri.parse("content://media/external/audio/albumart"),
+                        favSong.albumId.toLong()
+                    )
+                }
 
-                Log.d("ImagePersonal",favSong.imagePersonal.toString())
-                AsyncImage(
-                    model = favSong.album,
-                    placeholder = painterResource(R.drawable.lythmlogoasset),
-                    contentDescription = "Personal Image",
-                    error = painterResource(R.drawable.noalbumimgasset),
-                    modifier = Modifier.weight(0.25f)
-                )
+                Log.d("ImagePersonal",favSong.albumId.toString())
+                if(songUri==null){
+                    Image(
+                        painter = painterResource(R.drawable.lythmlogoasset),
+                        contentDescription = "Image",
+                        modifier = Modifier.weight(0.25f)
+                    )
+                }else{
+                    AsyncImage(
+                        model = songUri,
+                        placeholder = painterResource(R.drawable.lythmlogoasset),
+                        contentDescription = "Personal Image",
+                        error = painterResource(R.drawable.noalbumimgasset),
+                        modifier = Modifier.weight(0.25f)
+                    )
+                }
+
             }
 
             Column(modifier = Modifier.fillMaxSize(0.75f)) {
