@@ -1,5 +1,6 @@
 package com.example.lhythm.presentation.Screens
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -12,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,6 +29,7 @@ fun GetAllSongASCScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                         navController: NavController,
                         mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel()) {
     val getAllSongsASCState = viewmodel.songsInASCOrderState.collectAsState()
+    val listOfAscSongUri = remember { mutableListOf<Uri>() }
 
     when{
         getAllSongsASCState.value.isLoading->{
@@ -36,6 +39,10 @@ fun GetAllSongASCScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
             Text("Error Loading Songs ${getAllSongsASCState.value.error}")
         }
         !getAllSongsASCState.value.data.isNullOrEmpty()->{
+            getAllSongsASCState.value.data.forEach {song->
+                listOfAscSongUri.add(song.path.toUri())
+
+            }
             Column(modifier = Modifier
                 .fillMaxSize()
                 .background(color = BlackColor)) {
@@ -49,7 +56,9 @@ fun GetAllSongASCScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
 
                             EachSongItemLook(songTitle = song.title, songPath = song.path, songArtist = song.artist,
                                 songDuration = song.duration, songYear = song.year,
-                                albumID = song.albumId)
+                                albumID = song.albumId,
+                                songUriList = listOfAscSongUri,
+                                index = getAllSongsASCState.value.data.indexOf(song))
                         }
 
                     }

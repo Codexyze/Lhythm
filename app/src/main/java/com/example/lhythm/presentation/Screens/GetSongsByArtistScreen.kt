@@ -1,5 +1,6 @@
 package com.example.lhythm.presentation.Screens
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,12 +28,16 @@ fun GetAllSongsByArtistScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel
                     navController: NavController,
                     mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel()) {
     val getAllSongsByArtistState = viewmodel.getAllSongsByArtist.collectAsState()
+    val listOfSongByArtistUri = remember { mutableListOf<Uri>() }
 
     if(getAllSongsByArtistState.value.isLoading){
         LoadingScreen()
     }else if(!getAllSongsByArtistState.value.error.isNullOrBlank()){
         Text("Error Loading Songs ${getAllSongsByArtistState.value.error}")
     }else if(!getAllSongsByArtistState.value.data.isNullOrEmpty()){
+        getAllSongsByArtistState.value.data.forEach { song->
+            listOfSongByArtistUri.add(song.path.toUri())
+        }
         Column(modifier = Modifier
             .fillMaxSize()
             .background(color = BlackColor)) {
@@ -45,7 +51,9 @@ fun GetAllSongsByArtistScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel
 
                         EachSongItemLook(songPath = song.path, songTitle = song.title,
                             songArtist = song.artist, songDuration = song.duration,
-                            songYear = song.year, albumID = song.albumId)
+                            songYear = song.year, albumID = song.albumId,
+                            songUriList = listOfSongByArtistUri,
+                            index = getAllSongsByArtistState.value.data.indexOf(song))
                     }
 
                 }
