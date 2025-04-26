@@ -9,6 +9,11 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import com.example.lhythm.constants.Constants
+import com.example.lhythm.presentation.Utils.showToastMessage
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,6 +21,11 @@ import javax.inject.Singleton
 class MediaPlayerManager @Inject constructor(private val context: Context) {
 
     private var exoPlayer: ExoPlayer? = null
+     var songList: List<Uri> = emptyList()
+//    private val _songList = MutableStateFlow<List<Uri>>(emptyList())
+//    var songList: StateFlow<List<Uri>> = _songList.asStateFlow()
+//    Log.d("MediaPlayerManager", "songList: $songList")
+
 
     fun initializePlayer(uri: Uri) {
         releasePlayer()
@@ -47,6 +57,7 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
 
     fun isPlaying(): Boolean {
         // Safely check if exoPlayer is null and return false if it is
+        showToastMessage(context = context, text = "Playing",type = Constants.TOASTSUCCESS)
         return exoPlayer?.isPlaying ?: false
     }
 
@@ -75,7 +86,10 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
                 if (it.isPlaying) {
                     it.pause()
                 }
+
             } ?: Log.e("MediaPlayerManager", "pausePlayer() called but mediaPlayer is null")
+
+
         }
 
 
@@ -83,6 +97,7 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
     }
 
     fun playListPlay(listOfSongsUri: List<Uri>) {
+
         releasePlayer()
         val mediaItemList = mutableListOf<MediaItem>()
         for (uri in listOfSongsUri) {
@@ -93,6 +108,7 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
             setMediaItems(mediaItemList)
             prepare()
             playWhenReady = true
+            showToastMessage(context = context, text = "Playing",type = Constants.TOASTSUCCESS)
 
             addListener(object : Player.Listener {
                 override fun onPlaybackStateChanged(state: Int) {
@@ -110,6 +126,7 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
 
     }
     fun playPlayListWithIndex(listOfSongsUri: List<Uri>,index: Int=0) {
+        songList = listOfSongsUri
         releasePlayer()
         val mediaItemList = mutableListOf<MediaItem>()
         for (uri in listOfSongsUri) {
@@ -120,6 +137,7 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
             setMediaItems(mediaItemList,index, C.INDEX_UNSET.toLong())
             prepare()
             playWhenReady = true
+            showToastMessage(context = context, text = "Playing",type = Constants.TOASTSUCCESS)
 
             addListener(object : Player.Listener {
                 override fun onPlaybackStateChanged(state: Int) {

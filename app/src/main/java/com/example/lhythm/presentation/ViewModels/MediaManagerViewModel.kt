@@ -21,9 +21,16 @@ class MediaManagerViewModel @Inject constructor(private val mediaMananger: Media
     val currentSongPositionState =_currentSongPositionState.asStateFlow()
     private val _isplayingState = MutableStateFlow<Boolean>(value = false)
     val isplayingState =_isplayingState.asStateFlow()
+//    private var _songQueue : List<Uri> = mediaMananger.songList
+//    var songQueue : List<Uri> = _songQueue
+//    var Index:Int =0
+    private val _songQueue = MutableStateFlow<List<Uri>>(emptyList())
+    val songQueue = _songQueue.asStateFlow()
+    private  val _index = MutableStateFlow(0)
+    val index = _index.asStateFlow()
 
 
-   init {
+    init {
       viewModelScope.launch {
           while (isPlaying()){
               getCurrentPosition()
@@ -80,7 +87,8 @@ fun getCurrentPosition() {
     }
 
     fun playPlayListWithIndex(listOfSongsUri: List<Uri>,index: Int=0 ,context: Context) {
-        Toast.makeText(context, "Hello context test", Toast.LENGTH_SHORT).show()
+        _index.value=index
+        _songQueue.value=listOfSongsUri
         mediaMananger.playPlayListWithIndex(listOfSongsUri,index)
 
     }
