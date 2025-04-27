@@ -198,6 +198,7 @@ fun EachPlayListItem(
     val context = LocalContext.current
     val insertState=playListViewModel.insertSongToPlaListState.collectAsState()
     val addToFavState= favSongViewModel.inserOrUpdateFavState.collectAsState()
+    val lyricsState = playListViewModel.getLyricsFromPlayListState.collectAsState()
 
 
    if (insertState.value.isLoading || deletePlayListSongState.value.isLoading||addToFavState.value.isLoading){
@@ -428,18 +429,30 @@ fun EachPlayListItem(
 
                }
                if (showLyricsDialogue.value){
+                   playListViewModel.getLyricsFromPlayList(id = id)
                    AlertDialog(
                        text = {
-                           LazyColumn(modifier = Modifier.padding(12.dp)) {
-                               item {
-                                   if(lyricsString=="Empty Lyrics"){
-                                       Text("No Lyrics Found")
-                                   }else{
-                                       Text(text = lyricsString)
-                                   }
+                           when{
+                               lyricsState.value.isLoading->{
+                                   Text("Loading...")
+                               }
+                               !lyricsState.value.error.isNullOrEmpty()->{
+                                   Text("Error")
+                               }
+                               !lyricsState.value.data.isNullOrEmpty()->{
+                                   LazyColumn(modifier = Modifier.padding(12.dp)) {
+                                       item {
+                                           if(lyricsState.value.data =="Empty Lyrics"){
+                                               Text("No Lyrics Found")
+                                           }else{
+                                               Text(text = lyricsState.value.data)
+                                           }
 
+                                       }
+                                   }
                                }
                            }
+
                        },
                        onDismissRequest = {
 
@@ -453,6 +466,7 @@ fun EachPlayListItem(
 
                                }
                            ) {
+                               Text("Delete")
 
                            }
                        },

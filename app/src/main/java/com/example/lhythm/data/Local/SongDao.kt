@@ -20,4 +20,7 @@ interface SongDao {
    @Query("SELECT * FROM ${Constants.PLAYLIST} WHERE title LIKE '%' || :query || '%' ")
    suspend fun searchFromPlaylist(query: String): List<SongEntity>
 
+   @Query("SELECT lyrics FROM ${Constants.PLAYLIST} WHERE id = :id")
+   suspend fun getLyricsFromPlaylist(id: Int): String
+
 }

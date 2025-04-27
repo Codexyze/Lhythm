@@ -18,6 +18,7 @@ import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetAllSongComposerASCUseCase
 import com.example.lhythm.domain.Usecases.GetAllSongUseCase
 import com.example.lhythm.domain.Usecases.GetByYearASCUseCase
+import com.example.lhythm.domain.Usecases.GetLyricsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetSongCategoryUseCase
 import com.example.lhythm.domain.Usecases.GetSongDESCUsecase
 import com.example.lhythm.domain.Usecases.GetSongsByArtistUseCase
@@ -120,5 +121,10 @@ object DiModule {
    fun GetAllSongsByComposerAscObjUseCase(@ApplicationContext context: Context): GetAllSongComposerASCUseCase{
        return GetAllSongComposerASCUseCase(getCategoryRepository = GetCategoryRepoImpl(context = context))
    }
+
+    @Provides
+    fun GetLyricsFromPlaylistUsecaseobj(@ApplicationContext context: Context): GetLyricsFromPlayListUseCase{
+        return GetLyricsFromPlayListUseCase(songPlayListRepository = SongPlayListRepoInterfaceObj(context = context))
+    }
 
 }

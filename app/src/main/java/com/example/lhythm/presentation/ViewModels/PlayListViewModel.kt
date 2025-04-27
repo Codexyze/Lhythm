@@ -6,10 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.lhythm.core.StateHandeling.ResultState
 import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.domain.StateHandeling.DeleteSongFromPlayListState
+import com.example.lhythm.domain.StateHandeling.GetLyricsFromPlaylistState
 import com.example.lhythm.domain.StateHandeling.GetSongsFromPlayListState
 import com.example.lhythm.domain.StateHandeling.InsertSongsToPlayListState
 import com.example.lhythm.domain.StateHandeling.SearchPlayListSongState
 import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
+import com.example.lhythm.domain.Usecases.GetLyricsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetSongsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
 import com.example.lhythm.domain.Usecases.SearchFromPlayListUseCase
@@ -25,7 +27,8 @@ class PlayListViewModel @Inject constructor(
     private val getSongsFromPlayListUseCase: GetSongsFromPlayListUseCase,
     private val insertSongToPlayListUseCase: InsertSongToPlayListUseCase,
     private val deleteSongFromPlayListUseCase: DeleteClickedPlayListUseCase,
-    private val searchSongUseCase:SearchFromPlayListUseCase
+    private val searchSongUseCase:SearchFromPlayListUseCase,
+    private val getLyricsFromPlayList: GetLyricsFromPlayListUseCase
 )  : ViewModel() {
     private val _getSongFromPlayListState = MutableStateFlow(GetSongsFromPlayListState())
     val getSongFromPlayListState = _getSongFromPlayListState.asStateFlow()
@@ -35,6 +38,8 @@ class PlayListViewModel @Inject constructor(
     val deleteSongFromPlayListState = _deleteSongFromPlayListState.asStateFlow()
     private val _searchSongState = MutableStateFlow(SearchPlayListSongState())
     val searchSongState = _searchSongState.asStateFlow()
+    private val _getLyricsFromPlayListState = MutableStateFlow(GetLyricsFromPlaylistState())
+    val getLyricsFromPlayListState = _getLyricsFromPlayListState.asStateFlow()
     init {
         getSongsFromPlayList()
     }
@@ -120,6 +125,26 @@ class PlayListViewModel @Inject constructor(
 
                 }
             }
+        }
+    }
+
+    fun getLyricsFromPlayList(id:Int){
+        viewModelScope.launch(Dispatchers.IO) {
+            getLyricsFromPlayList.invoke(id=id).collect {result->
+               when(result){
+                   is ResultState.Loading->{
+                      _getLyricsFromPlayListState.value = GetLyricsFromPlaylistState(isLoading = true)
+                   }
+                   is ResultState.Success->{
+                      _getLyricsFromPlayListState.value = GetLyricsFromPlaylistState(isLoading = false, data = result.data)
+                   }
+                   is ResultState.Error->{
+                      _getLyricsFromPlayListState.value = GetLyricsFromPlaylistState(isLoading = false, error = result.message)
+                   }
+               }
+
+           }
+
         }
     }
 

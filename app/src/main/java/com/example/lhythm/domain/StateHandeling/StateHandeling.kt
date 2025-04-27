@@ -82,3 +82,8 @@ data class GetAllComposerSongASCState(
     val error: String ? = null
 
 )
+data class GetLyricsFromPlaylistState(
+    val isLoading: Boolean = false,
+    val data: String= "",
+    val error: String ? = null
+)
