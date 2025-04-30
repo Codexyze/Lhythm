@@ -14,16 +14,22 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MediaPlayerManager @Inject constructor(private val context: Context) {
+class MediaPlayerManager @Inject constructor(private val context: Context,
+private var exoPlayer: ExoPlayer) {
 
-    private var exoPlayer: ExoPlayer? = null
+   // private var exoPlayer: ExoPlayer? = null
     var exoPlayerExternal : ExoPlayer? = exoPlayer
      var songList: List<Uri> = emptyList()
 
     fun initializePlayer(uri: Uri) {
         releasePlayer()
 
-        exoPlayer = ExoPlayer.Builder(context).build().apply {
+//        exoPlayer = ExoPlayer.Builder(context).build().apply {
+//            setMediaItem(MediaItem.fromUri(uri))
+//            prepare()
+//            playWhenReady = true
+//        }
+        exoPlayer.apply {
             setMediaItem(MediaItem.fromUri(uri))
             prepare()
             playWhenReady = true
@@ -45,7 +51,7 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
             this.stop()
             this.release()
         }
-        exoPlayer = null
+        //exoPlayer = null
     }
 
     fun isPlaying(): Boolean {

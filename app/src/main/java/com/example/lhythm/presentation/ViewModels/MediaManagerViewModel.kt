@@ -40,6 +40,9 @@ class MediaManagerViewModel @Inject constructor(private val mediaMananger: Media
       }
 
    }
+    fun exoplayeInstance(): ExoPlayer?{
+       return mediaMananger.exoPlayerExternal
+    }
 
     fun playMusic(uri: Uri){
         mediaMananger.initializePlayer(uri = uri)

@@ -55,7 +55,7 @@ object DiModule {
 
     @Provides
     fun MediaPlayerManagerInstance(@ApplicationContext context: Context): MediaPlayerManager{
-         return MediaPlayerManager(context = context)
+         return MediaPlayerManager(exoPlayer = exoplayerObjectBuilder(context = context), context = context)
     }
 
     @Provides
