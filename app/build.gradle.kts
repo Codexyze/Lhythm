@@ -66,6 +66,7 @@ dependencies {
     implementation ("androidx.media3:media3-exoplayer:1.5.0")
     implementation ("androidx.media3:media3-ui:1.5.0")
     implementation ("androidx.media3:media3-common:1.5.0")
+    implementation ("androidx.media3:media3-session:1.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")

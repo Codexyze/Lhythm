@@ -1,6 +1,8 @@
 package com.example.lhythm.Di
 
 import android.content.Context
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.MediaSession
 import androidx.room.Room
 import com.example.lhythm.constants.Constants
 import com.example.lhythm.core.Media.MediaPlayerManager
@@ -126,5 +128,18 @@ object DiModule {
     fun GetLyricsFromPlaylistUsecaseobj(@ApplicationContext context: Context): GetLyricsFromPlayListUseCase{
         return GetLyricsFromPlayListUseCase(songPlayListRepository = SongPlayListRepoInterfaceObj(context = context))
     }
+
+    @Singleton
+    @Provides
+    fun exoplayerObjectBuilder(@ApplicationContext context: Context): ExoPlayer{
+        return ExoPlayer.Builder(context).setHandleAudioBecomingNoisy(true).build()
+    }
+
+    @Singleton
+    @Provides
+    fun MediaSessionBuilderObj(@ApplicationContext context: Context,player: ExoPlayer): MediaSession{
+        return MediaSession.Builder(context,player).build()
+    }
+
 
 }

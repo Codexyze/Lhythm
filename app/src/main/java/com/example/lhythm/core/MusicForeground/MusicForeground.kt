@@ -9,32 +9,26 @@ import com.example.lhythm.core.Media.MediaPlayerManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
-class MusicForeground:Service() {
-    @Inject
-    lateinit var mediaPlayerManager: MediaPlayerManager
+class MusicForeground : Service() {
+
+
     override fun onBind(p0: Intent?): IBinder? {
-       return null
+        return null
     }
 
-
-     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-      startForeground(101, buildNotification(this))
-      return START_STICKY
-     }
-
-
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        startForeground(101, buildNotification(this))
+        return START_STICKY
+    }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayerManager.pause()
-        mediaPlayerManager.releasePlayer()
     }
+
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel(applicationContext)
     }
-
-
 }
-

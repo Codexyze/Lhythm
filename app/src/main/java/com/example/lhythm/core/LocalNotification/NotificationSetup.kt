@@ -8,42 +8,49 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MusicNote
 import androidx.core.app.NotificationCompat
 import com.example.lhythm.R
 
 import com.example.lhythm.constants.Constants
 import com.example.lhythm.core.BroadCastReciver.StopServiceReciver
-import kotlin.random.Random
+import com.example.lhythm.presentation.Screens.MainActivity
 
 fun createNotificationChannel(context: Context){
     if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
         val notificationChannel = NotificationChannel(Constants.NOTIFICATIONID,
             Constants.NOTIFICATIONNAME, NotificationManager.IMPORTANCE_HIGH
         )
-        val manager = context.getSystemService(NotificationManager::class.java).createNotificationChannel(notificationChannel)
+        context.getSystemService(NotificationManager::class.java).createNotificationChannel(notificationChannel)
 
     }
 
 }
  fun buildNotification(context: Context): Notification {
-     val stopIntent = Intent(context, StopServiceReciver::class.java).apply {
-         action="STOPPLAYER"
-     }
-     val pauseIntent = Intent(context,StopServiceReciver::class.java).apply {
-         action="PAUSEPLAYER"
-     }
-     val pendingIntent= PendingIntent.getBroadcast(
+//     val stopIntent = Intent(context, StopServiceReciver::class.java).apply {
+//         action="STOPPLAYER"
+//     }
+//     val pauseIntent = Intent(context,StopServiceReciver::class.java).apply {
+//         action="PAUSEPLAYER"
+//     }
+//     val pendingIntent= PendingIntent.getBroadcast(
+//         context,
+//         0,
+//         stopIntent,
+//         PendingIntent.FLAG_IMMUTABLE
+//     )
+//     val pendingPauseIntent = PendingIntent.getBroadcast(
+//         context,
+//         1,
+//         pauseIntent,
+//         PendingIntent.FLAG_IMMUTABLE
+//     )
+
+     val intent = Intent(context, MainActivity::class.java)
+
+     val activityIntent = PendingIntent.getActivity(
          context,
          0,
-         stopIntent,
-         PendingIntent.FLAG_IMMUTABLE
-     )
-     val pendingPauseIntent = PendingIntent.getBroadcast(
-         context,
-         1,
-         pauseIntent,
+         intent,
          PendingIntent.FLAG_IMMUTABLE
      )
 
@@ -52,7 +59,6 @@ fun createNotificationChannel(context: Context){
         .setContentText(Constants.NOTIFICATIONTEXT)
         .setSmallIcon(R.drawable.lythmlogoasset)
         .setOngoing(true)
-        .addAction(R.drawable.lythmlogoasset, "Stop", pendingIntent)
-        .addAction(R.drawable.lythmlogoasset, "Pause", pendingPauseIntent)//i want pause
+        .setContentIntent(activityIntent)
         .build()
 }

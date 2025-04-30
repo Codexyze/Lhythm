@@ -7,25 +7,47 @@ import android.util.Log
 import android.widget.Toast
 import com.example.lhythm.core.Media.MediaPlayerManager
 import com.example.lhythm.core.MusicForeground.MusicForeground
-import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-class StopServiceReciver @Inject constructor(private val mediaPlayerManager: MediaPlayerManager): BroadcastReceiver() {
+class StopServiceReciver: BroadcastReceiver() {
+
+    @Inject
+    lateinit var mediaPlayerManager: MediaPlayerManager //this
+
+
+
     override fun onReceive(context: Context?, intent: Intent?) {
+
         try {
             when(intent?.action){
-                 "STOPPLAYER"->{
-                val intentStop= Intent(context, MusicForeground::class.java)
-                context?.stopService(intentStop)
-                //mediaPlayerManager.releasePlayer()
-                MediaPlayerManager.MediaPlayerManager.releasePlayer()
-                Log.d("BroadCast","StopBroadCast")
-                Toast.makeText(context, "Music Stopped", Toast.LENGTH_SHORT).show()
-                }
-                "PAUSEPLAYER"->{
-                    MediaPlayerManager.MediaPlayerManager.pausePlayer()
-                    Toast.makeText(context, "Music Paused", Toast.LENGTH_SHORT).show()
-                }
+//                 "STOPPLAYER"->{
+//                val intentStop= Intent(context, MusicForeground::class.java)
+//                     mediaPlayerManager.exoPlayerExternal.let {
+//                         if(it==null){
+//                             Log.d("BroadCast","NULL Player")
+//                         }else{
+//                             it.release()
+//                         }
+//                     }
+//                     mediaPlayerManager.releasePlayer()
+//                context?.stopService(intentStop)
+//                //mediaPlayerManager.releasePlayer()
+//               // MediaPlayerManager.MediaPlayerManager.releasePlayer()
+//
+//                Log.d("BroadCast","StopBroadCast")
+//                Toast.makeText(context, "Music Stopped", Toast.LENGTH_SHORT).show()
+//                }
+//                "PAUSEPLAYER"->{
+//                   // MediaPlayerManager.MediaPlayerManager.pausePlayer()
+//                    mediaPlayerManager.exoPlayerExternal.let {
+//                        if(it==null){
+//                            Log.d("BroadCast","NULL Player")
+//                        }else{
+//                            it.pause()
+//                        }
+//                    }
+//                    Toast.makeText(context, "Music Paused", Toast.LENGTH_SHORT).show()
+//                }
             }
 
         }catch (e: Exception){

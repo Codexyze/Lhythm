@@ -1,6 +1,8 @@
 package com.example.lhythm.presentation.Screens
 
+import android.app.PendingIntent
 import android.content.ContentUris
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -46,11 +48,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startForegroundService
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.lhythm.R
+import com.example.lhythm.core.BroadCastReciver.StopServiceReciver
+import com.example.lhythm.core.MusicForeground.MusicForeground
 import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.data.Song.Song
@@ -197,6 +202,9 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
         Card (modifier = Modifier.fillMaxWidth().padding(8.dp).clickable{
             if (!songUriList.isNullOrEmpty()){
                 mediaManagerViewModel.playPlayListWithIndex(listOfSongsUri = songUriList, index = index, context = context)
+                    // val intent = Intent(context, MusicForeground::class.java)
+                 //startForegroundService(context, intent)
+
             }
             else if (songPath.isNullOrEmpty()){
                 FancyToast.makeText(

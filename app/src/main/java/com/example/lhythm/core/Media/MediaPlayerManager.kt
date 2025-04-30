@@ -1,7 +1,6 @@
 package com.example.lhythm.core.Media
 
 import android.content.Context
-import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
@@ -11,9 +10,6 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.lhythm.constants.Constants
 import com.example.lhythm.presentation.Utils.showToastMessage
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,11 +17,8 @@ import javax.inject.Singleton
 class MediaPlayerManager @Inject constructor(private val context: Context) {
 
     private var exoPlayer: ExoPlayer? = null
+    var exoPlayerExternal : ExoPlayer? = exoPlayer
      var songList: List<Uri> = emptyList()
-//    private val _songList = MutableStateFlow<List<Uri>>(emptyList())
-//    var songList: StateFlow<List<Uri>> = _songList.asStateFlow()
-//    Log.d("MediaPlayerManager", "songList: $songList")
-
 
     fun initializePlayer(uri: Uri) {
         releasePlayer()
@@ -69,9 +62,6 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
         }
     }
 
-//    fun getCurrentPosition(): Float {
-//        return exoPlayer?.currentPosition!!.toFloat()
-//    }
     fun getCurrentPosition(): Float {
         return exoPlayer?.currentPosition?.toFloat() ?: 0f
     }
@@ -81,28 +71,6 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
         exoPlayer?.seekTo(position)
     }
 
-    object MediaPlayerManager {
-        private var mediaPlayer: MediaPlayer? = null
-
-        fun releasePlayer() {
-            mediaPlayer?.release()
-            mediaPlayer = null
-        }
-
-        fun pausePlayer() {
-            mediaPlayer?.let {
-                if (it.isPlaying) {
-                    it.pause()
-                }
-
-            } ?: Log.e("MediaPlayerManager", "pausePlayer() called but mediaPlayer is null")
-
-
-        }
-
-
-        // Optional: add create/start functions too
-    }
 
     fun playListPlay(listOfSongsUri: List<Uri>) {
 
@@ -163,6 +131,7 @@ class MediaPlayerManager @Inject constructor(private val context: Context) {
 
     }
 }
+
 
 
  
