@@ -8,14 +8,18 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.MediaSession
 import com.example.lhythm.constants.Constants
+import com.example.lhythm.core.LocalNotification.createMusicExoNotification
+import com.example.lhythm.core.LocalNotification.createMusicNotificationChannel
 import com.example.lhythm.presentation.Utils.showToastMessage
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class MediaPlayerManager @Inject constructor(private val context: Context,
-private var exoPlayer: ExoPlayer) {
+private var exoPlayer: ExoPlayer, private val mediaSession: MediaSession
+) {
 
    // private var exoPlayer: ExoPlayer? = null
     var exoPlayerExternal : ExoPlayer? = exoPlayer
@@ -31,6 +35,7 @@ private var exoPlayer: ExoPlayer) {
 //        }
         exoPlayer.apply {
             setMediaItem(MediaItem.fromUri(uri))
+            createMusicExoNotification(exoPlayer = exoPlayer, context = context)
             prepare()
             playWhenReady = true
         }
@@ -86,11 +91,10 @@ private var exoPlayer: ExoPlayer) {
             val mediaItem = MediaItem.fromUri(uri.path!!.toUri())
             mediaItemList.add(mediaItem)
         }
-        exoPlayer = ExoPlayer.Builder(context).build().apply {
+        exoPlayer.apply {
             setMediaItems(mediaItemList)
             prepare()
             playWhenReady = true
-            showToastMessage(context = context, text = "Playing",type = Constants.TOASTSUCCESS)
 
             addListener(object : Player.Listener {
                 override fun onPlaybackStateChanged(state: Int) {
@@ -105,6 +109,25 @@ private var exoPlayer: ExoPlayer) {
                 }
             })
         }
+//        exoPlayer = ExoPlayer.Builder(context).build().apply {
+//            setMediaItems(mediaItemList)
+//            prepare()
+//            playWhenReady = true
+//            showToastMessage(context = context, text = "Playing",type = Constants.TOASTSUCCESS)
+//
+//            addListener(object : Player.Listener {
+//                override fun onPlaybackStateChanged(state: Int) {
+//                    if (state == Player.STATE_ENDED) {
+//                        Log.d("MediaPlayerManager", "Playlist ended.")
+//                    }
+//                }
+//
+//                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+//                    val currentIndex = this@apply.currentMediaItemIndex
+//                    Log.d("MediaPlayerManager", "Now playing index: $currentIndex")
+//                }
+//            })
+//        }
 
     }
     fun playPlayListWithIndex(listOfSongsUri: List<Uri>,index: Int=0) {
@@ -115,7 +138,8 @@ private var exoPlayer: ExoPlayer) {
             val mediaItem = MediaItem.fromUri(uri.path!!.toUri())
             mediaItemList.add(mediaItem)
         }
-        exoPlayer = ExoPlayer.Builder(context).build().apply {
+        exoPlayer = ExoPlayer.Builder(context).build().apply  {
+            createMusicExoNotification(exoPlayer = this, context = context)
             setMediaItems(mediaItemList,index, C.INDEX_UNSET.toLong())
             prepare()
             playWhenReady = true
@@ -139,5 +163,33 @@ private var exoPlayer: ExoPlayer) {
 }
 
 
-
+// fun playPlayListWithIndex(listOfSongsUri: List<Uri>,index: Int=0) {
+//        songList = listOfSongsUri
+//        releasePlayer()
+//        val mediaItemList = mutableListOf<MediaItem>()
+//        for (uri in listOfSongsUri) {
+//            val mediaItem = MediaItem.fromUri(uri.path!!.toUri())
+//            mediaItemList.add(mediaItem)
+//        }
+//        exoPlayer = ExoPlayer.Builder(context).build().apply {
+//            setMediaItems(mediaItemList,index, C.INDEX_UNSET.toLong())
+//            prepare()
+//            playWhenReady = true
+//            showToastMessage(context = context, text = "Playing",type = Constants.TOASTSUCCESS)
+//
+//            addListener(object : Player.Listener {
+//                override fun onPlaybackStateChanged(state: Int) {
+//                    if (state == Player.STATE_ENDED) {
+//                        Log.d("MediaPlayerManager", "Playlist ended.")
+//                    }
+//                }
+//
+//                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+//                    val currentIndex = this@apply.currentMediaItemIndex
+//                    Log.d("MediaPlayerManager", "Now playing index: $currentIndex")
+//                }
+//            })
+//        }
+//
+//    }
  

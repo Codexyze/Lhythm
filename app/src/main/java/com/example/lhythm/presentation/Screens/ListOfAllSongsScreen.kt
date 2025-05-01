@@ -141,8 +141,8 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
                             Box(modifier = Modifier.wrapContentSize().clickable{
                                 // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
                                 // mediaPlayerViewModel.playMusic(song.path.toUri())
-//                    val intent = Intent(context, MusicForeground::class.java)
-//                    context.startForegroundService(intent)
+                              // val intent = Intent(context, MusicForeground::class.java)
+                              //context.startForegroundService(intent)
                                 // THEN, play music
                                 //   mediaPlayerViewModel.playMusic(song.path.toUri()) // <- use actual uri here
                             }){
@@ -202,8 +202,8 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
         Card (modifier = Modifier.fillMaxWidth().padding(8.dp).clickable{
             if (!songUriList.isNullOrEmpty()){
                 mediaManagerViewModel.playPlayListWithIndex(listOfSongsUri = songUriList, index = index, context = context)
-                    // val intent = Intent(context, MusicForeground::class.java)
-                 //startForegroundService(context, intent)
+                val intent = Intent(context, MusicForeground::class.java)
+                 startForegroundService(context, intent)
 
             }
             else if (songPath.isNullOrEmpty()){

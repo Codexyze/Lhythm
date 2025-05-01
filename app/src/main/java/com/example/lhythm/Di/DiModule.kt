@@ -29,9 +29,11 @@ import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
 import com.example.lhythm.domain.Usecases.SearchFromPlayListUseCase
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.util.UUID
 import javax.inject.Singleton
 
 
@@ -54,8 +56,9 @@ object DiModule {
     }
 
     @Provides
-    fun MediaPlayerManagerInstance(@ApplicationContext context: Context): MediaPlayerManager{
-         return MediaPlayerManager(exoPlayer = exoplayerObjectBuilder(context = context), context = context)
+    fun MediaPlayerManagerInstance(@ApplicationContext context: Context,exoPlayer: ExoPlayer): MediaPlayerManager{
+         return MediaPlayerManager(exoPlayer = exoPlayer, mediaSession =
+             MediaSessionBuilderObj(context = context, player = exoplayerObjectBuilder(context = context)), context = context)
     }
 
     @Provides
@@ -138,8 +141,16 @@ object DiModule {
     @Singleton
     @Provides
     fun MediaSessionBuilderObj(@ApplicationContext context: Context,player: ExoPlayer): MediaSession{
-        return MediaSession.Builder(context,player).build()
+        return MediaSession.Builder(context,player).setId(UUID.randomUUID().toString()).build()
     }
 
 
+
+
+}
+
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface ExoPlayerEntryPoint {
+    fun getExoPlayer(): ExoPlayer
 }
