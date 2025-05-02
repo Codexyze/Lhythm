@@ -3,6 +3,7 @@ package com.example.lhythm.presentation.Screens
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.PlaylistAddCheck
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -29,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.ViewModels.PlayListViewModel
+import com.example.lhythm.ui.theme.cardColor
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -56,7 +59,7 @@ fun HomeScreen(navController: NavController) {
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
+            NavigationBar(containerColor = cardColor) {
                 bottonNavList.forEachIndexed{index,item->
                     NavigationBarItem(
                         selected = index == selectedindex,
@@ -64,10 +67,13 @@ fun HomeScreen(navController: NavController) {
                             selectedindex = index
                         },
                         icon = {
-                            Icon(imageVector = item.icon, contentDescription = item.title)
+                            Icon(imageVector = item.icon, contentDescription = item.title,
+                                tint = if(index==selectedindex) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.secondary)
                         },
                         label = {
-                            Text(text = item.title)
+                            Text(text = item.title, color = if(index==selectedindex) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.secondary)
                         }
 
                     )

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -50,7 +51,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
 
             Row {
                 LazyRow(modifier = Modifier.fillMaxWidth()) {
-                    item(){
+                    item{
 
                             Box(modifier = Modifier.wrapContentSize().clickable{
                                 currentCategory.value = SongCategory.ASCENDING
@@ -64,7 +65,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                         modifier = Modifier.size(60.dp)
                                             .clip(CircleShape)
                                     )
-                                    Text("Asscending")
+                                    Text("Asscending", color = MaterialTheme.colorScheme.primary)
                                 }
                             }
                         Spacer(modifier = Modifier.width(16.dp))
@@ -79,7 +80,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                     contentDescription = "decending",
                                     modifier = Modifier.size(60.dp) .clip(CircleShape)
                                 )
-                                Text("Descending")
+                                Text("Descending", color = MaterialTheme.colorScheme.secondary)
                             }
                         }
                         Spacer(modifier = Modifier.width(16.dp))
@@ -94,7 +95,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                     contentDescription = "artist",
                                     modifier = Modifier.size(60.dp) .clip(CircleShape)
                                 )
-                                Text(".  Artist  .")
+                                Text(".  Artist  .", color = MaterialTheme.colorScheme.primary)
                             }
                         }
                         Spacer(modifier = Modifier.width(16.dp))
@@ -109,7 +110,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                     contentDescription = ".   year   .",
                                     modifier = Modifier.size(60.dp) .clip(CircleShape)
                                 )
-                                Text("  Year  ")
+                                Text("  Year  ", color = MaterialTheme.colorScheme.secondary)
                             }
                         }
                         Box(modifier = Modifier.wrapContentSize().clickable{
@@ -126,7 +127,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                     contentDescription = "fAvSong",
                                     modifier = Modifier.size(60.dp) .clip(CircleShape)
                                 )
-                                Text(" Favorite")
+                                Text(" Favorite", color = MaterialTheme.colorScheme.primary)
                             }
                         }
                         Spacer(modifier = Modifier.width(16.dp))
@@ -142,7 +143,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                     modifier = Modifier.size(60.dp)
                                         .clip(CircleShape)
                                 )
-                                Text("Composer")
+                                Text("Composer", color = MaterialTheme.colorScheme.secondary)
                             }
                         }
                         Spacer(modifier = Modifier.width(16.dp))

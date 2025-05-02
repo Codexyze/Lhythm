@@ -8,8 +8,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,6 +26,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -93,29 +96,7 @@ fun FavSongScreen(favSongsViewModel: FavSongViewModel = hiltViewModel()) {
 fun EachFavItemScreen(favSong: FavSongEntity,favSongsViewModel: FavSongViewModel = hiltViewModel(),
                       listOfUris: List<Uri> = emptyList<Uri>() , index: Int,
                       mediaManagerViewModel: MediaManagerViewModel = hiltViewModel()) {
-    val imageUri = rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
-    val alertDialogue = rememberSaveable { mutableStateOf(false) }
-    val favSongState = favSongsViewModel.getAllFavSongState.collectAsState()
-    val mediaPicker = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) {
-        if (it == null) {
-            showToastMessage(
-                context = context,
-                type = Constants.TOASTWARNING,
-                text = "Please select an image"
-            )
-
-        } else {
-            imageUri.value = it.toString()
-            showToastMessage(
-                context = context,
-                type = Constants.TOASTSUCCESS,
-                text = "Image selected successfully"
-            )
-        }
-    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -131,30 +112,36 @@ fun EachFavItemScreen(favSong: FavSongEntity,favSongsViewModel: FavSongViewModel
         Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.fillMaxSize(0.25f)) {
-                    val songUri = if (favSong.albumId.isNullOrEmpty()) {
-                        null
-                    } else {
-                        ContentUris.withAppendedId(
-                            Uri.parse("content://media/external/audio/albumart"),
-                            favSong.albumId.toLong()
-                        )
-                    }
 
                     Log.d("ImagePersonal", favSong.albumId.toString())
-                    if (songUri == null) {
+                    if (favSong.albumId.isNullOrEmpty()) {
                         Image(
                             painter = painterResource(R.drawable.lythmlogoasset),
                             contentDescription = "Image",
                             modifier = Modifier.weight(0.25f)
                         )
                     } else {
-                        AsyncImage(
-                            model = songUri,
-                            placeholder = painterResource(R.drawable.lythmlogoasset),
-                            contentDescription = "Personal Image",
-                            error = painterResource(R.drawable.noalbumimgasset),
-                            modifier = Modifier.weight(0.25f)
+                        val image = ContentUris.withAppendedId(
+                            Uri.parse("content://media/external/audio/albumart"),
+                            favSong.albumId.toLong()
                         )
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(0.25f)
+                                    .aspectRatio(1f) // Ensures square
+                            ) {
+                                AsyncImage(
+                                    model = image,
+                                    placeholder = painterResource(R.drawable.lythmlogoasset),
+                                    contentDescription = "Personal Image",
+                                    error = painterResource(R.drawable.lythmlogoasset),
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+
+                        }
+
                     }
 
                 }
@@ -165,9 +152,6 @@ fun EachFavItemScreen(favSong: FavSongEntity,favSongsViewModel: FavSongViewModel
                     }
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Text(text = favSong.artist.toString(), maxLines = 1)
-                    }
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Text(text = favSong.composer.toString(), maxLines = 1)
                     }
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Text(text = formatDuration(favSong.duration!!.toLong()), maxLines = 1)
@@ -186,92 +170,13 @@ fun EachFavItemScreen(favSong: FavSongEntity,favSongsViewModel: FavSongViewModel
                                 favSongsViewModel.deleteFavSong(favSongEntity)
                                 // favSongsViewModel.getAllFavSong()
                             },
-                            tint = WhiteColor
+                            tint = MaterialTheme.colorScheme.primary
 
                         )
-                        Icon(
-                            imageVector = Icons.Filled.Image,
-                            contentDescription = "Picture",
-                            modifier = Modifier.weight(1f).clickable {
-                                //add picture here
-                                alertDialogue.value = true
 
-                            },
-                            tint = WhiteColor
-
-                        )
                     }
                 }
             }
-            if (alertDialogue.value) {
-                AlertDialog(
-                    text = {
-                        if (imageUri.value != "" || imageUri.value != null) {
-                            Column {
-                                AsyncImage(
-                                    model = imageUri.value,
-                                    placeholder = painterResource(R.drawable.lythmlogoasset),
-                                    contentDescription = "Personal Image",
-                                    error = painterResource(R.drawable.noalbumimgasset)
-                                )
-                            }
-                        } else {
-                            Text("Select Image")
-
-                        }
-
-                    },
-                    onDismissRequest = {
-                        alertDialogue.value = false
-                    },
-                    confirmButton = {
-                        Button(
-                            onClick = {
-                                // mediaPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                            }
-                        ) {
-                            Text("Open Image")
-                        }
-                    },
-                    dismissButton = {
-                        Button(
-                            onClick = {
-                                if (imageUri.value != "") {
-                                    val favSong = FavSongEntity(
-                                        id = favSong.id,
-                                        title = favSong.title,
-                                        artist = favSong.artist,
-                                        composer = favSong.composer,
-                                        duration = favSong.duration,
-                                        path = favSong.path,
-                                        imagePersonal = imageUri.value,
-                                        size = favSong.size,
-                                        album = favSong.album,
-                                        year = favSong.year,
-                                        albumId = favSong.albumId,
-                                        lyrics = favSong.lyrics
-                                    )
-                                    favSongsViewModel.insertOrUpdateFavSong(favSongEntity = favSong)
-                                    showToastMessage(
-                                        context = context,
-                                        text = "Added Image",
-                                        type = Constants.TOASTSUCCESS
-                                    )
-                                } else {
-                                    showToastMessage(
-                                        context = context,
-                                        text = "Null image",
-                                        type = Constants.TOASTERROR
-                                    )
-                                }
-                            }
-                        ) {
-                            Text("Apply")
-                        }
-                    }
-                )
-            }
-
 
         }
 
