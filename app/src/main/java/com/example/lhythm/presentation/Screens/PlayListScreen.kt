@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Space
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,7 +30,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -52,6 +56,7 @@ import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.ViewModels.FavSongViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 import com.example.lhythm.presentation.ViewModels.PlayListViewModel
+import com.example.lhythm.ui.theme.cardColor
 import com.shashank.sony.fancytoastlib.FancyToast
 
 
@@ -87,7 +92,7 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
             }
             var list = getAllSongsState.value.data
             Log.d("PLAYLIST", "${listOfSongs.toString()}")
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)) {
                 Row(modifier = Modifier.weight(0.10f), horizontalArrangement = Arrangement.Center) {
                     OutlinedTextField(
                         value = searchSong.value,
@@ -97,7 +102,14 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
                         label = {
                             Text("Search Song")
                         },
-                        modifier = Modifier.weight(0.85f)
+                        modifier = Modifier.weight(0.85f),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            errorTextColor = MaterialTheme.colorScheme.primary,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                        ),textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
 
                     IconButton(
@@ -109,7 +121,9 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
                         },
                         modifier = Modifier.weight(0.15f)
                     ) {
-                        Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+                        Icon(imageVector = Icons.Filled.Search, contentDescription = "Search",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 }
                 if (isSearching.value) {
@@ -237,7 +251,10 @@ fun EachPlayListItem(
 
                }
            }, elevation = CardDefaults.elevatedCardElevation(8.dp)
-           , shape = RoundedCornerShape(16.dp)
+           , shape = RoundedCornerShape(16.dp),
+           colors = CardDefaults.cardColors(
+               containerColor = cardColor
+           )
        ){
            Column(modifier = Modifier.padding(8.dp)) {
 
@@ -249,12 +266,12 @@ fun EachPlayListItem(
                    )
                    Spacer(modifier = Modifier.width(20.dp))
                    Column(modifier = Modifier.weight(0.75f)) {
-                       Text(title, maxLines = 2)
+                       Text(title, maxLines = 2, color = MaterialTheme.colorScheme.secondary)
                        Row {
-                           Text(artist, maxLines = 1)
+                           Text(artist, maxLines = 1, color = MaterialTheme.colorScheme.secondary)
                        }
                        Row {
-                           Text(year, maxLines = 1)
+                           Text(year, maxLines = 1, color = MaterialTheme.colorScheme.secondary)
                        }
                        Row {
                            if(lyricsString== "Empty Lyrics"){
@@ -293,7 +310,8 @@ fun EachPlayListItem(
                                            ).show()
                                        }
 
-                                   }
+                                   },
+                               tint = MaterialTheme.colorScheme.primary
                            )
                            Icon(imageVector = Icons.Filled.Delete, contentDescription = "Info",
                                modifier = Modifier
@@ -331,7 +349,7 @@ fun EachPlayListItem(
                                                FancyToast.SUCCESS, false
                                            ).show()
                                        }
-                                   }
+                                   },tint = MaterialTheme.colorScheme.primary
                            )
                            Icon(
                                imageVector = Icons.Filled.Lyrics, contentDescription = "lyrics",
@@ -341,7 +359,8 @@ fun EachPlayListItem(
 
                                        showLyricsSavingDailog.value = true
 
-                                   }
+                                   },
+                               tint = MaterialTheme.colorScheme.primary
                            )
                            Icon(
                                imageVector = Icons.Filled.TextFields, contentDescription = "lyrics",
@@ -349,7 +368,8 @@ fun EachPlayListItem(
                                    .weight(1f)
                                    .clickable {
                                        showLyricsDialogue.value = true
-                                   }
+                                   },
+                               tint = MaterialTheme.colorScheme.primary
                            )
                        }
                    }

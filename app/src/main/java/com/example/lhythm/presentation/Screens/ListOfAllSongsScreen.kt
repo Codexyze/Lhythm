@@ -9,7 +9,6 @@ import android.os.Build
 import android.util.Log
 import android.widget.Spinner
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -60,18 +59,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.lhythm.R
-import com.example.lhythm.core.BroadCastReciver.StopServiceReciver
 import com.example.lhythm.core.MusicForeground.MusicForeground
 import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.SongEntity
-import com.example.lhythm.data.Song.Song
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.Utils.formatDuration
 import com.example.lhythm.presentation.ViewModels.FavSongViewModel
 import com.example.lhythm.presentation.ViewModels.GetAllSongViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 import com.example.lhythm.presentation.ViewModels.PlayListViewModel
-import com.example.lhythm.ui.theme.BlackColor
 import com.example.lhythm.ui.theme.cardColor
 import com.shashank.sony.fancytoastlib.FancyToast
 
