@@ -3,11 +3,13 @@ package com.example.lhythm.presentation.Screens
 import android.app.PendingIntent
 import android.content.ContentUris
 import android.content.Intent
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.widget.Spinner
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,7 +37,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,8 +49,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startForegroundService
 import androidx.core.net.toUri
@@ -66,6 +72,7 @@ import com.example.lhythm.presentation.ViewModels.GetAllSongViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 import com.example.lhythm.presentation.ViewModels.PlayListViewModel
 import com.example.lhythm.ui.theme.BlackColor
+import com.example.lhythm.ui.theme.cardColor
 import com.shashank.sony.fancytoastlib.FancyToast
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -100,9 +107,16 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
                             searchSong.value = it
                         },
                         label = {
-                            Text("Search Song")
+                            Text("Search Song",color = MaterialTheme.colorScheme.primary)
                         },
-                        modifier = Modifier.weight(0.85f)
+                        modifier = Modifier.weight(0.85f),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            errorTextColor = MaterialTheme.colorScheme.primary,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                        ),textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
                     IconButton(
                         onClick = {
@@ -110,7 +124,7 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
 
                         }
                     ) {
-                        Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+                        Icon(imageVector = Icons.Filled.Search, contentDescription = "Search",tint = MaterialTheme.colorScheme.primary,)
                     }
 
                 }
@@ -136,15 +150,10 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
 
 
                 }else{
-                    LazyColumn(modifier = Modifier.background(color = BlackColor).weight(0.90f)) {
+                    LazyColumn(modifier = Modifier.background(color = MaterialTheme.colorScheme.background).weight(0.90f)) {
                         items(state.value.data) { song ->
                             Box(modifier = Modifier.wrapContentSize().clickable{
-                                // navController.navigate(MUSICPLAYERSCREEN(path = song.path))
-                                // mediaPlayerViewModel.playMusic(song.path.toUri())
-                              // val intent = Intent(context, MusicForeground::class.java)
-                              //context.startForegroundService(intent)
-                                // THEN, play music
-                                //   mediaPlayerViewModel.playMusic(song.path.toUri()) // <- use actual uri here
+
                             }){
 
                                 EachSongItemLook(songid = song.id, songTitle = song.title, songArtist = song.artist,
@@ -218,7 +227,10 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
 
 
         }, elevation = CardDefaults.elevatedCardElevation(8.dp)
-            , shape = RoundedCornerShape(16.dp)
+            , shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = cardColor // Light grey like dark theme cards
+            )
         ){
             Column(modifier = Modifier.padding(8.dp)) {
 
@@ -248,40 +260,36 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                         )
                     }
 
-
-//                    Image(
-//                        painter = painterResource(R.drawable.lythmlogoasset),
-//                        contentDescription = "Logo",
-//                        modifier = Modifier.weight(0.25f)
-//                    )
                     Spacer(modifier = Modifier.width(20.dp))
                     Column(modifier = Modifier.weight(0.75f)) {
                         Row {
-                            songTitle?.let { Text(it, maxLines = 2) }
+                            songTitle?.let { Text(it, maxLines = 2, color = MaterialTheme.colorScheme.secondary) }
 
                         }
 
                         Row {
-                            songArtist?.let { Text(it, maxLines = 1) }
+                            songArtist?.let { Text(it, maxLines = 1, color = MaterialTheme.colorScheme.secondary) }
                         }
                         Row{
-                            songYear?.let { Text("year : $it", maxLines = 1) }
+                            songYear?.let { Text("year : $it", maxLines = 1, color = MaterialTheme.colorScheme.secondary) }
 
                         }
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Absolute.SpaceEvenly){
                             songDuration?.let {
                                 duration.value = formatDuration(it.toLong())
-                                Text(duration.value.toString(), maxLines = 1) }
+                                Text(duration.value.toString(), maxLines = 1, color = MaterialTheme.colorScheme.secondary) }
 
 
                         }
                         Row(modifier = Modifier, horizontalArrangement = Arrangement.Absolute.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
                             Icon(imageVector = Icons.Filled.Info, contentDescription = "Info",
+                                tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.weight(1f).clickable{
                                     showDialogueBox.value = true
                                 }
                             )
                             Icon(imageVector = Icons.Filled.Add, contentDescription = "Add to playlist",
+                                tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.weight(1f).clickable{
                                     val data = getAllPlayListSongs.value.data
                                     //check if exists
@@ -312,6 +320,7 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                                 }
                             )
                             Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Favorite",
+                                tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.weight(1f).clickable{
                                     //Fav impl here
                                     val favSongEntity= FavSongEntity(

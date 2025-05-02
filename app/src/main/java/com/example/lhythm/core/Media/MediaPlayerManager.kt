@@ -18,7 +18,7 @@ import javax.inject.Singleton
 
 @Singleton
 class MediaPlayerManager @Inject constructor(private val context: Context,
-private var exoPlayer: ExoPlayer, private val mediaSession: MediaSession
+private var  exoPlayer: ExoPlayer, private val mediaSession: MediaSession
 ) {
 
    // private var exoPlayer: ExoPlayer? = null
@@ -109,25 +109,6 @@ private var exoPlayer: ExoPlayer, private val mediaSession: MediaSession
                 }
             })
         }
-//        exoPlayer = ExoPlayer.Builder(context).build().apply {
-//            setMediaItems(mediaItemList)
-//            prepare()
-//            playWhenReady = true
-//            showToastMessage(context = context, text = "Playing",type = Constants.TOASTSUCCESS)
-//
-//            addListener(object : Player.Listener {
-//                override fun onPlaybackStateChanged(state: Int) {
-//                    if (state == Player.STATE_ENDED) {
-//                        Log.d("MediaPlayerManager", "Playlist ended.")
-//                    }
-//                }
-//
-//                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-//                    val currentIndex = this@apply.currentMediaItemIndex
-//                    Log.d("MediaPlayerManager", "Now playing index: $currentIndex")
-//                }
-//            })
-//        }
 
     }
     fun playPlayListWithIndex(listOfSongsUri: List<Uri>,index: Int=0) {

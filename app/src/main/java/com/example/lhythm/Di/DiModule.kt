@@ -29,7 +29,6 @@ import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
 import com.example.lhythm.domain.Usecases.SearchFromPlayListUseCase
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -135,7 +134,7 @@ object DiModule {
     @Singleton
     @Provides
     fun exoplayerObjectBuilder(@ApplicationContext context: Context): ExoPlayer{
-        return ExoPlayer.Builder(context).setHandleAudioBecomingNoisy(true).build()
+        return ExoPlayer.Builder(context).build()
     }
 
     @Singleton
@@ -144,13 +143,4 @@ object DiModule {
         return MediaSession.Builder(context,player).setId(UUID.randomUUID().toString()).build()
     }
 
-
-
-
-}
-
-@EntryPoint
-@InstallIn(SingletonComponent::class)
-interface ExoPlayerEntryPoint {
-    fun getExoPlayer(): ExoPlayer
 }
