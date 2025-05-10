@@ -38,6 +38,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
+
 object DiModule {
 
     @Provides
@@ -55,9 +56,10 @@ object DiModule {
     }
 
     @Provides
-    fun MediaPlayerManagerInstance(@ApplicationContext context: Context,exoPlayer: ExoPlayer): MediaPlayerManager{
+    @Singleton
+    fun MediaPlayerManagerInstance(@ApplicationContext context: Context,exoPlayer: ExoPlayer,mediaSession: MediaSession): MediaPlayerManager{
          return MediaPlayerManager(exoPlayer = exoPlayer, mediaSession =
-             MediaSessionBuilderObj(context = context, player = exoplayerObjectBuilder(context = context)), context = context)
+             mediaSession, context = context)
     }
 
     @Provides

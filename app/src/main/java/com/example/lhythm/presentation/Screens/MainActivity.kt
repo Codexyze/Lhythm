@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.media3.exoplayer.ExoPlayer
 import com.example.lhythm.core.LocalNotification.createMusicNotificationChannel
 import com.example.lhythm.core.Media.MediaPlayerManager
 import com.example.lhythm.core.MusicForeground.MusicForeground
@@ -17,7 +18,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
-    lateinit var mediaPlayerManager: MediaPlayerManager
+    lateinit var exoPlayer: ExoPlayer
     override fun onCreate(savedInstanceState: Bundle?) {
         createMusicNotificationChannel(this)
         super.onCreate(savedInstanceState)
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
         val notificationManager =getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel("media_channel", 1) // 1 = your notification ID
-        mediaPlayerManager.releasePlayer()
+        exoPlayer.release()
         val intent = Intent(this, MusicForeground::class.java)
         stopService(intent)
 

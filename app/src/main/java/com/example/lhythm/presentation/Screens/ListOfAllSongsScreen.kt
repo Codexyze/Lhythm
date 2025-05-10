@@ -1,13 +1,10 @@
 package com.example.lhythm.presentation.Screens
 
-import android.app.PendingIntent
 import android.content.ContentUris
 import android.content.Intent
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
 import android.util.Log
-import android.widget.Spinner
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -48,7 +45,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -192,16 +188,17 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                      mediaManagerViewModel: MediaManagerViewModel=hiltViewModel(),
                      favSongViewModel: FavSongViewModel=hiltViewModel()) {
          val context = LocalContext.current
-         val showDialogueBox = rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        playListViewModel.getSongsFromPlayList()
+        favSongViewModel.getAllFavSong()
+    }
+
+    val showDialogueBox = rememberSaveable { mutableStateOf(false) }
         val inserToPlayListState = playListViewModel.insertSongToPlaListState.collectAsState()
          val insertOrUpdateFavSongState =favSongViewModel.inserOrUpdateFavState.collectAsState()
          val getAllPlayListSongs =  playListViewModel.getSongFromPlayListState.collectAsState()
          val favSongsState = favSongViewModel.getAllFavSongState.collectAsState()
         val  duration = rememberSaveable{ mutableStateOf("0") }
-        LaunchedEffect(getAllPlayListSongs.value.data) {
-            playListViewModel.getSongsFromPlayList()
-            favSongViewModel.getAllFavSong()
-        }
 
 
         Card (modifier = Modifier.fillMaxWidth().padding(8.dp).clickable{
