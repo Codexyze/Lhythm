@@ -1,6 +1,5 @@
 package com.example.lhythm.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -65,6 +64,22 @@ val yellowColorPallete = lightColorScheme(
     primary = Color(0xFFFFEB3B),
     secondary = Color(0xFFFFFFFF)
 )
+val purpleColorPallete = lightColorScheme(
+    background = Color(0xFF000000),
+    primary = Color(0xFFDF77EE),
+    secondary = Color(0xFFFFFFFF)
+)
+val pinkColorPallete = lightColorScheme(
+    background = Color(0xFF000000),
+    primary = Color(0xFFF35389),
+    secondary = Color(0xFFFFFFFF)
+)
+val orangeColorPallete = lightColorScheme(
+    background = Color(0xFF000000),
+    primary = Color(0xFFF54E1B),
+    secondary = Color(0xFFFFFFFF)
+)
+
 
 @Composable
 fun LhythmTheme(
@@ -106,6 +121,9 @@ fun LhythmCustomTheme(
         Constants.GREENTHEME -> greenColorPallete
         Constants.BLUETHEME -> blueColorPallete
         Constants.YELLOWTHEME -> yellowColorPallete
+        Constants.PURPLETHEME -> purpleColorPallete
+        Constants.PINKTHEME -> pinkColorPallete
+        Constants.ORANGETHEME -> orangeColorPallete
         else -> darkColorPallete
     }
     MaterialTheme(

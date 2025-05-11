@@ -23,11 +23,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.airbnb.lottie.model.content.CircleShape
 import com.example.lhythm.constants.Constants
 import com.example.lhythm.presentation.ViewModels.OnBoardingViewModel
 
@@ -98,8 +96,17 @@ fun SettingScreen(
                             ThemeCircleButton(color = Color.Yellow) {
                                 themeSelectionViewModel.updateThemeSelection(Constants.YELLOWTHEME)
                             }
-                            ThemeCircleButton(color = Color.Yellow) {
-                                themeSelectionViewModel.updateThemeSelection(Constants.YELLOWTHEME)
+
+                        }
+                        Row {
+                            ThemeCircleButton(color =Color(0xFFDF77EE)) {
+                                themeSelectionViewModel.updateThemeSelection(Constants.PURPLETHEME)
+                            }
+                            ThemeCircleButton(color =Color(0xFFF35389)) {
+                                themeSelectionViewModel.updateThemeSelection(Constants.PINKTHEME)
+                            }
+                            ThemeCircleButton(color = Color(0xFFF54E1B)) {
+                                themeSelectionViewModel.updateThemeSelection(Constants.ORANGETHEME)
                             }
                         }
                     }
