@@ -60,6 +60,11 @@ val blueColorPallete = lightColorScheme(
     primary = Color(0xFF03A9F4),
     secondary = Color(0xFFFFFFFF)
 )
+val yellowColorPallete = lightColorScheme(
+    background = Color(0xFF000000),
+    primary = Color(0xFFFFEB3B),
+    secondary = Color(0xFFFFFFFF)
+)
 
 @Composable
 fun LhythmTheme(
@@ -100,6 +105,7 @@ fun LhythmCustomTheme(
         Constants.REDTHEME -> darkColorPallete
         Constants.GREENTHEME -> greenColorPallete
         Constants.BLUETHEME -> blueColorPallete
+        Constants.YELLOWTHEME -> yellowColorPallete
         else -> darkColorPallete
     }
     MaterialTheme(
