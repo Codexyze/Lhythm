@@ -14,6 +14,8 @@ import javax.inject.Inject
 class OnBoardingViewModel @Inject constructor (private val prefrence: UserPrefrence): ViewModel(){
     private val _onBoardingPrefrence = MutableStateFlow<Boolean?>(null)
     val onBoardingPrefrence = _onBoardingPrefrence.asStateFlow()
+    private val _themeSelection = MutableStateFlow<String?>(null)
+    val themeSelection = _themeSelection.asStateFlow()
     fun getLatestValueOfPref(){
         viewModelScope.launch {
             prefrence.onBoardingPref.collect {
@@ -27,5 +29,19 @@ class OnBoardingViewModel @Inject constructor (private val prefrence: UserPrefre
             prefrence.updateOnBardingPref()
         }
     }
+   fun getThemeSelection(){
+       viewModelScope.launch(Dispatchers.IO) {
+           prefrence.themeSelection.collect {
+               _themeSelection.value = it
+           }
+       }
+   }
+
+   fun updateThemeSelection(theme: String){
+       viewModelScope.launch(Dispatchers.IO) {
+           prefrence.updateThemeSelection(theme)
+       }
+   }
+
 
 }

@@ -9,8 +9,13 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.lhythm.constants.Constants
+import com.example.lhythm.presentation.ViewModels.OnBoardingViewModel
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -45,6 +50,17 @@ val lightColorPallete = lightColorScheme(
     primary = Color(0xFFFF0B55),
     secondary = Color(0xFFFFFFFF)
 )
+val greenColorPallete = lightColorScheme(
+    background = Color(0xFF000000),
+    primary = Color(0xFF8BC34A),
+    secondary = Color(0xFFFFFFFF)
+)
+val blueColorPallete = lightColorScheme(
+    background = Color(0xFF000000),
+    primary = Color(0xFF03A9F4),
+    secondary = Color(0xFFFFFFFF)
+)
+
 @Composable
 fun LhythmTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -72,9 +88,20 @@ fun LhythmTheme(
 @Composable
 fun LhythmCustomTheme(
     darktheme: Boolean = isSystemInDarkTheme(),
+    themeViewModel:OnBoardingViewModel = hiltViewModel(),
     content: @Composable () -> Unit
 ){
-    val colourScheme = if(darktheme) darkColorPallete else lightColorPallete
+    LaunchedEffect(Unit) {
+        themeViewModel.getThemeSelection()
+    }
+    val themeState = themeViewModel.themeSelection.collectAsState()
+    //val colourScheme = if(darktheme) darkColorPallete else lightColorPallete
+    val colourScheme = when(themeState.value){
+        Constants.REDTHEME -> darkColorPallete
+        Constants.GREENTHEME -> greenColorPallete
+        Constants.BLUETHEME -> blueColorPallete
+        else -> darkColorPallete
+    }
     MaterialTheme(
         colorScheme = colourScheme,
         typography = Typography,

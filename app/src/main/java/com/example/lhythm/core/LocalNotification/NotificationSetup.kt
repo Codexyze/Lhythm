@@ -18,7 +18,6 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerNotificationManager
 import com.example.lhythm.R
 import com.example.lhythm.constants.Constants
-import com.example.lhythm.core.MusicForeground.MusicForeground
 import com.example.lhythm.presentation.Screens.MainActivity
 import javax.inject.Inject
 
@@ -46,10 +45,10 @@ fun createMusicExoNotification(exoPlayer: ExoPlayer, context: Context) {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
                 super.onNotificationCancelled(notificationId, dismissedByUser)
-                val intent = Intent(context, MusicForeground::class.java)
+               // val intent = Intent(context, MusicForeground::class.java)
                 exoPlayer.stop()
                 exoPlayer.release()
-                context.stopService(intent)
+               // context.stopService(intent)
             }
 
             @RequiresApi(Build.VERSION_CODES.O)
@@ -58,8 +57,8 @@ fun createMusicExoNotification(exoPlayer: ExoPlayer, context: Context) {
                 notification: Notification,
                 ongoing: Boolean
             ) {
-                val intent = Intent(context, MusicForeground::class.java)
-               context.startForegroundService(intent)
+               // val intent = Intent(context, MusicForeground::class.java)
+              // context.startForegroundService(intent)
             }
         })
         .build()

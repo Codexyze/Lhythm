@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.PlaylistAddCheck
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -44,7 +45,12 @@ fun HomeScreen(navController: NavController) {
         BottomNaviagtionItem(
             title = "PlayList",
             icon = Icons.Outlined.PlaylistAddCheck
+        ),
+        BottomNaviagtionItem(
+            title = "Settings",
+            icon = Icons.Outlined.Settings
         )
+
 
     )
 
@@ -101,6 +107,9 @@ fun ContentScreen(navController: NavController,index: Int) {
         }
         3->{
             PlayListExample(navController = navController)
+        }
+        4->{
+            SettingScreen(navController = navController)
         }
 
     }

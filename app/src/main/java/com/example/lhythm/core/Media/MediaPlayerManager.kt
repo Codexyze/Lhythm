@@ -31,7 +31,7 @@ private val  exoPlayer: ExoPlayer, private val mediaSession: MediaSession
 
         exoPlayer.apply {
             setMediaItem(MediaItem.fromUri(uri))
-            createMusicExoNotification(exoPlayer = exoPlayer, context = context)
+           // createMusicExoNotification(exoPlayer = exoPlayer, context = context)
             prepare()
             playWhenReady = true
         }
@@ -132,6 +132,8 @@ private val  exoPlayer: ExoPlayer, private val mediaSession: MediaSession
                     Log.d("MediaPlayerManager", "Now playing index: $currentIndex")
                 }
             })
+
+
         }
 
     }
@@ -145,8 +147,8 @@ private val  exoPlayer: ExoPlayer, private val mediaSession: MediaSession
         exoPlayer.stop()
         exoPlayer.release()
         mediaSession.release()
-        val intent = Intent(this, MusicForeground::class.java)
-        stopService(intent)
+//        val intent = Intent(this, MusicForeground::class.java)
+//        stopService(intent)
 
     }
 }

@@ -204,8 +204,8 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
         Card (modifier = Modifier.fillMaxWidth().padding(8.dp).clickable{
             if (!songUriList.isNullOrEmpty()){
                 mediaManagerViewModel.playPlayListWithIndex(listOfSongsUri = songUriList, index = index, context = context)
-                val intent = Intent(context, MusicForeground::class.java)
-                 startForegroundService(context, intent)
+//                val intent = Intent(context, MusicForeground::class.java)
+//                startForegroundService(context, intent)
 
             }
             else if (songPath.isNullOrEmpty()){
