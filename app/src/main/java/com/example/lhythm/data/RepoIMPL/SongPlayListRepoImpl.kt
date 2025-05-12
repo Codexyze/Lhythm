@@ -2,6 +2,7 @@ package com.example.lhythm.data.RepoIMPL
 
 import android.util.Log
 import com.example.lhythm.core.StateHandeling.ResultState
+import com.example.lhythm.data.Local.PlayListTable
 import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.data.Local.SongPlayListDataBase
 import com.example.lhythm.domain.Repository.SongPlayListRepository
@@ -64,5 +65,17 @@ class SongPlayListRepoImpl @Inject constructor(private val dataBase: SongPlayLis
         }catch (e: Exception){
             emit(ResultState.Error(e.message.toString()))
         }
+    }
+
+    override suspend fun createUpdateNewPlayList(playListTable: PlayListTable): Flow<ResultState<String>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deletePlayList(playListTable: PlayListTable): Flow<ResultState<String>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAllPlayList(): Flow<ResultState<List<PlayListTable>>> {
+        TODO("Not yet implemented")
     }
 }

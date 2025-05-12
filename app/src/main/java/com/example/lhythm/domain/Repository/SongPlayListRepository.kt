@@ -1,6 +1,7 @@
 package com.example.lhythm.domain.Repository
 
 import com.example.lhythm.core.StateHandeling.ResultState
+import com.example.lhythm.data.Local.PlayListTable
 import com.example.lhythm.data.Local.SongEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -15,4 +16,10 @@ interface SongPlayListRepository {
     suspend fun searchFromPlaylist(query: String): Flow<ResultState<List<SongEntity>>>
 
     suspend fun getLyricsFromPlaylist(id: Int): Flow<ResultState<String>>
+
+    suspend fun createUpdateNewPlayList(playListTable: PlayListTable): Flow<ResultState<String>>
+
+    suspend fun deletePlayList(playListTable: PlayListTable): Flow<ResultState<String>>
+
+    suspend fun getAllPlayList(): Flow<ResultState<List<PlayListTable>>>
 }

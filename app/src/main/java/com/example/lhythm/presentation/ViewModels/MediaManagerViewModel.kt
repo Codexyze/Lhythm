@@ -1,7 +1,9 @@
 package com.example.lhythm.presentation.ViewModels
 
 import android.content.Context
+import android.media.audiofx.Equalizer
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
@@ -21,9 +23,6 @@ class MediaManagerViewModel @Inject constructor(private val mediaMananger: Media
     val currentSongPositionState =_currentSongPositionState.asStateFlow()
     private val _isplayingState = MutableStateFlow<Boolean>(value = false)
     val isplayingState =_isplayingState.asStateFlow()
-//    private var _songQueue : List<Uri> = mediaMananger.songList
-//    var songQueue : List<Uri> = _songQueue
-//    var Index:Int =0
     private val _songQueue = MutableStateFlow<List<Uri>>(emptyList())
     val songQueue = _songQueue.asStateFlow()
     private  val _index = MutableStateFlow(0)
@@ -93,10 +92,5 @@ fun getCurrentPosition() {
         _index.value=index
         _songQueue.value=listOfSongsUri
         mediaMananger.playPlayListWithIndex(listOfSongsUri,index)
-
     }
-
-
-
-
 }
