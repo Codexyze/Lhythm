@@ -87,3 +87,15 @@ data class GetLyricsFromPlaylistState(
     val data: String= "",
     val error: String ? = null
 )
+
+data class CreateOrUpdatePlayListState(
+    val isLoading: Boolean = false,
+    val data: String= "",
+    val error: String ? = null
+)
+
+data class DeletePlayListState(
+    val isLoading: Boolean = false,
+    val data: String= "",
+    val error: String ? = null
+)

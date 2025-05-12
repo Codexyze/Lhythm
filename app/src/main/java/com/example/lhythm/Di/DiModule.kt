@@ -1,6 +1,8 @@
 package com.example.lhythm.Di
 
 import android.content.Context
+import androidx.annotation.OptIn
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.room.Room
@@ -16,7 +18,10 @@ import com.example.lhythm.domain.Repository.FavSongRepository
 import com.example.lhythm.domain.Repository.GetAllSongRepository
 import com.example.lhythm.domain.Repository.GetCategoryRepository
 import com.example.lhythm.domain.Repository.SongPlayListRepository
+import com.example.lhythm.domain.Usecases.CreateUpdateNewPlayListUseCase
 import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
+import com.example.lhythm.domain.Usecases.DeletePlayListUseCase
+import com.example.lhythm.domain.Usecases.GetAllPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetAllSongComposerASCUseCase
 import com.example.lhythm.domain.Usecases.GetAllSongUseCase
 import com.example.lhythm.domain.Usecases.GetByYearASCUseCase
@@ -55,6 +60,7 @@ object DiModule {
         return GetAllSongUseCase(getAllSongRepository = getAllSongsRepoIntefcae(context = context))
     }
 
+    @OptIn(UnstableApi::class)
     @Provides
     @Singleton
     fun MediaPlayerManagerInstance(@ApplicationContext context: Context,exoPlayer: ExoPlayer,mediaSession: MediaSession): MediaPlayerManager{
@@ -143,6 +149,22 @@ object DiModule {
     @Provides
     fun MediaSessionBuilderObj(@ApplicationContext context: Context,player: ExoPlayer): MediaSession{
         return MediaSession.Builder(context,player).setId(UUID.randomUUID().toString()).build()
+    }
+
+    //Playlist Injections
+    @Provides
+    fun createUpdatePlayListObj(@ApplicationContext context: Context):CreateUpdateNewPlayListUseCase{
+        return CreateUpdateNewPlayListUseCase(songPlayListRepository = SongPlayListRepoInterfaceObj(context = context))
+    }
+
+    @Provides
+    fun deletePlayListObj(@ApplicationContext context: Context):DeletePlayListUseCase{
+        return DeletePlayListUseCase(songPlayListRepository = SongPlayListRepoInterfaceObj(context = context))
+    }
+
+    @Provides
+    fun getAllPlayListObj(@ApplicationContext context: Context): GetAllPlayListUseCase{
+        return GetAllPlayListUseCase(songPlayListRepository = SongPlayListRepoInterfaceObj(context = context))
     }
 
 }

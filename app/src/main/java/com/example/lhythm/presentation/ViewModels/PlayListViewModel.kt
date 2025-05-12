@@ -4,13 +4,19 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lhythm.core.StateHandeling.ResultState
+import com.example.lhythm.data.Local.PlayListTable
 import com.example.lhythm.data.Local.SongEntity
+import com.example.lhythm.domain.StateHandeling.CreateOrUpdatePlayListState
+import com.example.lhythm.domain.StateHandeling.DeletePlayListState
 import com.example.lhythm.domain.StateHandeling.DeleteSongFromPlayListState
 import com.example.lhythm.domain.StateHandeling.GetLyricsFromPlaylistState
 import com.example.lhythm.domain.StateHandeling.GetSongsFromPlayListState
 import com.example.lhythm.domain.StateHandeling.InsertSongsToPlayListState
 import com.example.lhythm.domain.StateHandeling.SearchPlayListSongState
+import com.example.lhythm.domain.Usecases.CreateUpdateNewPlayListUseCase
 import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
+import com.example.lhythm.domain.Usecases.DeletePlayListUseCase
+import com.example.lhythm.domain.Usecases.GetAllPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetLyricsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetSongsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
@@ -28,7 +34,10 @@ class PlayListViewModel @Inject constructor(
     private val insertSongToPlayListUseCase: InsertSongToPlayListUseCase,
     private val deleteSongFromPlayListUseCase: DeleteClickedPlayListUseCase,
     private val searchSongUseCase:SearchFromPlayListUseCase,
-    private val getLyricsFromPlayList: GetLyricsFromPlayListUseCase
+    private val getLyricsFromPlayList: GetLyricsFromPlayListUseCase,
+    private val createOrUpdateUseCase: CreateUpdateNewPlayListUseCase,
+    private val deletePlayListUseCase: DeletePlayListUseCase,
+    private val getAllPlayListUseCase: GetAllPlayListUseCase
 )  : ViewModel() {
     private val _getSongFromPlayListState = MutableStateFlow(GetSongsFromPlayListState())
     val getSongFromPlayListState = _getSongFromPlayListState.asStateFlow()
@@ -40,6 +49,10 @@ class PlayListViewModel @Inject constructor(
     val searchSongState = _searchSongState.asStateFlow()
     private val _getLyricsFromPlayListState = MutableStateFlow(GetLyricsFromPlaylistState())
     val getLyricsFromPlayListState = _getLyricsFromPlayListState.asStateFlow()
+    private val _createOrUpdatePlayList = MutableStateFlow(CreateOrUpdatePlayListState())
+    val createOrUpdatePlayList = _createOrUpdatePlayList.asStateFlow()
+    private val _deletePlayListState = MutableStateFlow(DeletePlayListState())
+    val deletePlayListState = _deletePlayListState.asStateFlow()
     init {
         getSongsFromPlayList()
     }
@@ -146,6 +159,48 @@ class PlayListViewModel @Inject constructor(
            }
 
         }
+    }
+
+    fun createOrInsertPlayList(playListTable: PlayListTable) {
+        viewModelScope.launch(Dispatchers.IO) {
+           createOrUpdateUseCase.invoke(playListTable = playListTable).collect {result->
+               when(result){
+                   is ResultState.Loading->{
+                       _createOrUpdatePlayList.value = CreateOrUpdatePlayListState(isLoading = true)
+                   }
+                   is ResultState.Success->{
+                       _createOrUpdatePlayList.value = CreateOrUpdatePlayListState(isLoading = false, data = result.data)
+                   }
+                   is ResultState.Error->{
+                       _createOrUpdatePlayList.value = CreateOrUpdatePlayListState(isLoading = false, error = result.message)
+                   }
+               }
+
+           }
+
+        }
+
+    }
+
+    fun deletePlayList(playListTable: PlayListTable) {
+        viewModelScope.launch(Dispatchers.IO) {
+            deletePlayListUseCase.invoke(playListTable = playListTable).collect {result->
+                when(result){
+                    is ResultState.Loading->{
+                        _deletePlayListState.value = DeletePlayListState(isLoading = true)
+                    }
+                    is ResultState.Success->{
+                        _deletePlayListState.value = DeletePlayListState(isLoading = false, data = result.data)
+                    }
+                    is ResultState.Error->{
+                        _deletePlayListState.value = DeletePlayListState(isLoading = false, error = result.message)
+                    }
+                }
+
+            }
+
+        }
+
     }
 
 }

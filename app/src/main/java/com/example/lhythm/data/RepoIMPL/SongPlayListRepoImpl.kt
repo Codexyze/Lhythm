@@ -67,15 +67,33 @@ class SongPlayListRepoImpl @Inject constructor(private val dataBase: SongPlayLis
         }
     }
 
-    override suspend fun createUpdateNewPlayList(playListTable: PlayListTable): Flow<ResultState<String>> {
-        TODO("Not yet implemented")
+    override suspend fun createUpdateNewPlayList(playListTable: PlayListTable): Flow<ResultState<String>> =flow{
+        emit(ResultState.Loading)
+        try {
+            dataBase.PlayListDao().addPlayList(playListTable = playListTable)
+            emit(ResultState.Success("Sucessfully added to playlist"))
+        }catch (e: Exception){
+            emit(ResultState.Error(e.message.toString()))
+        }
     }
 
-    override suspend fun deletePlayList(playListTable: PlayListTable): Flow<ResultState<String>> {
-        TODO("Not yet implemented")
+    override suspend fun deletePlayList(playListTable: PlayListTable): Flow<ResultState<String>> =flow{
+        emit(ResultState.Loading)
+        try {
+            dataBase.PlayListDao().deletePlayList(playListTable = playListTable)
+            emit(ResultState.Success("Sucessfully deleted"))
+        }catch (e: Exception){
+            emit(ResultState.Error(e.message.toString()))
+        }
     }
 
-    override suspend fun getAllPlayList(): Flow<ResultState<List<PlayListTable>>> {
-        TODO("Not yet implemented")
+    override suspend fun getAllPlayList(): Flow<ResultState<List<PlayListTable>>> =flow{
+        emit(ResultState.Loading)
+        try {
+            val data = dataBase.PlayListDao().getAllPlayList()
+            emit(ResultState.Success(data))
+        }catch (e: Exception){
+            emit(ResultState.Error(e.message.toString()))
+        }
     }
 }
