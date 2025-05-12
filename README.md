@@ -4,6 +4,19 @@
 
 ---
 
+<div style="display: flex; flex-wrap: wrap;">
+  <img src="https://github.com/user-attachments/assets/52a162dd-5c08-41fa-8ece-4e20cc398548" width="24%" />
+  <img src="https://github.com/user-attachments/assets/86fafd0f-ecb1-43c3-852b-90e97846819f" width="24%" />
+  <img src="https://github.com/user-attachments/assets/9c770016-4db3-41aa-b435-43bfc0237f0a" width="24%" />
+  <img src="https://github.com/user-attachments/assets/b13f1c27-35e2-42a2-9375-7548eee439cb" width="24%" />
+  <img src="https://github.com/user-attachments/assets/335d65ea-dcec-4ff1-ade4-946a8539b71f" width="24%" />
+  <img src="https://github.com/user-attachments/assets/6bd76060-541e-4924-94f8-5b8ee9d8e3ef" width="24%" />
+  <img src="https://github.com/user-attachments/assets/e693d197-5b4c-40e1-b028-12ce26f6da2b" width="24%" />
+  <img src="https://github.com/user-attachments/assets/576e6448-7aa1-4670-8fd5-fd56d26fbae9" width="24%" />
+</div>
+
+---
+
 ## App Architecture
 
 **Lythm** follows the **MVVM (Model-View-ViewModel)** architecture combined with **Clean Architecture** principles. This ensures that the app is modular, maintainable, and scalable. Here's a brief breakdown:
@@ -14,15 +27,45 @@
 
 ---
 
-## Key Features
 
-The app offers several essential features to enhance the music listening experience. Some of the key features include:
+## 🎵 Current  Features :
 
-- **Play Music (Basic)**: Allows users to play their locally stored music files with ease.
-- **List Play**: Users can view their music collection in a list format and play songs sequentially or in random order.
-- **Personal Playlist**: Users can create and manage their own playlists, adding or removing songs as they desire.
-- **Sorting**: The app supports sorting of music files by year, artist, name, genre, etc., to make it easy for users to find their preferred tracks.
-- **Lyrics Embedding**: Allows users to view embedded lyrics while listening to their favorite songs.
+- ▶️ **Basic Playback Controls**  
+  Play, pause, skip to next, rewind 10 seconds, and forward 10 seconds effortlessly.
+
+- 🔔 **Notification Controls**  
+  Control your music right from the notification bar.
+
+- 🎧 **Headphone Controls**  
+  Control your music with headphones/earphones.
+
+- ❤️ **Favorite Track Saving**  
+  Mark your favorite tracks and find them anytime.
+
+- 📁 **Playlist Creation**  
+  Create and manage your own playlists with ease.
+
+- 🧭 **Bottom Navigation**  
+  Simple and intuitive bottom bar navigation for a smooth user experience.
+
+- 🎤 **Embedded Lyrics Support** *(Most Special!)*  
+  View lyrics embedded within the song — karaoke night just got easier!
+
+- 📊 **Auto-Generated App Summary**  
+  Automatically generated info summary that gives you a quick snapshot of your music stats.
+
+- 🧠 **Sorting Options**  
+  Sort your songs by:
+  - Ascending / Descending order  
+  - Artist  
+  - Year  
+  - Favorite  
+  - Composer
+
+- 🔍 **Powerful Search Functionality**  
+  Search in:
+  - 🎼 All Songs  
+  - 🎶 Your Playlists  
 
 ---
 
@@ -64,12 +107,11 @@ The app offers several essential features to enhance the music listening experie
 
 Lythm utilizes **Content Resolver** to fetch music files from the device’s storage. It identifies supported audio formats and dynamically generates a list of music that can be played.
 
-The **Splash Screen** initializes essential components (like the music list, playlists, etc.) asynchronously, making the startup time smooth and efficient. Once the app is ready, users can start exploring their music library right away.
 
 ---
 ## 📦 Versions :
 
-- [**v0.1.0-beta**](https://github.com/Codexyze/Lhythm/releases/tag/v0.1.0-beta)
+- [**v0.1.0-beta**](https://github.com/Codexyze/Lhythm/releases/tag/v0.1.0-beta) : **First Beta** release
 
 ---
 ## Future Improvements
@@ -80,6 +122,7 @@ As the project continues to evolve, here are some features planned for future up
 - **Offline Mode**: Allow users to save their favorite playlists for offline listening.
 - **Dark Mode**: Provide a dark theme for users who prefer a more subdued color scheme.
 - **Social Sharing**: Allow users to share their favorite songs or playlists with others on social media.
+- **Personal Playlist**: Allows users to create their own playlists. They can add or remove songs, manage playlist names, and access them quickly from the home screen.
 
 ---
 
