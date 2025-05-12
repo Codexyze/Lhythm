@@ -67,7 +67,11 @@ Lythm utilizes **Content Resolver** to fetch music files from the device’s sto
 The **Splash Screen** initializes essential components (like the music list, playlists, etc.) asynchronously, making the startup time smooth and efficient. Once the app is ready, users can start exploring their music library right away.
 
 ---
+## 📦 Versions :
 
+- [**v0.1.0-beta**](https://github.com/Codexyze/Lhythm/releases/tag/v0.1.0-beta)
+
+---
 ## Future Improvements
 
 As the project continues to evolve, here are some features planned for future updates:
