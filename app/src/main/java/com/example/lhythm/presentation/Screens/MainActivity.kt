@@ -26,6 +26,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             LhythmCustomTheme {
                 MainApp()
+                //ListOfPlayListScreen()
             }
         }
     }
