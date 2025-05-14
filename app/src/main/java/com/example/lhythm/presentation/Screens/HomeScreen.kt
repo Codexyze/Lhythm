@@ -106,7 +106,8 @@ fun ContentScreen(navController: NavController,index: Int) {
            SongCategoriesScreen(navController = navController)
         }
         3->{
-            PlayListExample(navController = navController)
+            //PlayListExample(navController = navController)
+            ListOfPlayListScreen(navController = navController)
         }
         4->{
             SettingScreen(navController = navController)

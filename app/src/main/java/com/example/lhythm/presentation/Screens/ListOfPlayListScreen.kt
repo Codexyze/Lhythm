@@ -13,6 +13,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,15 +24,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.lhythm.constants.Constants
 import com.example.lhythm.data.Local.PlayListTable
+import com.example.lhythm.presentation.Navigation.USERPLAYLISTSCREEN
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.Utils.showToastMessage
 import com.example.lhythm.presentation.ViewModels.PlayListViewModel
 
 @Composable
-fun ListOfPlayListScreen(playListViewModel: PlayListViewModel = hiltViewModel()) {
+fun ListOfPlayListScreen(playListViewModel: PlayListViewModel = hiltViewModel(),navController: NavController) {
     LaunchedEffect(Unit) {
         playListViewModel.getAllPlayList()
     }
@@ -72,9 +76,9 @@ fun ListOfPlayListScreen(playListViewModel: PlayListViewModel = hiltViewModel())
                     }
                 }) {
                 it
-                LazyColumn {
+                LazyColumn(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
                     items(playListState.value.data) { playListTable ->
-                        EachPlayListNameItem(playListTable = playListTable)
+                        EachPlayListNameItem(playListTable = playListTable, navController = navController)
                     }
                 }
 
@@ -126,11 +130,19 @@ fun ListOfPlayListScreen(playListViewModel: PlayListViewModel = hiltViewModel())
                         },
                         label = {
                             Text("PlayList Name")
-                        }
+                        },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            errorTextColor = MaterialTheme.colorScheme.primary,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                        ),textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
                 }
 
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
     }
 
@@ -139,10 +151,11 @@ fun ListOfPlayListScreen(playListViewModel: PlayListViewModel = hiltViewModel())
 }
 
 @Composable
-fun EachPlayListNameItem(playListTable: PlayListTable) {
+fun EachPlayListNameItem(playListTable: PlayListTable,navController: NavController) {
     Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Button(
             onClick = {
+                navController.navigate(USERPLAYLISTSCREEN)
 
             },
             modifier = Modifier.fillMaxWidth(0.9f)

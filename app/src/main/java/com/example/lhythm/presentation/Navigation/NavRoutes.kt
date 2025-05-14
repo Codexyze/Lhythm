@@ -11,3 +11,6 @@ object ONBOARDING
 
 @Serializable
 object HOMESCREEN
+
+@Serializable
+object USERPLAYLISTSCREEN

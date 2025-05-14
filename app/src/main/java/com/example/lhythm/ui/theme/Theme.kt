@@ -41,33 +41,39 @@ private val LightColorScheme = lightColorScheme(
 val darkColorPallete =darkColorScheme(
     background = Color(0xFF000000),
     primary = Color(0xFFFF0B55),
-    secondary = Color(0xFFFFFFFF)
+    secondary = Color(0xFFFFFFFF),
+    surfaceVariant = Color(0x13000000)
 )
 
 val lightColorPallete = lightColorScheme(
     background = Color(0xFF000000),
     primary = Color(0xFFFF0B55),
-    secondary = Color(0xFFFFFFFF)
+    secondary = Color(0xFFFFFFFF),
+    surfaceVariant = Color(0x13000000)
 )
 val greenColorPallete = lightColorScheme(
     background = Color(0xFF000000),
     primary = Color(0xFF8BC34A),
-    secondary = Color(0xFFFFFFFF)
+    secondary = Color(0xFFFFFFFF),
+    surfaceVariant = Color(0x13000000)
 )
 val blueColorPallete = lightColorScheme(
     background = Color(0xFF000000),
     primary = Color(0xFF03A9F4),
-    secondary = Color(0xFFFFFFFF)
+    secondary = Color(0xFFFFFFFF),
+    surfaceVariant = Color(0x13000000)
 )
 val yellowColorPallete = lightColorScheme(
     background = Color(0xFF000000),
     primary = Color(0xFFFFEB3B),
-    secondary = Color(0xFFFFFFFF)
+    secondary = Color(0xFFFFFFFF),
+    surfaceVariant = Color(0x13000000)
 )
 val purpleColorPallete = lightColorScheme(
     background = Color(0xFF000000),
     primary = Color(0xFFDF77EE),
-    secondary = Color(0xFFFFFFFF)
+    secondary = Color(0xFFFFFFFF),
+    surfaceVariant = Color(0x13000000)
 )
 val pinkColorPallete = lightColorScheme(
     background = Color(0xFF000000),
@@ -77,7 +83,8 @@ val pinkColorPallete = lightColorScheme(
 val orangeColorPallete = lightColorScheme(
     background = Color(0xFF000000),
     primary = Color(0xFFF54E1B),
-    secondary = Color(0xFFFFFFFF)
+    secondary = Color(0xFFFFFFFF),
+    surfaceVariant = Color(0x13000000)
 )
 
 

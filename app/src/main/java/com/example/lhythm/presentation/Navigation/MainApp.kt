@@ -1,11 +1,11 @@
 package com.example.lhythm.presentation.Navigation
 
+import android.os.Build
 import android.util.Log
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,9 +13,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.lhythm.presentation.Screens.HomeScreen
 import com.example.lhythm.presentation.Screens.ListOfAllSongsScreen
 import com.example.lhythm.presentation.Screens.OnBoardingScreen
+import com.example.lhythm.presentation.Screens.UserPlayListScreen
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.ViewModels.OnBoardingViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
     val state =viewmodel.onBoardingPrefrence.collectAsState()
@@ -36,6 +38,9 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
 
             composable<HOMESCREEN> {
                 HomeScreen(navController = navcontroller)
+            }
+            composable<USERPLAYLISTSCREEN> {
+                UserPlayListScreen(navController = navcontroller)
             }
 
         }
