@@ -2,6 +2,7 @@ package com.example.lhythm.data.RepoIMPL
 
 import android.util.Log
 import com.example.lhythm.core.StateHandeling.ResultState
+import com.example.lhythm.data.Local.PlayListSongMapper
 import com.example.lhythm.data.Local.PlayListTable
 import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.data.Local.SongPlayListDataBase
@@ -91,6 +92,36 @@ class SongPlayListRepoImpl @Inject constructor(private val dataBase: SongPlayLis
         emit(ResultState.Loading)
         try {
             val data = dataBase.PlayListDao().getAllPlayList()
+            emit(ResultState.Success(data))
+        }catch (e: Exception){
+            emit(ResultState.Error(e.message.toString()))
+        }
+    }
+//
+    override suspend fun upsertPlayListSongs(playListSongMapper: PlayListSongMapper): Flow<ResultState<String>> =flow{
+        emit(ResultState.Loading)
+        try {
+            val data =dataBase.PlayListSongsDao().upsertPlayListSongs(playListSongMapper = playListSongMapper)
+            emit(ResultState.Success(data.toString()))
+        }catch (e: Exception){
+            emit(ResultState.Error(e.message.toString()))
+        }
+    }
+//
+    override suspend fun deletePlayListSongs(playListSongMapper: PlayListSongMapper): Flow<ResultState<String>> =flow{
+        emit(ResultState.Loading)
+        try {
+            val data =dataBase.PlayListSongsDao().deletePlayListSongs(playListSongMapper = playListSongMapper)
+            emit(ResultState.Success(data.toString()))
+        }catch (e: Exception){
+            emit(ResultState.Error(e.message.toString()))
+        }
+    }
+//
+    override suspend fun getAllPlayListSongs(): Flow<ResultState<List<PlayListSongMapper>>> =flow{
+        emit(ResultState.Loading)
+        try {
+            val data =dataBase.PlayListSongsDao().getAllPlayListSongs()
             emit(ResultState.Success(data))
         }catch (e: Exception){
             emit(ResultState.Error(e.message.toString()))

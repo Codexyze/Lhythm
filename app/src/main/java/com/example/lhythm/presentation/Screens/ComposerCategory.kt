@@ -56,7 +56,8 @@ fun ComposerCategory(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                 songArtist = song.artist, songDuration = song.duration,
                                 songYear = song.year, albumID = song.albumId,
                                 songUriList = listOfComposerPlay,
-                                index = composerSortStateAsc.value.data.indexOf(song))
+                                index = composerSortStateAsc.value.data.indexOf(song),
+                                navController = navController)
                         }
 
                     }

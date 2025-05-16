@@ -55,11 +55,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.lhythm.R
+import com.example.lhythm.constants.Constants
 import com.example.lhythm.core.MusicForeground.MusicForeground
 import com.example.lhythm.data.Local.FavSongEntity
+import com.example.lhythm.data.Local.PlayListTable
 import com.example.lhythm.data.Local.SongEntity
+import com.example.lhythm.presentation.Navigation.USERPLAYLISTSCREEN
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.Utils.formatDuration
+import com.example.lhythm.presentation.Utils.showToastMessage
 import com.example.lhythm.presentation.ViewModels.FavSongViewModel
 import com.example.lhythm.presentation.ViewModels.GetAllSongViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
@@ -134,7 +138,8 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
                                    songYear = songsFiltered.year,songPath= songsFiltered.path,
                                    songSize = songsFiltered.size, album = songsFiltered.album,
                                    albumID = songsFiltered.albumId
-                                   , composer = songsFiltered.composer)
+                                   , composer = songsFiltered.composer,
+                                   navController = navController)
                                listOfPlayListUri.add(songsFiltered.path.toUri())
                            }
                         }
@@ -142,11 +147,15 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
 
 
                 }else{
-                    LazyColumn(modifier = Modifier.background(color = MaterialTheme.colorScheme.background).weight(0.90f)) {
+                    LazyColumn(modifier = Modifier
+                        .background(color = MaterialTheme.colorScheme.background)
+                        .weight(0.90f)) {
                         items(state.value.data) { song ->
-                            Box(modifier = Modifier.wrapContentSize().clickable{
+                            Box(modifier = Modifier
+                                .wrapContentSize()
+                                .clickable {
 
-                            }){
+                                }){
 
                                 EachSongItemLook(songid = song.id, songTitle = song.title, songArtist = song.artist,
                                     songDuration = song.duration,
@@ -154,7 +163,8 @@ fun  ListOfAllSongsScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),navCo
                                     songSize = song.size, album = song.album,
                                     songUriList = listOfAllSongs
                                     , composer = song.composer, albumID = song.albumId,
-                                    index = state.value.data.indexOf(song))
+                                    index = state.value.data.indexOf(song),
+                                    navController = navController)
                                 listOfPlayListUri.add(song.path.toUri())
 
                             }
@@ -186,40 +196,58 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                       index: Int = 0,
                      playListViewModel: PlayListViewModel=hiltViewModel(),
                      mediaManagerViewModel: MediaManagerViewModel=hiltViewModel(),
-                     favSongViewModel: FavSongViewModel=hiltViewModel()) {
-         val context = LocalContext.current
+                     favSongViewModel: FavSongViewModel=hiltViewModel(),
+                     navController: NavController
+                     ) {
     LaunchedEffect(Unit) {
         playListViewModel.getSongsFromPlayList()
         favSongViewModel.getAllFavSong()
+        playListViewModel.getAllPlayList()
+    }
+    val playListState = playListViewModel.getAllPlayListState.collectAsState()
+    val context = LocalContext.current
+    val showDialogueBox = rememberSaveable { mutableStateOf(false) }
+    val inserToPlayListState = playListViewModel.insertSongToPlaListState.collectAsState()
+    val insertOrUpdateFavSongState =favSongViewModel.inserOrUpdateFavState.collectAsState()
+    val getAllPlayListSongs =  playListViewModel.getSongFromPlayListState.collectAsState()
+    val favSongsState = favSongViewModel.getAllFavSongState.collectAsState()
+    val  duration = rememberSaveable{ mutableStateOf("0") }
+    val playListSelectionDialog = rememberSaveable { mutableStateOf(false) }
+    when{
+        playListState.value.isLoading -> {
+            LoadingScreen()
+        }
+        !playListState.value.error.isNullOrEmpty() -> {
+            Text(text = playListState.value.error.toString())
+        }
     }
 
-    val showDialogueBox = rememberSaveable { mutableStateOf(false) }
-        val inserToPlayListState = playListViewModel.insertSongToPlaListState.collectAsState()
-         val insertOrUpdateFavSongState =favSongViewModel.inserOrUpdateFavState.collectAsState()
-         val getAllPlayListSongs =  playListViewModel.getSongFromPlayListState.collectAsState()
-         val favSongsState = favSongViewModel.getAllFavSongState.collectAsState()
-        val  duration = rememberSaveable{ mutableStateOf("0") }
 
-
-        Card (modifier = Modifier.fillMaxWidth().padding(8.dp).clickable{
-            if (!songUriList.isNullOrEmpty()){
-                mediaManagerViewModel.playPlayListWithIndex(listOfSongsUri = songUriList, index = index, context = context)
+        Card (modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable {
+                if (!songUriList.isNullOrEmpty()) {
+                    mediaManagerViewModel.playPlayListWithIndex(
+                        listOfSongsUri = songUriList,
+                        index = index,
+                        context = context
+                    )
 //                val intent = Intent(context, MusicForeground::class.java)
 //                startForegroundService(context, intent)
 
-            }
-            else if (songPath.isNullOrEmpty()){
-                FancyToast.makeText(
-                    context, "Error Loading Song",
-                    FancyToast.LENGTH_SHORT,
-                    FancyToast.ERROR, false
-                ).show()
-            }else{
-                mediaManagerViewModel.playMusic(songPath.toUri())
-            }
+                } else if (songPath.isNullOrEmpty()) {
+                    FancyToast.makeText(
+                        context, "Error Loading Song",
+                        FancyToast.LENGTH_SHORT,
+                        FancyToast.ERROR, false
+                    ).show()
+                } else {
+                    mediaManagerViewModel.playMusic(songPath.toUri())
+                }
 
 
-        }, elevation = CardDefaults.elevatedCardElevation(8.dp)
+            }, elevation = CardDefaults.elevatedCardElevation(8.dp)
             , shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
                 containerColor = cardColor // Light grey like dark theme cards
@@ -277,75 +305,84 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                         Row(modifier = Modifier, horizontalArrangement = Arrangement.Absolute.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
                             Icon(imageVector = Icons.Filled.Info, contentDescription = "Info",
                                 tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.weight(1f).clickable{
-                                    showDialogueBox.value = true
-                                }
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable {
+                                        showDialogueBox.value = true
+                                    }
                             )
+                            //add to playlist
                             Icon(imageVector = Icons.Filled.Add, contentDescription = "Add to playlist",
                                 tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.weight(1f).clickable{
-                                    val data = getAllPlayListSongs.value.data
-                                    //check if exists
-                                    val songEntity= SongEntity(
-                                        path = songPath.toString(),
-                                        album = album,
-                                        artist = songArtist,
-                                        composer = composer,
-                                        duration = songDuration,
-                                        size = songSize,
-                                        title = songTitle,
-                                        year = songYear,
-                                        albumId = albumID,
-                                    )
-                                    val doesExist: Boolean =data.any {
-                                        it.title== songEntity.title
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable {
+                                        playListSelectionDialog.value = true
+//                                    val data = getAllPlayListSongs.value.data
+//                                    //check if exists
+//                                    val songEntity= SongEntity(
+//                                        path = songPath.toString(),
+//                                        album = album,
+//                                        artist = songArtist,
+//                                        composer = composer,
+//                                        duration = songDuration,
+//                                        size = songSize,
+//                                        title = songTitle,
+//                                        year = songYear,
+//                                        albumId = albumID,
+//                                    )
+//                                    val doesExist: Boolean =data.any {
+//                                        it.title== songEntity.title
+//                                    }
+//                                    Log.d("DOESEXIST", "$doesExist")
+//                                    if(doesExist){
+//                                        FancyToast.makeText(
+//                                            context, "Song Already Exists",
+//                                            FancyToast.LENGTH_SHORT,
+//                                            FancyToast.WARNING, false
+//                                        ).show()
+//                                    }else{
+//                                        playListViewModel.insertSongToPlayList(songEntity = songEntity)
+//                                    }
+
                                     }
-                                    Log.d("DOESEXIST", "$doesExist")
-                                    if(doesExist){
-                                        FancyToast.makeText(
-                                            context, "Song Already Exists",
-                                            FancyToast.LENGTH_SHORT,
-                                            FancyToast.WARNING, false
-                                        ).show()
-                                    }else{
-                                        playListViewModel.insertSongToPlayList(songEntity = songEntity)
-                                    }
-                                }
                             )
                             Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Favorite",
                                 tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.weight(1f).clickable{
-                                    //Fav impl here
-                                    val favSongEntity= FavSongEntity(
-                                        path = songPath.toString(),
-                                        album = album,
-                                        artist = songArtist,
-                                        composer = composer,
-                                        duration = songDuration,
-                                        size = songSize,
-                                        title = songTitle,
-                                        year = songYear,
-                                        albumId = albumID,
-                                        lyrics = "Unknown"
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable {
+                                        //Fav impl here
+                                        val favSongEntity = FavSongEntity(
+                                            path = songPath.toString(),
+                                            album = album,
+                                            artist = songArtist,
+                                            composer = composer,
+                                            duration = songDuration,
+                                            size = songSize,
+                                            title = songTitle,
+                                            year = songYear,
+                                            albumId = albumID,
+                                            lyrics = "Unknown"
 
-                                    )
-                                    favSongViewModel.insertOrUpdateFavSong(favSongEntity = favSongEntity)
-                                    if(!insertOrUpdateFavSongState.value.data.isNullOrEmpty()){
-                                        FancyToast.makeText(
-                                            context, "Saved",
-                                            FancyToast.LENGTH_SHORT,
-                                            FancyToast.SUCCESS, false
-                                        ).show()
-                                    }else if(!insertOrUpdateFavSongState.value.error.isNullOrEmpty()){
-                                        FancyToast.makeText(
-                                            context, "Error Saving",
-                                            FancyToast.LENGTH_SHORT,
-                                            FancyToast.ERROR, false
-                                        ).show()
+                                        )
+                                        favSongViewModel.insertOrUpdateFavSong(favSongEntity = favSongEntity)
+                                        if (!insertOrUpdateFavSongState.value.data.isNullOrEmpty()) {
+                                            FancyToast.makeText(
+                                                context, "Saved",
+                                                FancyToast.LENGTH_SHORT,
+                                                FancyToast.SUCCESS, false
+                                            ).show()
+                                        } else if (!insertOrUpdateFavSongState.value.error.isNullOrEmpty()) {
+                                            FancyToast.makeText(
+                                                context, "Error Saving",
+                                                FancyToast.LENGTH_SHORT,
+                                                FancyToast.ERROR, false
+                                            ).show()
+                                        }
+
+
                                     }
-
-
-                                }
                             )
                     }
 
@@ -388,8 +425,7 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                                         Text("Album : $album")
                                         Text("Artist : $songArtist")
                                         Text("Composer : $composer")
-                                        Text("Duration of :" +
-                                                duration.value.toString())
+                                        Text("Duration of :" + duration.value.toString())
                                         Text("Size : $songSize")
                                         Text("Title : $songTitle")
                                         Text("Year : $songYear")
@@ -403,8 +439,71 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                         }
                     )
                 }
+                if(playListSelectionDialog.value){
+                    AlertDialog(
+                        onDismissRequest = { playListSelectionDialog.value = false },
+                        title = { Text("Add to playlist") },
+                        confirmButton = {
+                            Button(onClick = {
+                                playListSelectionDialog.value = false
+                            }) {
+                                Text("Add to playlist Default")
+                            }
+                        },
+                        dismissButton = {
+                            Button(onClick = {
+                                playListSelectionDialog.value = false
+
+                            }) {
+                                Text("Close")
+                            }
+                        },
+                        text = {
+                            Column {
+                                LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    items(playListState.value.data) { playListTable ->
+                                        PlayListAddItem(playListTable = playListTable)
+                                    }
+                                }
+
+                            }
+                        }
+                    )
+
+                }
 
             }
         }
  }
 
+@Composable
+fun PlayListAddItem(playListTable: PlayListTable,playListViewModel: PlayListViewModel=hiltViewModel()) {
+    val createOrUpdatePlayListState = playListViewModel.createOrUpdatePlayListState.collectAsState()
+    val context = LocalContext.current
+    when{
+        createOrUpdatePlayListState.value.isLoading -> {
+            LoadingScreen()
+        }
+        !createOrUpdatePlayListState.value.error.isNullOrEmpty() -> {
+            Text(text = createOrUpdatePlayListState.value.error.toString())
+        }
+        !createOrUpdatePlayListState.value.data.isNullOrEmpty()->{
+
+            showToastMessage(context= context, text = "New Playlist Created", type = Constants.TOASTSUCCESS)
+
+        }
+    }
+    Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Button(
+            onClick = {
+
+
+            },
+            modifier = Modifier.fillMaxWidth(0.9f)
+        ) {
+            Text(playListTable.playListName)
+        }
+    }
+
+
+}

@@ -58,7 +58,8 @@ fun GetAllSongASCScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                 songDuration = song.duration, songYear = song.year,
                                 albumID = song.albumId,
                                 songUriList = listOfAscSongUri,
-                                index = getAllSongsASCState.value.data.indexOf(song))
+                                index = getAllSongsASCState.value.data.indexOf(song),
+                                navController = navController)
                         }
 
                     }

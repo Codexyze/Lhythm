@@ -84,6 +84,26 @@ fun ListOfPlayListScreen(playListViewModel: PlayListViewModel = hiltViewModel(),
 
             }
         }
+        playListState.value.data.isNullOrEmpty()->{
+            Scaffold(modifier = Modifier.fillMaxSize(),
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = {
+                            createUpdateDialogue.value = true
+                        }
+                    ) {
+                        Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+                    }
+                }) {
+                it
+                LazyColumn(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    items(playListState.value.data) { playListTable ->
+                        EachPlayListNameItem(playListTable = playListTable, navController = navController)
+                    }
+                }
+
+            }
+        }
 
     }
     if(createUpdateDialogue.value){

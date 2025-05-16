@@ -53,7 +53,8 @@ fun GetAllSongsByArtistScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel
                             songArtist = song.artist, songDuration = song.duration,
                             songYear = song.year, albumID = song.albumId,
                             songUriList = listOfSongByArtistUri,
-                            index = getAllSongsByArtistState.value.data.indexOf(song))
+                            index = getAllSongsByArtistState.value.data.indexOf(song),
+                            navController = navController)
                     }
 
                 }

@@ -52,7 +52,8 @@ fun GetAllSongsDESC(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                             songArtist = song.artist, songDuration = song.duration,
                             songYear = song.year, albumID = song.albumId,
                             songUriList = listOfDescSongsUri,
-                            index = getAllSongsDESCState.value.data.indexOf(song))
+                            index = getAllSongsDESCState.value.data.indexOf(song),
+                            navController = navController)
                     }
 
                 }
