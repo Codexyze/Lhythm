@@ -13,6 +13,11 @@
   <img src="https://github.com/user-attachments/assets/6bd76060-541e-4924-94f8-5b8ee9d8e3ef" width="24%" />
   <img src="https://github.com/user-attachments/assets/e693d197-5b4c-40e1-b028-12ce26f6da2b" width="24%" />
   <img src="https://github.com/user-attachments/assets/576e6448-7aa1-4670-8fd5-fd56d26fbae9" width="24%" />
+  <img src="https://github.com/user-attachments/assets/9e7a59c4-3d49-4c87-9c9f-a6fb9b96e26c"  width="24%" />
+  <img src="https://github.com/user-attachments/assets/f8eb0ac0-9baa-41f8-b717-ad074fadf102"  width="24%" />
+  <img src="https://github.com/user-attachments/assets/28fb80af-4aae-4571-915f-df3906f7e48a"  width="24%" />
+  <img src="https://github.com/user-attachments/assets/acdb24dc-3812-4c69-857d-cb2874e5d604"  width="24%" />
+ <img src="https://github.com/user-attachments/assets/99c3ec54-8b85-4449-9958-eea09817031e"  width="24%" />
 </div>
 
 ---
@@ -67,6 +72,18 @@
   - 🎼 All Songs  
   - 🎶 Your Playlists  
 
+- 🎨 **Realtime Theme Switching**  
+  Instantly switch of theming colors.
+
+- 📡 **Samsung Output Media Support**  
+  Supports advanced Samsung media output routing — for a seamless Galaxy experience.
+
+- ⌚ **Headphone & WearOS Song Control**  
+  Control your music from your smartwatch or smart earbuds like a boss.
+
+- 📚 **Custom Multiple Playlist Support**  
+  Create as many playlists as your heart desires — mood-based, genre-based, even your dog’s playlist!
+
 ---
 
 ## Technology Stack
@@ -112,6 +129,7 @@ Lythm utilizes **Content Resolver** to fetch music files from the device’s sto
 ## 📦 Versions :
 
 - [**v0.1.0-beta**](https://github.com/Codexyze/Lhythm/releases/tag/v0.1.0-beta) : **First Beta** release
+- [**v0.2.0-beta**](https://github.com/Codexyze/Lhythm/releases/tag/v0.2.0-beta) : **Second Beta** release
 
 ---
 ## Future Improvements
@@ -119,10 +137,7 @@ Lythm utilizes **Content Resolver** to fetch music files from the device’s sto
 As the project continues to evolve, here are some features planned for future updates:
 
 - **Audio Effects**: Implement various audio effects like equalizer, bass boost, etc.
-- **Offline Mode**: Allow users to save their favorite playlists for offline listening.
-- **Dark Mode**: Provide a dark theme for users who prefer a more subdued color scheme.
 - **Social Sharing**: Allow users to share their favorite songs or playlists with others on social media.
-- **Personal Playlist**: Allows users to create their own playlists. They can add or remove songs, manage playlist names, and access them quickly from the home screen.
 
 ---
 
