@@ -4,24 +4,31 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lhythm.core.StateHandeling.ResultState
+import com.example.lhythm.data.Local.PlayListSongMapper
 import com.example.lhythm.data.Local.PlayListTable
 import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.domain.StateHandeling.CreateOrUpdatePlayListState
+import com.example.lhythm.domain.StateHandeling.DeletePlayListSongsState
 import com.example.lhythm.domain.StateHandeling.DeletePlayListState
 import com.example.lhythm.domain.StateHandeling.DeleteSongFromPlayListState
+import com.example.lhythm.domain.StateHandeling.GetAllPlayListSongsState
 import com.example.lhythm.domain.StateHandeling.GetAllPlayListState
 import com.example.lhythm.domain.StateHandeling.GetLyricsFromPlaylistState
 import com.example.lhythm.domain.StateHandeling.GetSongsFromPlayListState
 import com.example.lhythm.domain.StateHandeling.InsertSongsToPlayListState
 import com.example.lhythm.domain.StateHandeling.SearchPlayListSongState
+import com.example.lhythm.domain.StateHandeling.UpsertPlayListSongsState
 import com.example.lhythm.domain.Usecases.CreateUpdateNewPlayListUseCase
 import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
+import com.example.lhythm.domain.Usecases.DeletePlayListSongsUseCase
 import com.example.lhythm.domain.Usecases.DeletePlayListUseCase
+import com.example.lhythm.domain.Usecases.GetAllPlayListSongsUseCase
 import com.example.lhythm.domain.Usecases.GetAllPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetLyricsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetSongsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
 import com.example.lhythm.domain.Usecases.SearchFromPlayListUseCase
+import com.example.lhythm.domain.Usecases.UpsertPlayListSongsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +45,11 @@ class PlayListViewModel @Inject constructor(
     private val getLyricsFromPlayList: GetLyricsFromPlayListUseCase,
     private val createOrUpdateUseCase: CreateUpdateNewPlayListUseCase,
     private val deletePlayListUseCase: DeletePlayListUseCase,
-    private val getAllPlayListUseCase: GetAllPlayListUseCase
+    private val getAllPlayListUseCase: GetAllPlayListUseCase,
+    private val getAllPlayListSongsUseCase:GetAllPlayListSongsUseCase,
+    private val deletePlayListSongsUseCase:DeletePlayListSongsUseCase,
+    private val upsertPlayListSongsUseCase:UpsertPlayListSongsUseCase
+
 )  : ViewModel() {
     private val _getSongFromPlayListState = MutableStateFlow(GetSongsFromPlayListState())
     val getSongFromPlayListState = _getSongFromPlayListState.asStateFlow()
@@ -56,6 +67,13 @@ class PlayListViewModel @Inject constructor(
     val deletePlayListState = _deletePlayListState.asStateFlow()
     private val _getAllPlayListState = MutableStateFlow(GetAllPlayListState())
     val getAllPlayListState = _getAllPlayListState.asStateFlow()
+    private val _deletePlayListSongsState = MutableStateFlow(DeletePlayListSongsState())
+    val deletePlayListSongsState = _deletePlayListSongsState.asStateFlow()
+    private val _upsertPlayListSongsState = MutableStateFlow(UpsertPlayListSongsState())
+    val upsertPlayListSongsState = _upsertPlayListSongsState.asStateFlow()
+    val _getAllPlayListSongsState = MutableStateFlow(GetAllPlayListSongsState())
+    val getAllPlayListSongsState = _getAllPlayListSongsState.asStateFlow()
+
     init {
         getSongsFromPlayList()
     }
@@ -224,6 +242,59 @@ class PlayListViewModel @Inject constructor(
 
         }
 
+    }
+    fun getAllPlayListSongs(){
+        viewModelScope.launch(Dispatchers.IO) {
+            getAllPlayListSongsUseCase.invoke().collect { result->
+                when(result){
+                    is ResultState.Loading->{
+                        _getAllPlayListSongsState.value = GetAllPlayListSongsState(isLoading = true)
+                    }
+                    is ResultState.Success->{
+                        _getAllPlayListSongsState.value = GetAllPlayListSongsState(isLoading = false, data = result.data)
+                    }
+                    is ResultState.Error->{
+                        _getAllPlayListSongsState.value = GetAllPlayListSongsState(isLoading = false, error = result.message)
+                    }
+                }
+            }
+        }
+    }
+
+    fun deletePlayListSongs(playListSongMapper: PlayListSongMapper){
+        viewModelScope.launch(Dispatchers.IO) {
+            deletePlayListSongsUseCase.invoke(playListSongMapper = playListSongMapper).collect { result->
+                when(result){
+                    is ResultState.Loading->{
+                        _deletePlayListSongsState.value = DeletePlayListSongsState(isLoading = true)
+                    }
+                    is ResultState.Success->{
+                        _deletePlayListSongsState.value = DeletePlayListSongsState(isLoading = false, data = result.data)
+                    }
+                    is ResultState.Error->{
+                        _deletePlayListSongsState.value = DeletePlayListSongsState(isLoading = false, error = result.message)
+                    }
+                }
+            }
+        }
+    }
+    fun upsertPlayListSongs(playListSongMapper: PlayListSongMapper){
+        viewModelScope.launch(Dispatchers.IO) {
+            upsertPlayListSongsUseCase.invoke(playListSongMapper = playListSongMapper).collect { result->
+                when(result){
+                    is ResultState.Loading->{
+                        _upsertPlayListSongsState.value = UpsertPlayListSongsState(isLoading = true)
+                    }
+                    is ResultState.Success->{
+                        _upsertPlayListSongsState.value = UpsertPlayListSongsState(isLoading = false, data = result.data)
+                    }
+                    is ResultState.Error->{
+                        _upsertPlayListSongsState.value = UpsertPlayListSongsState(isLoading = false, error = result.message)
+                    }
+                }
+            }
+
+        }
     }
 
 }

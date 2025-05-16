@@ -20,7 +20,9 @@ import com.example.lhythm.domain.Repository.GetCategoryRepository
 import com.example.lhythm.domain.Repository.SongPlayListRepository
 import com.example.lhythm.domain.Usecases.CreateUpdateNewPlayListUseCase
 import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
+import com.example.lhythm.domain.Usecases.DeletePlayListSongsUseCase
 import com.example.lhythm.domain.Usecases.DeletePlayListUseCase
+import com.example.lhythm.domain.Usecases.GetAllPlayListSongsUseCase
 import com.example.lhythm.domain.Usecases.GetAllPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetAllSongComposerASCUseCase
 import com.example.lhythm.domain.Usecases.GetAllSongUseCase
@@ -32,6 +34,7 @@ import com.example.lhythm.domain.Usecases.GetSongsByArtistUseCase
 import com.example.lhythm.domain.Usecases.GetSongsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
 import com.example.lhythm.domain.Usecases.SearchFromPlayListUseCase
+import com.example.lhythm.domain.Usecases.UpsertPlayListSongsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -165,6 +168,23 @@ object DiModule {
     @Provides
     fun getAllPlayListObj(@ApplicationContext context: Context): GetAllPlayListUseCase{
         return GetAllPlayListUseCase(songPlayListRepository = SongPlayListRepoInterfaceObj(context = context))
+    }
+
+    //playlist usecase
+
+    @Provides
+    fun getAllPlayListSongs(songPlayListRepository: SongPlayListRepository): GetAllPlayListSongsUseCase{
+        return GetAllPlayListSongsUseCase(songPlayListRepository = songPlayListRepository)
+    }
+
+    @Provides
+    fun deletePlayListSongsUseCase(songPlayListRepository: SongPlayListRepository): DeletePlayListSongsUseCase{
+        return DeletePlayListSongsUseCase(songPlayListRepository = songPlayListRepository)
+    }
+
+    @Provides
+    fun upsertPlayListSongsUseCase(songPlayListRepository: SongPlayListRepository): UpsertPlayListSongsUseCase{
+        return UpsertPlayListSongsUseCase(songPlayListRepository = songPlayListRepository)
     }
 
 }

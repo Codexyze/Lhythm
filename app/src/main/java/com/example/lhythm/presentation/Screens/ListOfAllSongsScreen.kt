@@ -58,6 +58,7 @@ import com.example.lhythm.R
 import com.example.lhythm.constants.Constants
 import com.example.lhythm.core.MusicForeground.MusicForeground
 import com.example.lhythm.data.Local.FavSongEntity
+import com.example.lhythm.data.Local.PlayListSongMapper
 import com.example.lhythm.data.Local.PlayListTable
 import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.presentation.Navigation.USERPLAYLISTSCREEN
@@ -193,7 +194,7 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                      composer: String?="Unknown",
                      albumID: String?=null,
                      songUriList: List<Uri>?=null,
-                      index: Int = 0,
+                     index: Int = 0,
                      playListViewModel: PlayListViewModel=hiltViewModel(),
                      mediaManagerViewModel: MediaManagerViewModel=hiltViewModel(),
                      favSongViewModel: FavSongViewModel=hiltViewModel(),
@@ -462,7 +463,17 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                             Column {
                                 LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
                                     items(playListState.value.data) { playListTable ->
-                                        PlayListAddItem(playListTable = playListTable)
+                                        PlayListAddItem(playListTable = playListTable,
+                                            songTitle = songTitle,
+                                            songArtist = songArtist,
+                                            songDuration = songDuration,
+                                            songYear = songYear,
+                                            songPath = songPath,
+                                            songSize = songSize,
+                                            album = album,
+                                            composer = composer,
+                                            albumID = albumID
+                                            )
                                     }
                                 }
 
@@ -477,8 +488,20 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
  }
 
 @Composable
-fun PlayListAddItem(playListTable: PlayListTable,playListViewModel: PlayListViewModel=hiltViewModel()) {
+fun PlayListAddItem(playListTable: PlayListTable
+                    ,playListViewModel: PlayListViewModel=hiltViewModel(),
+                    songid: String="",
+                    songTitle: String?="",
+                    songArtist: String?="",
+                    songDuration: String?="",
+                    songYear: String?="",
+                    songPath: String?="",
+                    songSize: String?="",
+                    album: String?="Unknown",
+                    composer: String?="Unknown",
+                    albumID: String?=null,) {
     val createOrUpdatePlayListState = playListViewModel.createOrUpdatePlayListState.collectAsState()
+    val upsertPlayListSongsState = playListViewModel.upsertPlayListSongsState.collectAsState()
     val context = LocalContext.current
     when{
         createOrUpdatePlayListState.value.isLoading -> {
@@ -493,10 +516,34 @@ fun PlayListAddItem(playListTable: PlayListTable,playListViewModel: PlayListView
 
         }
     }
+    when{
+        upsertPlayListSongsState.value.isLoading -> {
+            LoadingScreen()
+        }
+        upsertPlayListSongsState.value.error.isNullOrEmpty() -> {
+
+        }
+        !upsertPlayListSongsState.value.data.isNullOrEmpty()->{
+            showToastMessage(context= context, text = "Song Added to ${playListTable.playListName}", type = Constants.TOASTSUCCESS)
+        }
+    }
     Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Button(
             onClick = {
-
+                val playListSong = PlayListSongMapper(
+                    playListID = playListTable.id,
+                    path = songPath.toString(),
+                    album = album,
+                    artist = songArtist,
+                    composer = composer,
+                    duration = songDuration,
+                    size = songSize,
+                    title = songTitle,
+                    year = songYear,
+                    albumId = albumID,
+                    lyrics = "Unknown"
+                )
+                playListViewModel.upsertPlayListSongs(playListSongMapper = playListSong)
 
             },
             modifier = Modifier.fillMaxWidth(0.9f)

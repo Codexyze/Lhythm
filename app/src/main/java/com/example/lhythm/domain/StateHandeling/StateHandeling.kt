@@ -1,6 +1,7 @@
 package com.example.lhythm.domain.StateHandeling
 
 import com.example.lhythm.data.Local.FavSongEntity
+import com.example.lhythm.data.Local.PlayListSongMapper
 import com.example.lhythm.data.Local.PlayListTable
 import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.data.Song.Song
@@ -104,5 +105,23 @@ data class DeletePlayListState(
 data class GetAllPlayListState(
     val isLoading: Boolean = false,
     val data: List<PlayListTable> = emptyList(),
+    val error: String ? = null
+)
+
+data class DeletePlayListSongsState(
+    val isLoading: Boolean = false,
+    val data: String= "",
+    val error: String ? = null
+)
+
+data class UpsertPlayListSongsState(
+    val isLoading: Boolean = false,
+    val data: String= "",
+    val error: String ? = null
+)
+
+data class GetAllPlayListSongsState(
+    val isLoading: Boolean = false,
+    val data: List<PlayListSongMapper> = emptyList(),
     val error: String ? = null
 )
