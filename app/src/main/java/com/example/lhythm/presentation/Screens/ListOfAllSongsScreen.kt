@@ -452,20 +452,6 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                             Column {
                                 LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
                                     items(playListState.value.data) { playListTable ->
-//                                        PlayListAddItem(playListTable = playListTable,
-//                                            songTitle = songTitle,
-//                                            songArtist = songArtist,
-//                                            songDuration = songDuration,
-//                                            songYear = songYear,
-//                                            songPath = songPath,
-//                                            songSize = songSize,
-//                                            album = album,
-//                                            composer = composer,
-//                                            albumID = albumID,
-//                                            onSongAddedToPlaylist = {
-//                                                closeDialogueBox()
-//                                            }
-//                                        )
                                         Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
                                             Button(
                                                 onClick = {

@@ -70,9 +70,10 @@ fun ListOfPlayListScreen(playListViewModel: PlayListViewModel = hiltViewModel(),
                     FloatingActionButton(
                         onClick = {
                            createUpdateDialogue.value = true
-                        }
+                        },
+                        containerColor = MaterialTheme.colorScheme.primary
                     ) {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+                        Icon(imageVector = Icons.Default.Add, contentDescription = "Add", tint = MaterialTheme.colorScheme.secondary)
                     }
                 }) {
                 it

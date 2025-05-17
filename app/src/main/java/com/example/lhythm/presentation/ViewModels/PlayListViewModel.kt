@@ -14,6 +14,7 @@ import com.example.lhythm.domain.StateHandeling.DeleteSongFromPlayListState
 import com.example.lhythm.domain.StateHandeling.GetAllPlayListSongsState
 import com.example.lhythm.domain.StateHandeling.GetAllPlayListState
 import com.example.lhythm.domain.StateHandeling.GetLyricsFromPlaylistState
+import com.example.lhythm.domain.StateHandeling.GetSongByPlayListIDState
 import com.example.lhythm.domain.StateHandeling.GetSongsFromPlayListState
 import com.example.lhythm.domain.StateHandeling.InsertSongsToPlayListState
 import com.example.lhythm.domain.StateHandeling.SearchPlayListSongState
@@ -25,6 +26,7 @@ import com.example.lhythm.domain.Usecases.DeletePlayListUseCase
 import com.example.lhythm.domain.Usecases.GetAllPlayListSongsUseCase
 import com.example.lhythm.domain.Usecases.GetAllPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetLyricsFromPlayListUseCase
+import com.example.lhythm.domain.Usecases.GetSongByPlayListIDUseCase
 import com.example.lhythm.domain.Usecases.GetSongsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
 import com.example.lhythm.domain.Usecases.SearchFromPlayListUseCase
@@ -48,7 +50,8 @@ class PlayListViewModel @Inject constructor(
     private val getAllPlayListUseCase: GetAllPlayListUseCase,
     private val getAllPlayListSongsUseCase:GetAllPlayListSongsUseCase,
     private val deletePlayListSongsUseCase:DeletePlayListSongsUseCase,
-    private val upsertPlayListSongsUseCase:UpsertPlayListSongsUseCase
+    private val upsertPlayListSongsUseCase:UpsertPlayListSongsUseCase,
+    private val getSongByPlayListIDUseCase: GetSongByPlayListIDUseCase
 
 )  : ViewModel() {
     private val _getSongFromPlayListState = MutableStateFlow(GetSongsFromPlayListState())
@@ -73,6 +76,8 @@ class PlayListViewModel @Inject constructor(
     val upsertPlayListSongsState = _upsertPlayListSongsState.asStateFlow()
     val _getAllPlayListSongsState = MutableStateFlow(GetAllPlayListSongsState())
     val getAllPlayListSongsState = _getAllPlayListSongsState.asStateFlow()
+    val _getSongByPlayListIDState = MutableStateFlow(GetSongByPlayListIDState())
+    val getSongByPlayListIDState = _getSongByPlayListIDState.asStateFlow()
 
     init {
         getSongsFromPlayList()
@@ -296,6 +301,25 @@ class PlayListViewModel @Inject constructor(
                 }
             }
 
+        }
+    }
+
+    fun getSongByPlayListID(playListId: Int){
+        viewModelScope.launch(Dispatchers.IO) {
+            getSongByPlayListIDUseCase.invoke(id = playListId).collect {result->
+                when(result){
+                    is ResultState.Loading->{
+                        _getSongByPlayListIDState.value = GetSongByPlayListIDState(isLoading = true)
+                    }
+                    is ResultState.Success->{
+                        _getSongByPlayListIDState.value = GetSongByPlayListIDState(isLoading = false, data = result.data)
+                    }
+                    is ResultState.Error->{
+                        _getSongByPlayListIDState.value = GetSongByPlayListIDState(isLoading = false, error = result.message)
+                    }
+                }
+
+            }
         }
     }
 

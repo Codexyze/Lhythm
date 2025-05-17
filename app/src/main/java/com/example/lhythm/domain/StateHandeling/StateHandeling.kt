@@ -125,3 +125,9 @@ data class GetAllPlayListSongsState(
     val data: List<PlayListSongMapper> = emptyList(),
     val error: String ? = null
 )
+
+data class GetSongByPlayListIDState(
+    val isLoading: Boolean = false,
+    val data: List<PlayListSongMapper> = emptyList(),
+    val error: String ? = null
+)

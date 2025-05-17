@@ -28,6 +28,7 @@ import com.example.lhythm.domain.Usecases.GetAllSongComposerASCUseCase
 import com.example.lhythm.domain.Usecases.GetAllSongUseCase
 import com.example.lhythm.domain.Usecases.GetByYearASCUseCase
 import com.example.lhythm.domain.Usecases.GetLyricsFromPlayListUseCase
+import com.example.lhythm.domain.Usecases.GetSongByPlayListIDUseCase
 import com.example.lhythm.domain.Usecases.GetSongCategoryUseCase
 import com.example.lhythm.domain.Usecases.GetSongDESCUsecase
 import com.example.lhythm.domain.Usecases.GetSongsByArtistUseCase
@@ -185,6 +186,11 @@ object DiModule {
     @Provides
     fun upsertPlayListSongsUseCase(songPlayListRepository: SongPlayListRepository): UpsertPlayListSongsUseCase{
         return UpsertPlayListSongsUseCase(songPlayListRepository = songPlayListRepository)
+    }
+
+    @Provides
+    fun getSongByPlayListIDUseCase(songPlayListRepository: SongPlayListRepository): GetSongByPlayListIDUseCase{
+        return GetSongByPlayListIDUseCase(songPlayListRepository = songPlayListRepository)
     }
 
 }
