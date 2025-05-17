@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
@@ -75,7 +76,7 @@ fun UserPlayListScreen(navController: NavHostController,
 
         }
         getSongByPlayListIDState.value.data.isNullOrEmpty()->{
-            NoSongPlaying()
+           NoSongsFoundScreen()
         }
         !getSongByPlayListIDState.value.data.isNullOrEmpty()->{
             val listOfAllSongs = remember(getSongByPlayListIDState.value.data) {
@@ -186,16 +187,9 @@ fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewMo
 
                     }
                     Row(modifier = Modifier, horizontalArrangement = Arrangement.Absolute.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
-                        Icon(imageVector = Icons.Filled.Info, contentDescription = "Info",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable {
-                                    showInfoDialogueBox.value = true
-                                }
-                        )
+
                         //add to playlist
-                        Icon(imageVector = Icons.Filled.Add, contentDescription = "Add to playlist",
+                        Icon(imageVector = Icons.Filled.Delete, contentDescription = "Add to playlist",
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier
                                 .weight(1f)
@@ -216,42 +210,6 @@ fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewMo
 
         }
     }
-    if(showInfoDialogueBox.value){
-        AlertDialog(
-            onDismissRequest = {showInfoDialogueBox.value = false },
-            title = { Text("Add to playlist") },
-            confirmButton = {
-                Button(onClick = {
-                    showInfoDialogueBox.value = false
-                }) {
-                    Text("Okay")
-                }
-            },
-            dismissButton = {
-                showInfoDialogueBox.value = false
-            },
-            text = {
-                Column {
-                    LazyColumn {
-                        item {
-                            Text("All Detail ")
-                            Text("Album : ${song.album}")
-                            Text("Artist : ${song.artist}")
-                            Text("Composer : ${song.composer}")
-                            Text("Duration of :" + duration.value.toString())
-                            Text("Size : ${song.size}")
-                            Text("Title : ${song.title}")
-                            Text("Year : ${song.year}")
-                            Text("This ${song.title} was published in year ${song.year} and is written by ${song.artist} " +
-                                    "and composed by ${song.composer}." +
-                                    " It has a duration of ${duration.value} and is ${song.size} in size.")
-                        }
-                    }
 
-
-                }
-            }
-        )
-    }
 
 }

@@ -1,12 +1,16 @@
 package com.example.lhythm.presentation.Screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
@@ -172,7 +176,21 @@ fun ListOfPlayListScreen(playListViewModel: PlayListViewModel = hiltViewModel(),
 }
 
 @Composable
-fun EachPlayListNameItem(playListTable: PlayListTable,navController: NavController) {
+fun EachPlayListNameItem(playListTable: PlayListTable,
+                         navController: NavController,
+                         playListViewModel: PlayListViewModel=hiltViewModel()) {
+    val deletePlayListState = playListViewModel.deletePlayListState.collectAsState()
+    when{
+        deletePlayListState.value.isLoading -> {
+            LoadingScreen()
+        }
+        !deletePlayListState.value.error.isNullOrEmpty() -> {
+            showToastMessage(context = LocalContext.current, text = "PlayList Not Deleted", type = Constants.TOASTERROR)
+        }
+        !deletePlayListState.value.data.isNullOrEmpty()->{
+            showToastMessage(context = LocalContext.current, text = "PlayList Deleted", type = Constants.TOASTSUCCESS)
+        }
+    }
     Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Button(
             onClick = {
@@ -181,7 +199,15 @@ fun EachPlayListNameItem(playListTable: PlayListTable,navController: NavControll
             },
             modifier = Modifier.fillMaxWidth(0.9f)
         ) {
-            Text(playListTable.playListName)
+            Row {
+                Text(text = playListTable.playListName, color = MaterialTheme.colorScheme.secondary)
+                Icon(imageVector = Icons.Filled.Delete, contentDescription = "Favorite",
+                    tint = MaterialTheme.colorScheme.background, modifier = Modifier.weight(1f).clickable {
+                        playListViewModel.deletePlayList(playListTable = playListTable)
+                    }
+                )
+            }
+
         }
     }
 
