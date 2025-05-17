@@ -17,4 +17,7 @@ interface PlayListSongs {
     @Query("SELECT * FROM ${ Constants.PLAYLISTSONGTABEL}")
     suspend fun getAllPlayListSongs(): List<PlayListSongMapper>
 
+    @Query("SELECT * FROM ${Constants.PLAYLISTSONGTABEL} WHERE playListID = :playlistId")
+    suspend fun getSongByPlayListID(playlistId: Int): List<PlayListSongMapper>
+
 }

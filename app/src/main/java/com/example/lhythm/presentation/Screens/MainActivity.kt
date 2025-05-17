@@ -2,10 +2,12 @@ package com.example.lhythm.presentation.Screens
 
 import android.app.NotificationManager
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import com.example.lhythm.core.LocalNotification.createMusicNotificationChannel
@@ -22,6 +24,7 @@ class MainActivity : ComponentActivity() {
     lateinit var exoPlayer: ExoPlayer
     @Inject
     lateinit var mediaSession: MediaSession
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         createMusicNotificationChannel(this)
         super.onCreate(savedInstanceState)

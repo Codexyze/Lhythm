@@ -13,4 +13,4 @@ object ONBOARDING
 object HOMESCREEN
 
 @Serializable
-object USERPLAYLISTSCREEN
+data class USERPLAYLISTSCREEN(val playListID: Int)

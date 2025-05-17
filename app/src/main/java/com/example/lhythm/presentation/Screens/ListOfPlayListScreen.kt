@@ -175,7 +175,7 @@ fun EachPlayListNameItem(playListTable: PlayListTable,navController: NavControll
     Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Button(
             onClick = {
-                navController.navigate(USERPLAYLISTSCREEN)
+                navController.navigate(USERPLAYLISTSCREEN(playListID = playListTable.id))
 
             },
             modifier = Modifier.fillMaxWidth(0.9f)

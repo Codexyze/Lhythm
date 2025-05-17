@@ -42,7 +42,7 @@ val darkColorPallete =darkColorScheme(
     background = Color(0xFF000000),
     primary = Color(0xFFFF0B55),
     secondary = Color(0xFFFFFFFF),
-    surfaceVariant = Color(0x13000000)
+    surfaceVariant = Color(0x13000000),
 )
 
 val lightColorPallete = lightColorScheme(

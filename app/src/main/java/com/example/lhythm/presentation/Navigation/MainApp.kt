@@ -10,6 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.lhythm.presentation.Screens.HomeScreen
 import com.example.lhythm.presentation.Screens.ListOfAllSongsScreen
 import com.example.lhythm.presentation.Screens.OnBoardingScreen
@@ -39,8 +40,9 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
             composable<HOMESCREEN> {
                 HomeScreen(navController = navcontroller)
             }
-            composable<USERPLAYLISTSCREEN> {
-                UserPlayListScreen(navController = navcontroller)
+            composable<USERPLAYLISTSCREEN> {bacstackEntry->
+                val data: USERPLAYLISTSCREEN = bacstackEntry.toRoute()
+                UserPlayListScreen(navController = navcontroller, playListID = data.playListID)
             }
 
         }

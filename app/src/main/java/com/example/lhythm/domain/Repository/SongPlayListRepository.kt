@@ -30,4 +30,6 @@ interface SongPlayListRepository {
 
     suspend fun getAllPlayListSongs(): Flow<ResultState<List<PlayListSongMapper>>>
 
+    suspend fun getSongByPlayListID(id: Int): Flow<ResultState<List<PlayListSongMapper>>>
+
 }

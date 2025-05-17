@@ -76,6 +76,8 @@ class PlayListViewModel @Inject constructor(
 
     init {
         getSongsFromPlayList()
+        getAllPlayList()
+        //getAllPlayListSongs()
     }
 
 

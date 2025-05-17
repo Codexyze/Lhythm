@@ -101,8 +101,8 @@ class SongPlayListRepoImpl @Inject constructor(private val dataBase: SongPlayLis
     override suspend fun upsertPlayListSongs(playListSongMapper: PlayListSongMapper): Flow<ResultState<String>> =flow{
         emit(ResultState.Loading)
         try {
-            val data =dataBase.PlayListSongsDao().upsertPlayListSongs(playListSongMapper = playListSongMapper)
-            emit(ResultState.Success(data.toString()))
+            dataBase.PlayListSongsDao().upsertPlayListSongs(playListSongMapper = playListSongMapper)
+            emit(ResultState.Success("Sucessfully added to playlist"))
         }catch (e: Exception){
             emit(ResultState.Error(e.message.toString()))
         }
@@ -122,6 +122,16 @@ class SongPlayListRepoImpl @Inject constructor(private val dataBase: SongPlayLis
         emit(ResultState.Loading)
         try {
             val data =dataBase.PlayListSongsDao().getAllPlayListSongs()
+            emit(ResultState.Success(data))
+        }catch (e: Exception){
+            emit(ResultState.Error(e.message.toString()))
+        }
+    }
+
+    override suspend fun getSongByPlayListID(id: Int): Flow<ResultState<List<PlayListSongMapper>>> =flow{
+        emit(ResultState.Loading)
+        try {
+            val data =dataBase.PlayListSongsDao().getSongByPlayListID(playlistId = id)
             emit(ResultState.Success(data))
         }catch (e: Exception){
             emit(ResultState.Error(e.message.toString()))
