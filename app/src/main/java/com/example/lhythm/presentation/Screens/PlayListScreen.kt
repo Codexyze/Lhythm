@@ -2,7 +2,6 @@ package com.example.lhythm.presentation.Screens
 
 import android.net.Uri
 import android.util.Log
-import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -41,7 +39,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -52,6 +49,7 @@ import androidx.navigation.NavController
 import com.example.lhythm.R
 import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.SongEntity
+import com.example.lhythm.presentation.Navigation.LYRICSFULLSCREEN
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.ViewModels.FavSongViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
@@ -130,7 +128,7 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
                     LazyColumn(modifier = Modifier.weight(0.90f)) {
                         if (!searchSongState.value.data.isNullOrEmpty()) {
                             items(searchSongState.value.data) { song ->
-                                EachItemFromSearchScreen(song = song)
+                                EachItemFromSearchScreen(song = song, navController = navController)
                             }
                             item {
                                 Button(
@@ -169,6 +167,7 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
                                 title = listelementvalue.title.toString(),
                                 year = listelementvalue.year.toString(),
                                 lyricsString = listelementvalue.lyrics.toString(),
+                                navController = navController,
                                 playListUris = if (!listOfSongs.isNullOrEmpty()) {
                                     listOfSongs
                                 } else {
@@ -189,20 +188,21 @@ fun PlayListExample(navController: NavController,playListViewModel: PlayListView
 @Composable
 fun EachPlayListItem(
     id: Int,
-    path : String,
-    album : String="Unknown",
-    artist : String="Unknown",
-    composer : String="Unknown",
-    duration : String="0",
-    size : String="0",
-    title : String="Unknown",
-    year : String="0",
-    lyricsString : String="",
-    mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel(),
-    playListViewModel: PlayListViewModel=hiltViewModel(),
-    favSongViewModel: FavSongViewModel= hiltViewModel(),
+    path: String,
+    album: String = "Unknown",
+    artist: String = "Unknown",
+    composer: String = "Unknown",
+    duration: String = "0",
+    size: String = "0",
+    title: String = "Unknown",
+    year: String = "0",
+    lyricsString: String = "",
+    mediaPlayerViewModel: MediaManagerViewModel = hiltViewModel(),
+    playListViewModel: PlayListViewModel = hiltViewModel(),
+    favSongViewModel: FavSongViewModel = hiltViewModel(),
     playListUris: List<Uri>,
-    indexOfCurrentSong:Int=0
+    indexOfCurrentSong: Int = 0,
+    navController: NavController
 
 ) {
     val lyrics=rememberSaveable { mutableStateOf("") }
@@ -417,9 +417,10 @@ fun EachPlayListItem(
                        dismissButton = {
 
                            Button(onClick = {
+                               //Show lyrics here
                                showLyricsSavingDailog.value = false
                            }) {
-                               Text("Okay")
+                               Text("Full Screen")
                            }
                        },
                        text = {
@@ -476,7 +477,6 @@ fun EachPlayListItem(
                        },
                        onDismissRequest = {
 
-                           showLyricsDialogue.value=false
 
 
                        },
@@ -510,7 +510,9 @@ fun EachPlayListItem(
 }
 
 @Composable
-fun EachItemFromSearchScreen(song: SongEntity, mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel()) {
+fun EachItemFromSearchScreen(song: SongEntity,
+                             mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel(),
+                             navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -539,6 +541,8 @@ fun EachItemFromSearchScreen(song: SongEntity, mediaPlayerViewModel: MediaManage
                     Row {
                        //Lyrics
 
+
+
                     }
                     Row {
                         Icon(
@@ -564,6 +568,7 @@ fun EachItemFromSearchScreen(song: SongEntity, mediaPlayerViewModel: MediaManage
                             modifier = Modifier
                                 .weight(1f)
                                 .clickable {
+                                    navController.navigate(LYRICSFULLSCREEN(lyrics = song.lyrics.toString()))
 
                                 }
                         )

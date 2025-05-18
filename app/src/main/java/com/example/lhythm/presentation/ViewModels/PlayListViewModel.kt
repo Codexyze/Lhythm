@@ -109,7 +109,6 @@ class PlayListViewModel @Inject constructor(
     }
 
     fun insertSongToPlayList(songEntity: SongEntity){
-
         viewModelScope.launch(Dispatchers.IO) {
             insertSongToPlayListUseCase.invoke(songEntity = songEntity).collect {result->
                 when(result){

@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.lhythm.presentation.Screens.HomeScreen
 import com.example.lhythm.presentation.Screens.ListOfAllSongsScreen
+import com.example.lhythm.presentation.Screens.LyricsFullScreenView
 import com.example.lhythm.presentation.Screens.OnBoardingScreen
 import com.example.lhythm.presentation.Screens.UserPlayListScreen
 import com.example.lhythm.presentation.Utils.LoadingScreen
@@ -43,6 +44,10 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
             composable<USERPLAYLISTSCREEN> {bacstackEntry->
                 val data: USERPLAYLISTSCREEN = bacstackEntry.toRoute()
                 UserPlayListScreen(navController = navcontroller, playListID = data.playListID)
+            }
+            composable<LYRICSFULLSCREEN> {bacstackEntry->
+                val data: LYRICSFULLSCREEN = bacstackEntry.toRoute()
+                LyricsFullScreenView(lyrics = data.lyrics)
             }
 
         }

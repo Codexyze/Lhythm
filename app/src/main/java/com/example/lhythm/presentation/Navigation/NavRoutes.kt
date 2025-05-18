@@ -14,3 +14,6 @@ object HOMESCREEN
 
 @Serializable
 data class USERPLAYLISTSCREEN(val playListID: Int)
+
+@Serializable
+data class LYRICSFULLSCREEN(val lyrics : String)

@@ -147,6 +147,21 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                             }
                         }
                         Spacer(modifier = Modifier.width(16.dp))
+                        Box(modifier = Modifier.wrapContentSize().clickable{
+                            currentCategory.value = SongCategory.PLAYLIST
+                        }){
+                            Column(modifier = Modifier.clickable{
+                                currentCategory.value = SongCategory.PLAYLIST
+                            }, horizontalAlignment = Alignment.CenterHorizontally) {
+                                Image(
+                                    painter = painterResource(R.drawable.playlist),
+                                    contentDescription = "ascending",
+                                    modifier = Modifier.size(60.dp)
+                                        .clip(CircleShape)
+                                )
+                                Text("PlayList", color = MaterialTheme.colorScheme.primary)
+                            }
+                        }
 
                     }
 
@@ -173,6 +188,10 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                 }
                 SongCategory.COMPOSER -> {
                     ComposerCategory(navController = navController)
+                }
+
+                SongCategory.PLAYLIST -> {
+                    PlayListExample(navController = navController)
                 }
             }
         }

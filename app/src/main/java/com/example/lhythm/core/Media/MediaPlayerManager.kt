@@ -1,13 +1,9 @@
 package com.example.lhythm.core.Media
 
 import android.content.Context
-import android.content.Intent
-import android.media.audiofx.Equalizer
 import android.net.Uri
 import android.util.Log
 import androidx.annotation.OptIn
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.core.net.toUri
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -34,7 +30,6 @@ private val  exoPlayer: ExoPlayer, private val mediaSession: MediaSession
 
     fun initializePlayer(uri: Uri) {
         releasePlayer()
-
         exoPlayer.apply {
             setMediaItem(MediaItem.fromUri(uri))
            // createMusicExoNotification(exoPlayer = exoPlayer, context = context)
@@ -113,24 +108,17 @@ private val  exoPlayer: ExoPlayer, private val mediaSession: MediaSession
         }
         exoPlayer.apply  {
             createMusicExoNotification(exoPlayer = exoPlayer, context = context)
+            this.addListener(object : Player.Listener {
+                override fun onAudioSessionIdChanged(audioSessionId: Int) {
+                    super.onAudioSessionIdChanged(audioSessionId)
+                    Log.d("AUDIOSESSION", "Audio session ID: ${audioSessionId}")
+
+                }
+            })
             setMediaItems(mediaItemList,index, C.INDEX_UNSET.toLong())
             prepare()
             playWhenReady = true
             showToastMessage(context = context, text = "Playing",type = Constants.TOASTSUCCESS)
-                addListener(object : Player.Listener {
-                override fun onPlaybackStateChanged(state: Int) {
-                    if (state == Player.STATE_ENDED) {
-                        showToastMessage(context = context, text = "Playlist Ended",type = Constants.TOASTCONFUSING)
-                    }
-                }
-
-                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                    val currentIndex = this@apply.currentMediaItemIndex
-                    Log.d("MediaPlayerManager", "Now playing index: $currentIndex")
-                }
-            })
-
-
         }
 
     }
@@ -139,13 +127,13 @@ private val  exoPlayer: ExoPlayer, private val mediaSession: MediaSession
       return  mediaSession
     }
 
+    @OptIn(UnstableApi::class)
     override fun onDestroy() {
         super.onDestroy()
         exoPlayer.stop()
         exoPlayer.release()
         mediaSession.release()
-//        val intent = Intent(this, MusicForeground::class.java)
-//        stopService(intent)
+        clearListener()
 
     }
 }

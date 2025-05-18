@@ -224,11 +224,11 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
         !createOrUpdatePlayListState.value.data.isNullOrEmpty()->{
             showToastMessage(context= context, text = "New Playlist Created", type = Constants.TOASTSUCCESS)
         }
-        upsertPlayListSongsState.value.isLoading ||createOrUpdatePlayListState.value.isLoading || getAllPlayListSongsState.value.isLoading-> {
+        upsertPlayListSongsState.value.isLoading ||createOrUpdatePlayListState.value.isLoading || getAllPlayListSongsState.value.isLoading ||inserToPlayListState.value.isLoading -> {
             //LoadingScreen()
             CircularProgressIndicator()
         }
-        !upsertPlayListSongsState.value.error.isNullOrEmpty() || !createOrUpdatePlayListState.value.error.isNullOrEmpty() || !getAllPlayListSongsState.value.error.isNullOrEmpty() -> {
+        !upsertPlayListSongsState.value.error.isNullOrEmpty() || !createOrUpdatePlayListState.value.error.isNullOrEmpty() || !getAllPlayListSongsState.value.error.isNullOrEmpty() || !inserToPlayListState.value.error.isNullOrEmpty()-> {
 
         }
         !upsertPlayListSongsState.value.data.isNullOrEmpty()->{
@@ -436,6 +436,18 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                         title = { Text("Add to playlist") },
                         confirmButton = {
                             Button(onClick = {
+                                val songEntity= SongEntity(
+                                    path = songPath.toString(),
+                                    album = album,
+                                    artist = songArtist,
+                                    composer = composer,
+                                    duration = songDuration,
+                                    size = songSize,
+                                    title = songTitle,
+                                    year = songYear,
+                                    albumId = albumID,
+                                )
+                                playListViewModel.insertSongToPlayList(songEntity = songEntity)
                                 playListSelectionDialog.value = false
                             }) {
                                 Text("Add to playlist Default")
