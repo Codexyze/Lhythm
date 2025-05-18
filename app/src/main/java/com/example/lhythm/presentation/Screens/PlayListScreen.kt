@@ -418,7 +418,7 @@ fun EachPlayListItem(
 
                            Button(onClick = {
                                //Show lyrics here
-                               showLyricsSavingDailog.value = false
+                              navController.navigate(LYRICSFULLSCREEN(lyrics = lyricsString))
                            }) {
                                Text("Full Screen")
                            }
@@ -476,6 +476,7 @@ fun EachPlayListItem(
 
                        },
                        onDismissRequest = {
+                           showLyricsDialogue.value = false
 
 
 
