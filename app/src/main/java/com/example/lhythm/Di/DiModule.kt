@@ -35,6 +35,7 @@ import com.example.lhythm.domain.Usecases.GetSongsByArtistUseCase
 import com.example.lhythm.domain.Usecases.GetSongsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
 import com.example.lhythm.domain.Usecases.SearchFromPlayListUseCase
+import com.example.lhythm.domain.Usecases.UpdateLyricsFromPLUseCase
 import com.example.lhythm.domain.Usecases.UpsertPlayListSongsUseCase
 import dagger.Module
 import dagger.Provides
@@ -191,6 +192,11 @@ object DiModule {
     @Provides
     fun getSongByPlayListIDUseCase(songPlayListRepository: SongPlayListRepository): GetSongByPlayListIDUseCase{
         return GetSongByPlayListIDUseCase(songPlayListRepository = songPlayListRepository)
+    }
+
+    @Provides
+    fun updateLyricsFromPLUseCase(songPlayListRepository: SongPlayListRepository): UpdateLyricsFromPLUseCase{
+        return UpdateLyricsFromPLUseCase(songPlayListRepository = songPlayListRepository)
     }
 
 }

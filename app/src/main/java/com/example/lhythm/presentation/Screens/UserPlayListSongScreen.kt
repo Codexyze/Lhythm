@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
@@ -43,6 +44,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.example.lhythm.R
@@ -50,6 +52,7 @@ import com.example.lhythm.constants.Constants
 import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.PlayListSongMapper
 import com.example.lhythm.data.Local.SongEntity
+import com.example.lhythm.presentation.Navigation.LYRICSFULLSCREEN
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.Utils.formatDuration
 import com.example.lhythm.presentation.Utils.showToastMessage
@@ -91,7 +94,8 @@ fun UserPlayListScreen(navController: NavHostController,
                         items(getSongByPlayListIDState.value.data) {song->
                             EachUserPlayListItem(index = getSongByPlayListIDState.value.data.indexOf(song),
                                 songUriList = listOfAllSongs,
-                                song = song
+                                song = song,
+                                navController = navController
                             )
                         }
                     }
@@ -105,7 +109,8 @@ fun UserPlayListScreen(navController: NavHostController,
 fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewModel(),
                          index:Int=0,
                          songUriList: List<Uri>?=null,
-                         song: PlayListSongMapper) {
+                         song: PlayListSongMapper,
+                         navController: NavController) {
     val duration = remember { mutableStateOf("") }
     val context = LocalContext.current
     val showInfoDialogueBox = remember { mutableStateOf(false) }
@@ -197,8 +202,9 @@ fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewMo
 
                                 }
                         )
-                        Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Favorite",
+                        Icon(imageVector = Icons.Filled.ChatBubble, contentDescription = "Lyrics",
                             tint = MaterialTheme.colorScheme.primary, modifier = Modifier.weight(1f).clickable {
+                                navController.navigate(LYRICSFULLSCREEN(lyrics = song.lyrics.toString()))
 
                             }
                         )

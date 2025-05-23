@@ -32,4 +32,6 @@ interface SongPlayListRepository {
 
     suspend fun getSongByPlayListID(id: Int): Flow<ResultState<List<PlayListSongMapper>>>
 
+    suspend fun updateLyricsFromPlayList(id:Int,lyrics: String): Flow<ResultState<String>>
+
 }

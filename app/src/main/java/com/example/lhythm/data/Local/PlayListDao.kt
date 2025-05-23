@@ -16,4 +16,6 @@ interface PlayListDao {
 
     @Query("SELECT * FROM ${Constants.PLAYLISTTABLE}")
     suspend fun getAllPlayList(): List<PlayListTable>
+
+
 }

@@ -18,6 +18,7 @@ import com.example.lhythm.domain.StateHandeling.GetSongByPlayListIDState
 import com.example.lhythm.domain.StateHandeling.GetSongsFromPlayListState
 import com.example.lhythm.domain.StateHandeling.InsertSongsToPlayListState
 import com.example.lhythm.domain.StateHandeling.SearchPlayListSongState
+import com.example.lhythm.domain.StateHandeling.UpdateLyricsFromPLState
 import com.example.lhythm.domain.StateHandeling.UpsertPlayListSongsState
 import com.example.lhythm.domain.Usecases.CreateUpdateNewPlayListUseCase
 import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
@@ -30,6 +31,7 @@ import com.example.lhythm.domain.Usecases.GetSongByPlayListIDUseCase
 import com.example.lhythm.domain.Usecases.GetSongsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
 import com.example.lhythm.domain.Usecases.SearchFromPlayListUseCase
+import com.example.lhythm.domain.Usecases.UpdateLyricsFromPLUseCase
 import com.example.lhythm.domain.Usecases.UpsertPlayListSongsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -51,8 +53,8 @@ class PlayListViewModel @Inject constructor(
     private val getAllPlayListSongsUseCase:GetAllPlayListSongsUseCase,
     private val deletePlayListSongsUseCase:DeletePlayListSongsUseCase,
     private val upsertPlayListSongsUseCase:UpsertPlayListSongsUseCase,
-    private val getSongByPlayListIDUseCase: GetSongByPlayListIDUseCase
-
+    private val getSongByPlayListIDUseCase: GetSongByPlayListIDUseCase,
+    private val updateLyricsFromPlayListUseCase: UpdateLyricsFromPLUseCase
 )  : ViewModel() {
     private val _getSongFromPlayListState = MutableStateFlow(GetSongsFromPlayListState())
     val getSongFromPlayListState = _getSongFromPlayListState.asStateFlow()
@@ -78,6 +80,8 @@ class PlayListViewModel @Inject constructor(
     val getAllPlayListSongsState = _getAllPlayListSongsState.asStateFlow()
     val _getSongByPlayListIDState = MutableStateFlow(GetSongByPlayListIDState())
     val getSongByPlayListIDState = _getSongByPlayListIDState.asStateFlow()
+    val _updateLyricsFromPlayListState = MutableStateFlow(UpdateLyricsFromPLState())
+    val updateLyricsFromPlayListState = _updateLyricsFromPlayListState.asStateFlow()
 
     init {
         getSongsFromPlayList()
@@ -320,6 +324,28 @@ class PlayListViewModel @Inject constructor(
 
             }
         }
+    }
+
+    fun updateLyricsFromPlayList(id: Int,lyrics: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            updateLyricsFromPlayListUseCase.invoke(id = id,lyrics=lyrics).collect {result->
+                when(result){
+                    is ResultState.Loading->{
+                        _updateLyricsFromPlayListState.value = UpdateLyricsFromPLState(isLoading = true)
+                    }
+                    is ResultState.Success->{
+                        _updateLyricsFromPlayListState.value = UpdateLyricsFromPLState(isLoading = false, data = result.data)
+                    }
+                    is ResultState.Error->{
+                        _updateLyricsFromPlayListState.value = UpdateLyricsFromPLState(isLoading = false, error = result.message)
+                    }
+                }
+
+
+            }
+
+        }
+
     }
 
 }

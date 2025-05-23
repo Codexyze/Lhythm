@@ -20,4 +20,7 @@ interface PlayListSongs {
     @Query("SELECT * FROM ${Constants.PLAYLISTSONGTABEL} WHERE playListID = :playlistId")
     suspend fun getSongByPlayListID(playlistId: Int): List<PlayListSongMapper>
 
+    @Query("UPDATE ${Constants.PLAYLISTSONGTABEL} SET lyrics = :lyrics WHERE id = :id")
+    suspend fun updateLyricsFromPlayList(lyrics: String, id: Int)
+
 }

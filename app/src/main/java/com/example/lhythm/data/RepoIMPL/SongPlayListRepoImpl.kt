@@ -137,4 +137,14 @@ class SongPlayListRepoImpl @Inject constructor(private val dataBase: SongPlayLis
             emit(ResultState.Error(e.message.toString()))
         }
     }
+
+    override suspend fun updateLyricsFromPlayList(id: Int, lyrics: String): Flow<ResultState<String>> =flow{
+        emit(ResultState.Loading)
+        try {
+            dataBase.PlayListSongsDao().updateLyricsFromPlayList(lyrics = lyrics, id = id)
+            emit(ResultState.Success("Sucessfully updated"))
+        }catch (e: Exception){
+            emit(ResultState.Error(e.message.toString()))
+        }
+    }
 }

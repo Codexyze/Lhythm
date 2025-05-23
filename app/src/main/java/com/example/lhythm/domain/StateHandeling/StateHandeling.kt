@@ -131,3 +131,9 @@ data class GetSongByPlayListIDState(
     val data: List<PlayListSongMapper> = emptyList(),
     val error: String ? = null
 )
+
+data class UpdateLyricsFromPLState(
+    val isLoading: Boolean = false,
+    val data: String= "",
+    val error: String ? = null
+)
