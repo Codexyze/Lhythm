@@ -467,7 +467,9 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                                         Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
                                             Button(
                                                 onClick = {
-                                                    val songAlreadyExists = getAllPlayListSongsState.value.data.any { it.title == songTitle }
+                                                    val songAlreadyExists = getAllPlayListSongsState.value.data.any {
+                                                        it.title == songTitle && it.playListID== playListTable.id
+                                                    }
 
                                                     if (songAlreadyExists) {
                                                         showToastMessage(context, "Song Already Exists in ${playListTable.playListName}", Constants.TOASTERROR)

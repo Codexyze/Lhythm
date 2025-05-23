@@ -1,6 +1,5 @@
 package com.example.lhythm.presentation.Screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +13,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -36,15 +36,17 @@ import com.example.lhythm.presentation.Navigation.USERPLAYLISTSCREEN
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.Utils.showToastMessage
 import com.example.lhythm.presentation.ViewModels.PlayListViewModel
-import java.nio.file.WatchEvent
+
 
 @Composable
 fun ListOfPlayListScreen(playListViewModel: PlayListViewModel = hiltViewModel(),navController: NavController) {
+
+
     LaunchedEffect(Unit) {
         playListViewModel.getAllPlayList()
     }
     val playListState = playListViewModel.getAllPlayListState.collectAsState()
-    val createOrUpdatePlayListState = playListViewModel.createOrUpdatePlayListState.collectAsState()
+    val createOrUpdatePlayListState = playListViewModel.createOrUpdatePlayListState
     val createUpdateDialogue = rememberSaveable { mutableStateOf(false) }
     val playListName = rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
@@ -192,23 +194,29 @@ fun EachPlayListNameItem(playListTable: PlayListTable,
         }
     }
     Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Button(
-            onClick = {
-                navController.navigate(USERPLAYLISTSCREEN(playListID = playListTable.id))
+        Row(modifier= Modifier.fillMaxWidth()){
+            Button(
+                onClick = {
+                    navController.navigate(USERPLAYLISTSCREEN(playListID = playListTable.id))
 
-            },
-            modifier = Modifier.fillMaxWidth(0.9f)
-        ) {
-            Row {
-                Text(text = playListTable.playListName, color = MaterialTheme.colorScheme.secondary)
-                Icon(imageVector = Icons.Filled.Delete, contentDescription = "Favorite",
-                    tint = MaterialTheme.colorScheme.background, modifier = Modifier.weight(1f).clickable {
-                        playListViewModel.deletePlayList(playListTable = playListTable)
-                    }
-                )
+                },
+                modifier = Modifier.fillMaxWidth(0.9f)
+            ) {
+                    Text(text = playListTable.playListName, color = MaterialTheme.colorScheme.secondary)
+
+
             }
 
+            IconButton(onClick = {
+                    playListViewModel.deletePlayList(playListTable = playListTable)
+
+            }) {
+                Icon(imageVector = Icons.Filled.Delete, contentDescription = "Favorite",
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+            }
         }
+
     }
 
 }
