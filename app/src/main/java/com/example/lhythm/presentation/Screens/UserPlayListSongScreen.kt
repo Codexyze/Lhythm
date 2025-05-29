@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -54,9 +53,7 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.example.lhythm.R
 import com.example.lhythm.constants.Constants
-import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.PlayListSongMapper
-import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.presentation.Navigation.LYRICSFULLSCREEN
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.Utils.formatDuration
@@ -123,8 +120,9 @@ fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewMo
     val lyrics=rememberSaveable { mutableStateOf("") }
     val updateLyricsFromPlayListState = playListViewModel.updateLyricsFromPlayListState.collectAsState()
     val showInfoDialogue= rememberSaveable { mutableStateOf(false) }
+    val deletePlayListSongsState = playListViewModel.deletePlayListSongsState.collectAsState()
     when{
-        updateLyricsFromPlayListState.value.isLoading->{
+        updateLyricsFromPlayListState.value.isLoading || deletePlayListSongsState.value.isLoading->{
             LoadingScreen()
         }
         !updateLyricsFromPlayListState.value.error.isNullOrEmpty()->{
@@ -133,7 +131,15 @@ fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewMo
         !updateLyricsFromPlayListState.value.data.isNullOrEmpty()->{
             showToastMessage(context = context,text = "Lyrics Updated",type = Constants.TOASTSUCCESS)
         }
+        !deletePlayListSongsState.value.error.isNullOrEmpty()->{
+            showToastMessage(context = context,text = "Error Deleting Song",type = Constants.TOASTERROR)
+        }
+        !deletePlayListSongsState.value.data.isNullOrEmpty()->{
+            showToastMessage(context = context,text = "Song Deleted",type = Constants.TOASTSUCCESS)
+        }
+
     }
+
     Card (modifier = Modifier
         .fillMaxWidth()
         .padding(8.dp)

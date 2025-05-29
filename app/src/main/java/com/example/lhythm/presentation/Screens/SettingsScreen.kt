@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.lhythm.constants.Constants
+import com.example.lhythm.presentation.Navigation.SOUNDFXSCREEN
 import com.example.lhythm.presentation.ViewModels.OnBoardingViewModel
 
 @Composable
@@ -60,7 +61,7 @@ fun SettingScreen(
 
         Button(
             onClick = {
-
+                navController.navigate(SOUNDFXSCREEN)
             },
             modifier = Modifier
                 .fillMaxWidth(0.75f)

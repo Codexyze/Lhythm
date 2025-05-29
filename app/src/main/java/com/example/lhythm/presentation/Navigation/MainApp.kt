@@ -15,6 +15,7 @@ import com.example.lhythm.presentation.Screens.HomeScreen
 import com.example.lhythm.presentation.Screens.ListOfAllSongsScreen
 import com.example.lhythm.presentation.Screens.LyricsFullScreenView
 import com.example.lhythm.presentation.Screens.OnBoardingScreen
+import com.example.lhythm.presentation.Screens.SoundFXScreen
 import com.example.lhythm.presentation.Screens.UserPlayListScreen
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.ViewModels.OnBoardingViewModel
@@ -48,6 +49,9 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
             composable<LYRICSFULLSCREEN> {bacstackEntry->
                 val data: LYRICSFULLSCREEN = bacstackEntry.toRoute()
                 LyricsFullScreenView(lyrics = data.lyrics)
+            }
+            composable<SOUNDFXSCREEN> {
+                SoundFXScreen(navController = navcontroller)
             }
 
         }
