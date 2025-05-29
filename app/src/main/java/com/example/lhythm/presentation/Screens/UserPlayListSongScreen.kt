@@ -121,6 +121,19 @@ fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewMo
     val context = LocalContext.current
     val showInfoDialogueBox = remember { mutableStateOf(false) }
     val lyrics=rememberSaveable { mutableStateOf("") }
+    val updateLyricsFromPlayListState = playListViewModel.updateLyricsFromPlayListState.collectAsState()
+    val showInfoDialogue= rememberSaveable { mutableStateOf(false) }
+    when{
+        updateLyricsFromPlayListState.value.isLoading->{
+            LoadingScreen()
+        }
+        !updateLyricsFromPlayListState.value.error.isNullOrEmpty()->{
+            showToastMessage(context = context,text = "Error Updating Lyrics",type = Constants.TOASTERROR)
+        }
+        !updateLyricsFromPlayListState.value.data.isNullOrEmpty()->{
+            showToastMessage(context = context,text = "Lyrics Updated",type = Constants.TOASTSUCCESS)
+        }
+    }
     Card (modifier = Modifier
         .fillMaxWidth()
         .padding(8.dp)
@@ -222,6 +235,13 @@ fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewMo
                                 showInfoDialogueBox.value = true
                             }
                         )
+                        Icon(imageVector = Icons.Filled.Info, contentDescription = "Info",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.weight(1f).clickable {
+                                showInfoDialogueBox.value = true
+
+                            }
+                        )
                     }
 
                 }
@@ -275,6 +295,7 @@ fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewMo
             confirmButton = {
                 Button(
                     onClick = {
+                        playListViewModel.updateLyricsFromPlayList(id = song.id,lyrics = lyrics.value)
 
                     },
                     colors = ButtonDefaults.buttonColors(
@@ -285,7 +306,49 @@ fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewMo
                 }
             },
             dismissButton = {
+                Button(
+                    onClick = {
+                        showInfoDialogueBox.value = false
 
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text("Cancel")
+                }
+
+            }
+        )
+    } else if(showInfoDialogueBox.value){
+        AlertDialog(
+            onDismissRequest = { showInfoDialogueBox.value = false },
+            title = { Text("Add to playlist") },
+            confirmButton = {
+
+            },
+            dismissButton = {
+
+            },
+            text = {
+                Column {
+                    LazyColumn {
+                        item {
+                            Text("All Detail ")
+                            Text("Title : ${song.title}")
+                            Text("Album : ${song.album}")
+                            Text("Artist : ${song.artist}")
+                            Text("Composer : ${song.composer}")
+                            Text("Duration of :" + duration.value.toString())
+                            Text("Size : ${song.size}")
+                            Text("Year : ${song.year}")
+                            Text("This ${song.title} was published in year ${song.year} by ${song.artist} and composed by ${song.composer}." +
+                                    " It has a duration of ${duration.value} and is ${song.size} in size.")
+                        }
+                    }
+
+
+                }
             }
         )
     }
