@@ -25,10 +25,13 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +44,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -110,10 +115,12 @@ fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewMo
                          index:Int=0,
                          songUriList: List<Uri>?=null,
                          song: PlayListSongMapper,
-                         navController: NavController) {
+                         navController: NavController,
+                         playListViewModel: PlayListViewModel= hiltViewModel()) {
     val duration = remember { mutableStateOf("") }
     val context = LocalContext.current
     val showInfoDialogueBox = remember { mutableStateOf(false) }
+    val lyrics=rememberSaveable { mutableStateOf("") }
     Card (modifier = Modifier
         .fillMaxWidth()
         .padding(8.dp)
@@ -199,6 +206,7 @@ fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewMo
                             modifier = Modifier
                                 .weight(1f)
                                 .clickable {
+                                    playListViewModel.deletePlayListSongs(playListSongMapper =song )
 
                                 }
                         )
@@ -208,6 +216,12 @@ fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewMo
 
                             }
                         )
+                        Icon(imageVector = Icons.Filled.Add, contentDescription = "Lyrics",
+                            tint = MaterialTheme.colorScheme.primary, modifier = Modifier.weight(1f).clickable {
+//                               playListViewModel.updateLyricsFromPlayList( )
+                                showInfoDialogueBox.value = true
+                            }
+                        )
                     }
 
                 }
@@ -215,6 +229,65 @@ fun EachUserPlayListItem(mediaManagerViewModel: MediaManagerViewModel=hiltViewMo
             }
 
         }
+    }
+    if(showInfoDialogueBox.value){
+        AlertDialog(
+            onDismissRequest = {
+                showInfoDialogueBox.value = false
+            },
+            title = {
+                if(lyrics.value.isEmpty()){
+                    Text("Add Lyrics",color = MaterialTheme.colorScheme.primary)
+                }else{
+                    LazyColumn {
+                        item {
+                            Text(
+                                text = lyrics.value,
+                                color = MaterialTheme.colorScheme.primary,
+                                maxLines = 3,
+                                overflow = TextOverflow.Ellipsis
+                            )
+
+                        }
+                    }
+
+                }
+            },
+            text = {
+                OutlinedTextField(
+                    value = lyrics.value,
+                    onValueChange = {
+                        lyrics.value = it
+                    },
+                    singleLine = true,
+                    label = {
+                        Text("Add Lyrics",color = MaterialTheme.colorScheme.primary)
+                    },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        errorTextColor = MaterialTheme.colorScheme.primary,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                    ),textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text("Add")
+                }
+            },
+            dismissButton = {
+
+            }
+        )
     }
 
 
