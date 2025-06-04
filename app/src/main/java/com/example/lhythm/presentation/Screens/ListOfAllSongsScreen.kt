@@ -1,6 +1,7 @@
 package com.example.lhythm.presentation.Screens
 
 import android.content.ContentUris
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -49,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -372,6 +375,31 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                                             ).show()
                                         }
 
+
+                                    }
+                            )
+                            Icon(imageVector = Icons.Filled.Share, contentDescription = "Share",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable {
+                                        val message = buildString {
+                                            append("🎵 I'm vibin' to \"${songTitle ?: "Unknown Title"}\" by ${songArtist ?: "Unknown Artist"}!\n\n")
+                                            append("🕒 Duration: ${songDuration ?: "Unknown"}\n")
+                                            append("📀 Album: ${album ?: "Unknown"} (${songYear ?: "N/A"})\n")
+                                            append("🎼 Composer: ${composer ?: "Unknown"}\n\n")
+                                            append("🔥 You can listen to it on the Lythm App!\n")
+                                            append("👉 Download now: ${Constants.REPOLINK}")
+                                        }
+
+                                        val shareIntent = Intent(Intent.ACTION_SEND)
+                                        shareIntent.type = "text/plain"
+                                        shareIntent.putExtra(Intent.EXTRA_TEXT,message)
+                                        try {
+                                            context.startActivity(Intent.createChooser(shareIntent, "Share via"))
+                                        }catch (e: Exception){
+                                            showToastMessage(context = context, text = "Error Sharing", type = Constants.TOASTERROR)
+                                        }
 
                                     }
                             )

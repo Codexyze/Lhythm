@@ -1,7 +1,5 @@
 package com.example.lhythm.presentation.Screens
 
-import android.R.attr.maxLevel
-import android.R.attr.minLevel
 import android.media.audiofx.Equalizer
 import androidx.annotation.OptIn
 import androidx.compose.foundation.background
