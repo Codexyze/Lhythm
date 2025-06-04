@@ -18,6 +18,9 @@
   <img src="https://github.com/user-attachments/assets/28fb80af-4aae-4571-915f-df3906f7e48a"  width="24%" />
   <img src="https://github.com/user-attachments/assets/acdb24dc-3812-4c69-857d-cb2874e5d604"  width="24%" />
  <img src="https://github.com/user-attachments/assets/99c3ec54-8b85-4449-9958-eea09817031e"  width="24%" />
+  <img src="https://github.com/user-attachments/assets/4c1e8770-2a4e-4b8a-b1ba-ecff2f502025"  width="24%" />
+ <img src="https://github.com/user-attachments/assets/8e8fe111-8f1f-483e-ae59-9336f495246c"  width="24%" />
+ <img src="https://github.com/user-attachments/assets/0870e8b5-f09e-4e95-9e46-c2ad5b6a77cd"  width="24%" />
 </div>
 
 ---
@@ -43,6 +46,11 @@
 
 - 🎧 **Headphone Controls**  
   Control your music with headphones/earphones.
+
+- 🎚️ **Equalizer Support**
+  Take full control of your sound with our brand new built-in Equalizer!  
+  Adjust bass, treble, and use presets to tune your music just the way you like it.  
+  Perfect for audiophiles and casual listeners alike 🎧🎶
 
 - ❤️ **Favorite Track Saving**  
   Mark your favorite tracks and find them anytime.
@@ -118,6 +126,12 @@
 - **Lyrics Embedding**:  
   Lyrics are embedded into the music files, so users can follow along with the lyrics while enjoying their favorite tracks.
 
+- **Equalizer Control**:
+  Lythm comes with a built-in audio equalizer that lets users fine-tune their sound experience. With customizable bands, bass boost, and preset profiles (like Rock, Jazz, Classical), users can shape the audio 
+  output to match their personal taste or the genre they’re vibing with.
+
+ 
+
 ---
 
 ## How It Works
@@ -130,13 +144,13 @@ Lythm utilizes **Content Resolver** to fetch music files from the device’s sto
 
 - [**v0.1.0-beta**](https://github.com/Codexyze/Lhythm/releases/tag/v0.1.0-beta) : **First Beta** release
 - [**v0.2.0-beta**](https://github.com/Codexyze/Lhythm/releases/tag/v0.2.0-beta) : **Second Beta** release
+- [**v0.3.0-beta**](https://github.com/Codexyze/Lhythm/releases/tag/v0.3.0-beta) : **Third Beta** release
 
 ---
 ## Future Improvements
 
 As the project continues to evolve, here are some features planned for future updates:
 
-- **Audio Effects**: Implement various audio effects like equalizer, bass boost, etc.
 - **Social Sharing**: Allow users to share their favorite songs or playlists with others on social media.
 
 ---
