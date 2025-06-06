@@ -23,6 +23,7 @@ import com.example.lhythm.presentation.ViewModels.OnBoardingViewModel
 @Composable
 fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
     val state =viewmodel.onBoardingPrefrence.collectAsState()
+
     val navcontroller = rememberNavController()
     LaunchedEffect(Unit) {
         viewmodel.getLatestValueOfPref()

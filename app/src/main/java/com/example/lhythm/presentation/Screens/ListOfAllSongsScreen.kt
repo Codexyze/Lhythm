@@ -51,7 +51,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -60,7 +59,6 @@ import com.example.lhythm.R
 import com.example.lhythm.constants.Constants
 import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.PlayListSongMapper
-import com.example.lhythm.data.Local.PlayListTable
 import com.example.lhythm.data.Local.SongEntity
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.Utils.formatDuration
@@ -71,7 +69,6 @@ import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 import com.example.lhythm.presentation.ViewModels.PlayListViewModel
 import com.example.lhythm.ui.theme.cardColor
 import com.shashank.sony.fancytoastlib.FancyToast
-import okhttp3.internal.filterList
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -394,11 +391,20 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
 
                                         val shareIntent = Intent(Intent.ACTION_SEND)
                                         shareIntent.type = "text/plain"
-                                        shareIntent.putExtra(Intent.EXTRA_TEXT,message)
+                                        shareIntent.putExtra(Intent.EXTRA_TEXT, message)
                                         try {
-                                            context.startActivity(Intent.createChooser(shareIntent, "Share via"))
-                                        }catch (e: Exception){
-                                            showToastMessage(context = context, text = "Error Sharing", type = Constants.TOASTERROR)
+                                            context.startActivity(
+                                                Intent.createChooser(
+                                                    shareIntent,
+                                                    "Share via"
+                                                )
+                                            )
+                                        } catch (e: Exception) {
+                                            showToastMessage(
+                                                context = context,
+                                                text = "Error Sharing",
+                                                type = Constants.TOASTERROR
+                                            )
                                         }
 
                                     }

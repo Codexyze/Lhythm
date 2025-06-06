@@ -23,6 +23,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
+import com.example.lhythm.presentation.UIModels.WindowType
+import com.example.lhythm.presentation.Utils.rememberWindowSize
 import com.example.lhythm.ui.theme.cardColor
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -95,9 +97,25 @@ data class BottomNaviagtionItem(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ContentScreen(navController: NavController,index: Int) {
+    val screenWindowSize = rememberWindowSize()
     when(index){
         0->{
-           ListOfAllSongsScreen(navController = navController)
+            when{
+                screenWindowSize.screenWidthType==WindowType.COMPACT->{
+                    ListOfAllSongsScreen(navController = navController)
+                }
+                screenWindowSize.screenWidthType==WindowType.MEDIUM->{
+                    ListOfAllSongsMediumScreen(navController = navController)
+                }
+                screenWindowSize.screenWidthType==WindowType.EXPANDED->{
+                    ListOfAllSongsMediumScreen(navController = navController)
+                }
+                else->{
+                    ListOfAllSongsMediumScreen(navController = navController)
+                }
+
+            }
+//           ListOfAllSongsScreen(navController = navController)
         }
         1->{
             SongControllerScreen()
