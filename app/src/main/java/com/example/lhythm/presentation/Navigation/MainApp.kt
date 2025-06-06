@@ -1,7 +1,6 @@
 package com.example.lhythm.presentation.Navigation
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -57,7 +56,6 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
         }
     }
 
-    Log.d("PREFDATA",state.value.toString())
 
 }
 

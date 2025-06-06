@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -109,44 +111,47 @@ fun OnBoardingScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    "Welcome to Lhythm",
-                    fontSize = 24.sp,
-                    fontFamily = FontFamily.Serif,
-                    color = Color.Green
-                )
-                Text(
-                    "Lose yourself in music",
-                    fontSize = 24.sp,
-                    fontFamily = FontFamily.Cursive,
-                    color = Color.Green
-                )
+                            LazyColumn {
+                                item{
+                                    Text(
+                                        "Welcome to Lhythm",
+                                        fontSize = 24.sp,
+                                        color = MaterialTheme.colorScheme.secondary
+                                    )
+                                    Text(
+                                        "Lose yourself in music",
+                                        fontSize = 24.sp,
+                                        color = MaterialTheme.colorScheme.secondary
+                                    )
 
-                LottieAnimation(
-                    composition = composition,
-                    progress = { progress },
-                    modifier = Modifier
-                        .size(200.dp)
-                        .background(color = Color.Black)
-                )
+                                    LottieAnimation(
+                                        composition = composition,
+                                        progress = { progress },
+                                        modifier = Modifier
+                                            .size(200.dp)
+                                            .background(color = Color.Black)
+                                    )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                                    Spacer(modifier = Modifier.height(16.dp))
 
-                            Button(onClick = {
-                                permissionState.value = checkPermission(context = context,permission=permission1)
-                                if(permissionState.value){
-                                    viewmodel.upDateOnBoardingPref()
-                                    navController.navigate(SAMPLESCREEN) {
-                                        popUpTo(0)
+                                    Button(onClick = {
+                                        permissionState.value = checkPermission(context = context,permission=permission1)
+                                        if(permissionState.value){
+                                            viewmodel.upDateOnBoardingPref()
+                                            navController.navigate(SAMPLESCREEN) {
+                                                popUpTo(0)
+                                            }
+                                        }else{
+                                            launchPermission.launch(arrayOf(permission1,permission2))
+
+                                        }
+
+                                    }, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)) {
+                                        Text("getting Started", color = MaterialTheme.colorScheme.secondary)
                                     }
-                                }else{
-                                   launchPermission.launch(arrayOf(permission1,permission2))
-
                                 }
-
-                            }, colors = ButtonDefaults.buttonColors(containerColor = RedThemeSuit1)) {
-                                Text("getting Started")
                             }
+
             }
 
 
