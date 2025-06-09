@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -31,7 +32,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -85,27 +90,59 @@ fun ListOfAllSongsMediumScreen(viewmodel: GetAllSongViewModel = hiltViewModel(),
             state.value.data.forEach {
                 listOfAllSongs.add(it.path.toUri())
             }
-            //Write here
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier.fillMaxSize()
-
-            ) {
-                items(state.value.data) { song ->
-                    EachSongItemMedium(
-                        songid = song.id, songTitle = song.title, songArtist = song.artist,
-                        songDuration = song.duration,
-                        songYear = song.year,songPath= song.path,
-                        songSize = song.size, album = song.album,
-                        songUriList = listOfAllSongs
-                        , composer = song.composer, albumID = song.albumId,
-                        index = state.value.data.indexOf(song),
-                        navController = navController)
-                    listOfPlayListUri.add(song.path.toUri()
+            Column(modifier = Modifier.fillMaxSize()) {
+                Row(modifier = Modifier.weight(0.25f), horizontalArrangement = Arrangement.Center) {
+                    OutlinedTextField(
+                        value = searchSong.value,
+                        onValueChange = {
+                            searchSong.value = it
+                        },
+                        label = {
+                            Text("Search Song",color = MaterialTheme.colorScheme.primary)
+                        },
+                        modifier = Modifier.weight(0.85f),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            errorTextColor = MaterialTheme.colorScheme.primary,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                        ),textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
+                    IconButton(
+                        onClick = {
+                            isSearching.value = true
+
+                        }
+                    ) {
+                        Icon(imageVector = Icons.Filled.Search, contentDescription = "Search",tint = MaterialTheme.colorScheme.primary,)
+                    }
 
                 }
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier.fillMaxSize().weight(0.75f),
+
+                ) {
+                    items(state.value.data) { song ->
+                        EachSongItemMedium(
+                            songid = song.id, songTitle = song.title, songArtist = song.artist,
+                            songDuration = song.duration,
+                            songYear = song.year,songPath= song.path,
+                            songSize = song.size, album = song.album,
+                            songUriList = listOfAllSongs
+                            , composer = song.composer, albumID = song.albumId,
+                            index = state.value.data.indexOf(song),
+                            navController = navController)
+                        listOfPlayListUri.add(song.path.toUri()
+                        )
+
+                    }
+                }
+
+
             }
+            //Write here
 
         }else->{
         Text("No Songs Found")
@@ -463,7 +500,4 @@ fun EachSongItemMedium(
         }
 
     }
-
-
-
 }
