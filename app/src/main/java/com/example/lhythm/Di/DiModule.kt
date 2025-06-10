@@ -7,6 +7,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.room.Room
 import com.example.lhythm.constants.Constants
+import com.example.lhythm.core.AlaramManager.AlaramManager
 import com.example.lhythm.core.Media.MediaPlayerManager
 import com.example.lhythm.data.Local.SongPlayListDataBase
 import com.example.lhythm.data.RepoIMPL.FavSongRepoImpl
@@ -197,6 +198,10 @@ object DiModule {
     @Provides
     fun updateLyricsFromPLUseCase(songPlayListRepository: SongPlayListRepository): UpdateLyricsFromPLUseCase{
         return UpdateLyricsFromPLUseCase(songPlayListRepository = songPlayListRepository)
+    }
+    @Provides
+    fun getAlaramManagerObject(@ApplicationContext context: Context): AlaramManager{
+        return AlaramManager(context = context)
     }
 
 }

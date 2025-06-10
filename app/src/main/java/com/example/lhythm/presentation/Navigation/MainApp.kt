@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.example.lhythm.presentation.Screens.AlaramSettingScreen
 import com.example.lhythm.presentation.Screens.HomeScreen
 import com.example.lhythm.presentation.Screens.ListOfAllSongsScreen
 import com.example.lhythm.presentation.Screens.LyricsFullScreenView
@@ -52,6 +53,9 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
             }
             composable<SOUNDFXSCREEN> {
                 SoundFXScreen(navController = navcontroller)
+            }
+            composable<ALARAMSETTINGSCREEN> {
+                AlaramSettingScreen(navController = navcontroller)
             }
 
         }

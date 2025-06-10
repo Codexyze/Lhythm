@@ -39,6 +39,7 @@
             android:exported="false"
             tools:ignore="ForegroundServicePermission" />
         <receiver android:name=".core.BroadCastReciver.StopServiceReciver"/>
+        <receiver android:name=".core.BroadCastReciver.AlaramReciver"/>
 
     </application>
 

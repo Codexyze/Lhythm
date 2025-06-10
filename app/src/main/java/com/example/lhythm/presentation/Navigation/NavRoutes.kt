@@ -8,7 +8,6 @@ object SAMPLESCREEN
 @Serializable
 object ONBOARDING
 
-
 @Serializable
 object HOMESCREEN
 
@@ -20,3 +19,6 @@ data class LYRICSFULLSCREEN(val lyrics : String)
 
 @Serializable
 object SOUNDFXSCREEN
+
+@Serializable
+object ALARAMSETTINGSCREEN
