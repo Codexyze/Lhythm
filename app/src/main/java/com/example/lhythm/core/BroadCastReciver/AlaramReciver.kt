@@ -21,11 +21,11 @@ class AlaramReciver: BroadcastReceiver() {
         }
        if(alarmMessage=="Alaram has been triggred" && exoPlayer.isPlaying){
            exoPlayer.stop()
-           exoPlayer.release()
-       }else{
+       }else if(!exoPlayer.isPlaying){
+           //
+       }
+       else{
            return
        }
-
-
     }
 }
