@@ -221,7 +221,24 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
 
                 SongCategory.ARTIST->{
 
-                     GetAllSongsByArtistScreen(navController = navController)
+                    when{
+                        screenWindowSize.screenWidthType==WindowType.COMPACT->{
+                            GetAllSongsByArtistScreen(navController = navController)
+                        }
+                        screenWindowSize.screenWidthType==WindowType.MEDIUM->{
+                            GetAllSongsByArtistScreenMedium(navController = navController)
+
+                        }
+                        screenWindowSize.screenWidthType==WindowType.EXPANDED->{
+                            GetAllSongsByArtistScreenMedium(navController = navController)
+                        }
+                        else->{
+                            GetAllSongsByArtistScreenMedium(navController = navController)
+                        }
+
+                    }
+
+
                 }
                 SongCategory.YEARASC -> {
                     GetSongsByYearASCScreen(navController = navController)
