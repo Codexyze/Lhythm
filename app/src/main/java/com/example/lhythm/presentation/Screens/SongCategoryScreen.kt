@@ -281,10 +281,29 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
 
                 }
                 SongCategory.COMPOSER -> {
-                    ComposerCategory(navController = navController)
+
+                    when{
+                        screenWindowSize.screenWidthType==WindowType.COMPACT->{
+                            ComposerCategory(navController = navController)
+                        }
+                        screenWindowSize.screenWidthType==WindowType.MEDIUM->{
+                            ComposerCategoryMedium(navController = navController)
+
+                        }
+                        screenWindowSize.screenWidthType==WindowType.EXPANDED->{
+                            ComposerCategoryMedium(navController = navController)
+                        }
+                        else->{
+                            ComposerCategoryMedium(navController = navController)
+                        }
+
+                    }
+
+
                 }
 
                 SongCategory.PLAYLIST -> {
+                    //Final screen
                     PlayListExample(navController = navController)
                 }
             }
