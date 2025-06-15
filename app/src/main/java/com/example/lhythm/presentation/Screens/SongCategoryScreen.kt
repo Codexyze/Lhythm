@@ -199,7 +199,24 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
 
                 }
                SongCategory.DESCENDING->{
-                    GetAllSongsDESC(navController = navController)
+                   when{
+                       screenWindowSize.screenWidthType==WindowType.COMPACT->{
+                           GetAllSongsDESC(navController = navController)
+                       }
+                       screenWindowSize.screenWidthType==WindowType.MEDIUM->{
+
+                       }
+                       screenWindowSize.screenWidthType==WindowType.EXPANDED->{
+                           GetAllSongsDESCMedium(navController = navController)
+                       }
+                       else->{
+                           GetAllSongsDESCMedium(navController = navController)
+                       }
+
+                   }
+
+
+
                }
 
                 SongCategory.ARTIST->{
