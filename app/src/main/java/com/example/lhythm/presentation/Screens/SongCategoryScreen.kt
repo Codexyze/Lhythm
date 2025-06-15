@@ -241,10 +241,43 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
 
                 }
                 SongCategory.YEARASC -> {
-                    GetSongsByYearASCScreen(navController = navController)
+                    when{
+                        screenWindowSize.screenWidthType==WindowType.COMPACT->{
+                            GetSongsByYearASCScreen(navController = navController)
+                        }
+                        screenWindowSize.screenWidthType==WindowType.MEDIUM->{
+                            GetSongsByYearASCScreenMedium(navController = navController)
+
+                        }
+                        screenWindowSize.screenWidthType==WindowType.EXPANDED->{
+                            GetSongsByYearASCScreenMedium(navController = navController)
+                        }
+                        else->{
+                            GetSongsByYearASCScreenMedium(navController = navController)
+                        }
+
+                    }
+
                 }
                 SongCategory.FAVSONG -> {
-                    FavSongScreen()
+
+                    when{
+                        screenWindowSize.screenWidthType==WindowType.COMPACT->{
+                            FavSongScreen()
+                        }
+                        screenWindowSize.screenWidthType==WindowType.MEDIUM->{
+                            FavSongScreenMedium()
+
+                        }
+                        screenWindowSize.screenWidthType==WindowType.EXPANDED->{
+                            FavSongScreenMedium()
+                        }
+                        else->{
+                            FavSongScreenMedium()
+                        }
+
+                    }
+
 
                 }
                 SongCategory.COMPOSER -> {
