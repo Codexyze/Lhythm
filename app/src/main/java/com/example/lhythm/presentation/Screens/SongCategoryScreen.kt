@@ -3,16 +3,21 @@ package com.example.lhythm.presentation.Screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,7 +34,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.lhythm.R
 import com.example.lhythm.presentation.UIModels.SongCategory
+import com.example.lhythm.presentation.UIModels.WindowType
 import com.example.lhythm.presentation.Utils.LoadingScreen
+import com.example.lhythm.presentation.Utils.rememberWindowSize
 import com.example.lhythm.presentation.ViewModels.GetSongCategoryViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 import com.example.lhythm.ui.theme.BlackColor
@@ -40,6 +47,7 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                          mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel()) {
     val getAllSongsASCState = viewmodel.songsInASCOrderState.collectAsState()
     val currentCategory = rememberSaveable { mutableStateOf(SongCategory.ASCENDING) }
+    val screenWindowSize = rememberWindowSize()
     if(getAllSongsASCState.value.isLoading){
         LoadingScreen()
     }else if(!getAllSongsASCState.value.error.isNullOrBlank()){
@@ -169,7 +177,26 @@ fun SongCategoriesScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
             }
             when(currentCategory.value){
                 SongCategory.ASCENDING ->{
-                    GetAllSongASCScreen(navController = navController)
+                    when{
+                        screenWindowSize.screenWidthType==WindowType.COMPACT->{
+                            GetAllSongASCScreen(navController = navController)
+                        }
+                        screenWindowSize.screenWidthType==WindowType.MEDIUM->{
+                           GetAllSongASCScreenMedium(navController = navController)
+                        }
+                        screenWindowSize.screenWidthType==WindowType.EXPANDED->{
+
+                            GetAllSongASCScreenMedium(navController = navController)
+                        }
+                        else->{
+
+                            GetAllSongASCScreenMedium(navController = navController)
+                        }
+
+                    }
+
+
+
                 }
                SongCategory.DESCENDING->{
                     GetAllSongsDESC(navController = navController)

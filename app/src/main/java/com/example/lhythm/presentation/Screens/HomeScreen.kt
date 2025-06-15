@@ -121,7 +121,27 @@ fun ContentScreen(navController: NavController,index: Int) {
             SongControllerScreen()
         }
         2->{
-           SongCategoriesScreen(navController = navController)
+            when{
+                screenWindowSize.screenWidthType==WindowType.COMPACT->{
+                    SongCategoriesScreen(navController = navController)
+                }
+                screenWindowSize.screenWidthType==WindowType.MEDIUM->{
+                  //  SongCategoriesMedium(navController = navController)
+                    SongCategoriesScreen(navController = navController)
+                }
+                screenWindowSize.screenWidthType==WindowType.EXPANDED->{
+                    //SongCategoriesMedium(navController = navController)
+                    SongCategoriesScreen(navController = navController)
+                }
+                else->{
+                  //  SongCategoriesMedium(navController = navController)
+                    SongCategoriesScreen(navController = navController)
+                }
+
+            }
+
+
+
         }
         3->{
             //PlayListExample(navController = navController)
