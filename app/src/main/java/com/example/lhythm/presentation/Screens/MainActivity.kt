@@ -39,8 +39,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        val notificationManager =getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancel("media_channel", 1) // 1 = your notification ID
+//        val notificationManager =getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+//        notificationManager.cancel("media_channel", 1) // 1 = your notification ID
         exoPlayer.release()
         mediaSession.release()
         val intent = Intent(this, MusicForeground::class.java)

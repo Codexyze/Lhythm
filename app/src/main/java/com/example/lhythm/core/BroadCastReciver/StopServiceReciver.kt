@@ -14,7 +14,6 @@ class StopServiceReciver: BroadcastReceiver() {
     val mediaPlayer = MediaPlayer()
 
     override fun onReceive(context: Context?, intent: Intent?) {
-
-
     }
 }
+

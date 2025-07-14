@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.lhythm.core.Media.MediaPlayerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,16 +30,16 @@ class MediaManagerViewModel @Inject constructor(private val mediaMananger: Media
     val index = _index.asStateFlow()
 
 
-    init {
-      viewModelScope.launch {
-          while (isPlaying()){
-              getCurrentPosition()
-              delay(2000)
-          }
-
-      }
-
-   }
+//    init {
+//      viewModelScope.launch {
+//          while (isPlaying()){
+//              getCurrentPosition()
+//              delay(2000)
+//          }
+//
+//      }
+//
+//   }
     fun exoplayeInstance(): ExoPlayer?{
        return mediaMananger.exoPlayerExternal
     }
@@ -93,4 +94,15 @@ fun getCurrentPosition() {
         _songQueue.value=listOfSongsUri
         mediaMananger.playPlayListWithIndex(listOfSongsUri,index)
     }
+
+    fun stopAndCleanup() {
+        mediaMananger.releasePlayer()
+        viewModelScope.cancel() // 🔥 Stop all coroutines so nothing touches ExoPlayer again
+    }
+
+    override fun onCleared() {
+        stopAndCleanup()
+        super.onCleared()
+    }
+
 }

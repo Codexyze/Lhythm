@@ -46,8 +46,8 @@ fun createMusicExoNotification(exoPlayer: ExoPlayer, context: Context) {
             override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
                 super.onNotificationCancelled(notificationId, dismissedByUser)
                // val intent = Intent(context, MusicForeground::class.java)
-                exoPlayer.stop()
-                exoPlayer.release()
+//                exoPlayer.stop()
+//                exoPlayer.release()
                // context.stopService(intent)
             }
 

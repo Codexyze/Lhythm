@@ -1,9 +1,11 @@
 package com.example.lhythm.core.Media
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.annotation.OptIn
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -14,6 +16,7 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.example.lhythm.constants.Constants
 import com.example.lhythm.core.LocalNotification.createMusicExoNotification
+import com.example.lhythm.core.MediaSessionService.PlaybackService
 import com.example.lhythm.presentation.Utils.showToastMessage
 import javax.inject.Inject
 
@@ -21,8 +24,8 @@ import javax.inject.Inject
 class MediaPlayerManager
 @UnstableApi
 @Inject constructor(private val context: Context,
-private val  exoPlayer: ExoPlayer, private val mediaSession: MediaSession
-): MediaSessionService() {
+private var  exoPlayer: ExoPlayer, private val mediaSession: MediaSession
+) {
 
    // private var exoPlayer: ExoPlayer? = null
     var exoPlayerExternal : ExoPlayer? = exoPlayer
@@ -97,45 +100,72 @@ private val  exoPlayer: ExoPlayer, private val mediaSession: MediaSession
 
     }
 
+//    @OptIn(UnstableApi::class)
+//    fun playPlayListWithIndex(listOfSongsUri: List<Uri>,index: Int=0) {
+//        songList = listOfSongsUri
+//       // releasePlayer()
+//        val mediaItemList = mutableListOf<MediaItem>()
+//        for (uri in listOfSongsUri) {
+//            val mediaItem = MediaItem.fromUri(uri.path!!.toUri())
+//            mediaItemList.add(mediaItem)
+//        }
+//        exoPlayer.apply  {
+//            //createMusicExoNotification(exoPlayer = exoPlayer, context = context)
+//            val intent = Intent(context, PlaybackService::class.java)
+//            ContextCompat.startForegroundService(context, intent)
+//            this.addListener(object : Player.Listener {
+//                override fun onAudioSessionIdChanged(audioSessionId: Int) {
+//                    super.onAudioSessionIdChanged(audioSessionId)
+//                    Log.d("AUDIOSESSION", "Audio session ID: ${audioSessionId}")
+//
+//                }
+//            })
+//            setMediaItems(mediaItemList,index, C.INDEX_UNSET.toLong())
+//            prepare()
+//            playWhenReady = true
+//            showToastMessage(context = context, text = "Playing",type = Constants.TOASTSUCCESS)
+//        }
+//
+//    }
+
     @OptIn(UnstableApi::class)
-    fun playPlayListWithIndex(listOfSongsUri: List<Uri>,index: Int=0) {
+    fun playPlayListWithIndex(listOfSongsUri: List<Uri>, index: Int = 0) {
+        val mediaItemList = listOfSongsUri.map {
+            MediaItem.fromUri(it.path!!.toUri())
+        }
+        if (exoPlayer.isReleased) {
+            Log.w("MediaPlayerManager", "playPlayListWithIndex() aborted: ExoPlayer is released")
+            exoPlayer = ExoPlayer.Builder(context).build()
+        }
+
         songList = listOfSongsUri
-       // releasePlayer()
-        val mediaItemList = mutableListOf<MediaItem>()
-        for (uri in listOfSongsUri) {
-            val mediaItem = MediaItem.fromUri(uri.path!!.toUri())
-            mediaItemList.add(mediaItem)
+
+
+
+        try {
+            exoPlayer.apply {
+                val intent = Intent(context, PlaybackService::class.java)
+                ContextCompat.startForegroundService(context, intent)
+
+                addListener(object : Player.Listener {
+                    override fun onAudioSessionIdChanged(audioSessionId: Int) {
+                        super.onAudioSessionIdChanged(audioSessionId)
+                        Log.d("AUDIOSESSION", "Audio session ID: $audioSessionId")
+                    }
+                })
+
+                setMediaItems(mediaItemList, index, C.INDEX_UNSET.toLong())
+                prepare()
+                playWhenReady = true
+
+                showToastMessage(context = context, text = "Playing", type = Constants.TOASTSUCCESS)
+            }
+        } catch (e: IllegalStateException) {
+            Log.e("MediaPlayerManager", "Error using released ExoPlayer: ${e.message}")
+            showToastMessage(context = context, text = "Playback failed 💥", type = Constants.TOASTERROR)
         }
-        exoPlayer.apply  {
-            createMusicExoNotification(exoPlayer = exoPlayer, context = context)
-            this.addListener(object : Player.Listener {
-                override fun onAudioSessionIdChanged(audioSessionId: Int) {
-                    super.onAudioSessionIdChanged(audioSessionId)
-                    Log.d("AUDIOSESSION", "Audio session ID: ${audioSessionId}")
-
-                }
-            })
-            setMediaItems(mediaItemList,index, C.INDEX_UNSET.toLong())
-            prepare()
-            playWhenReady = true
-            showToastMessage(context = context, text = "Playing",type = Constants.TOASTSUCCESS)
-        }
-
     }
 
-    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {
-      return  mediaSession
-    }
-
-    @OptIn(UnstableApi::class)
-    override fun onDestroy() {
-        super.onDestroy()
-        exoPlayer.stop()
-        exoPlayer.release()
-        mediaSession.release()
-        clearListener()
-
-    }
 }
 
 
