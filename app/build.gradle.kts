@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.media3.transformer)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -76,6 +77,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("com.airbnb.android:lottie-compose:6.3.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.1")
+    implementation("androidx.media3:media3-effect:1.7.1")
 
 
     implementation("androidx.room:room-runtime:$room_version")

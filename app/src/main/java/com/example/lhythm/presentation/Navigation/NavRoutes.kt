@@ -22,3 +22,6 @@ object SOUNDFXSCREEN
 
 @Serializable
 object ALARAMSETTINGSCREEN
+
+@Serializable
+object AUDIOTRIMMERSCREEN

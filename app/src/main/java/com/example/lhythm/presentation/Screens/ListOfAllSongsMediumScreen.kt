@@ -216,6 +216,16 @@ fun EachSongItemMedium(
         .fillMaxWidth()
         .padding(8.dp)
         .clickable {
+            if (songUriList == null) {
+                showToastMessage(context = context, text = "No song found", type = Constants.TOASTERROR)
+            }else{
+                mediaManagerViewModel.playPlayListWithIndex(
+                    listOfSongsUri = songUriList,
+                    index = index,
+                    context = context
+                )
+            }
+
 
 
         }, elevation = CardDefaults.elevatedCardElevation(8.dp)
