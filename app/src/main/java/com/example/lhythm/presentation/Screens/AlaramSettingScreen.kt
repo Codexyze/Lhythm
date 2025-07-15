@@ -59,7 +59,7 @@ fun AlaramSettingScreen(navController: NavController,alaramViewModel: AlaramView
                 timevalue.value = it
             },
             label = {
-                Text("Search Song")
+                Text("time in seconds")
             },
             modifier = Modifier.fillMaxWidth(0.85f),
             colors = OutlinedTextFieldDefaults.colors(

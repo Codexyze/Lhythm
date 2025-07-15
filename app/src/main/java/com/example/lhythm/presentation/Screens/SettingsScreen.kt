@@ -104,22 +104,6 @@ fun SettingScreen(
         }
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(
-            onClick = {
-               navController.navigate(AUDIOTRIMMERSCREEN)
-
-            },
-            modifier = Modifier
-                .fillMaxWidth(0.75f)
-                .height(60.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-        ) {
-            Text("Audio Trimmer", style = MaterialTheme.typography.titleMedium)
-        }
-
-
-
 
         if (themeSelection.value) {
             AlertDialog(

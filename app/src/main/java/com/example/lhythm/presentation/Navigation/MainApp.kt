@@ -60,7 +60,7 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
             }
             composable<AUDIOTRIMMERSCREEN> {backstackEntry->
                 val data: AUDIOTRIMMERSCREEN = backstackEntry.toRoute()
-                AudioTrimmerScreen(navController = navcontroller, uri = data.uri)
+                AudioTrimmerScreen(navController = navcontroller, uri = data.uri, songDuration = data.songDuration.toLong())
             }
 
         }

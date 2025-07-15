@@ -345,7 +345,9 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                                 modifier = Modifier
                                     .weight(1f)
                                     .clickable {
-                                      navController.navigate(AUDIOTRIMMERSCREEN(uri = songPath.toString()))
+                                      navController.navigate(AUDIOTRIMMERSCREEN(uri = songPath.toString(),
+                                          songDuration = songDuration.toString().toLong())
+                                      )
                                     }
                             )
                             Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Favorite",

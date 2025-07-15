@@ -24,4 +24,4 @@ object SOUNDFXSCREEN
 object ALARAMSETTINGSCREEN
 
 @Serializable
-data class AUDIOTRIMMERSCREEN(val uri: String)
+data class AUDIOTRIMMERSCREEN(val uri: String , val songDuration : Long)
