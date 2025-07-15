@@ -137,3 +137,9 @@ data class UpdateLyricsFromPLState(
     val data: String= "",
     val error: String ? = null
 )
+
+data class AudioTrimmerState(
+    val isLoading: Boolean = false,
+    val data: String= "",
+    val error: String ? = null
+)

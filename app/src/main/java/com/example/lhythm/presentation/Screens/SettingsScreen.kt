@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.lhythm.constants.Constants
 import com.example.lhythm.presentation.Navigation.ALARAMSETTINGSCREEN
+import com.example.lhythm.presentation.Navigation.AUDIOTRIMMERSCREEN
 import com.example.lhythm.presentation.Navigation.SOUNDFXSCREEN
 import com.example.lhythm.presentation.ViewModels.OnBoardingViewModel
 
@@ -105,7 +106,7 @@ fun SettingScreen(
 
         Button(
             onClick = {
-                //TODO
+               navController.navigate(AUDIOTRIMMERSCREEN)
 
             },
             modifier = Modifier

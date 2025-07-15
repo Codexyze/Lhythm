@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
@@ -60,6 +61,7 @@ import com.example.lhythm.constants.Constants
 import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.PlayListSongMapper
 import com.example.lhythm.data.Local.SongEntity
+import com.example.lhythm.presentation.Navigation.AUDIOTRIMMERSCREEN
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.Utils.formatDuration
 import com.example.lhythm.presentation.Utils.showToastMessage
@@ -336,6 +338,14 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
                                     .weight(1f)
                                     .clickable {
                                         playListSelectionDialog.value = true
+                                    }
+                            )
+                            Icon(imageVector = Icons.Filled.Edit, contentDescription = "Add to playlist",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable {
+                                      navController.navigate(AUDIOTRIMMERSCREEN(uri = songPath.toString()))
                                     }
                             )
                             Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Favorite",

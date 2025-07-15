@@ -10,11 +10,13 @@ import com.example.lhythm.constants.Constants
 import com.example.lhythm.core.AlaramManager.AlaramManager
 import com.example.lhythm.core.Media.MediaPlayerManager
 import com.example.lhythm.data.Local.SongPlayListDataBase
+import com.example.lhythm.data.RepoIMPL.AudioTimmerRepoImpl
 import com.example.lhythm.data.RepoIMPL.FavSongRepoImpl
 import com.example.lhythm.data.RepoIMPL.GetCategoryRepoImpl
 import com.example.lhythm.data.RepoIMPL.GetAllSongsRepoImpl
 import com.example.lhythm.data.RepoIMPL.SongPlayListRepoImpl
 import com.example.lhythm.data.UserPrefrence.UserPrefrence
+import com.example.lhythm.domain.Repository.AudioTrimmerRepository
 import com.example.lhythm.domain.Repository.FavSongRepository
 import com.example.lhythm.domain.Repository.GetAllSongRepository
 import com.example.lhythm.domain.Repository.GetCategoryRepository
@@ -36,6 +38,7 @@ import com.example.lhythm.domain.Usecases.GetSongsByArtistUseCase
 import com.example.lhythm.domain.Usecases.GetSongsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
 import com.example.lhythm.domain.Usecases.SearchFromPlayListUseCase
+import com.example.lhythm.domain.Usecases.TrimAudioUseCase
 import com.example.lhythm.domain.Usecases.UpdateLyricsFromPLUseCase
 import com.example.lhythm.domain.Usecases.UpsertPlayListSongsUseCase
 import dagger.Module
@@ -202,6 +205,17 @@ object DiModule {
     @Provides
     fun getAlaramManagerObject(@ApplicationContext context: Context): AlaramManager{
         return AlaramManager(context = context)
+    }
+
+    @UnstableApi
+    @Provides
+    fun provideAudioTrimmerRepositoryObj(@ApplicationContext context: Context): AudioTrimmerRepository{
+        return AudioTimmerRepoImpl()
+    }
+
+    fun provideAudioTrimmerUseCaseObj(repository: AudioTrimmerRepository): TrimAudioUseCase{
+        return TrimAudioUseCase(repository = repository)
+
     }
 
 }

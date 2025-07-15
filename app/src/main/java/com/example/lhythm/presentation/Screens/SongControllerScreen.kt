@@ -41,16 +41,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun SongControllerScreen(
     viewModel: MediaManagerViewModel = hiltViewModel(),
-    playlistViewModel : PlayListViewModel = hiltViewModel(),
 ) {
-    LaunchedEffect(Unit) {
-        if (viewModel.isPlaying()) {
-            while (true) {
-                viewModel.getCurrentPosition()
-                delay(1000)
-            }
-        }
-    }
+
 
 
     Column (modifier = Modifier.fillMaxSize()){

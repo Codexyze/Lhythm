@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.lhythm.presentation.Screens.AlaramSettingScreen
+import com.example.lhythm.presentation.Screens.AudioTrimmerScreen
 import com.example.lhythm.presentation.Screens.HomeScreen
 import com.example.lhythm.presentation.Screens.ListOfAllSongsScreen
 import com.example.lhythm.presentation.Screens.LyricsFullScreenView
@@ -56,6 +57,10 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
             }
             composable<ALARAMSETTINGSCREEN> {
                 AlaramSettingScreen(navController = navcontroller)
+            }
+            composable<AUDIOTRIMMERSCREEN> {backstackEntry->
+                val data: AUDIOTRIMMERSCREEN = backstackEntry.toRoute()
+                AudioTrimmerScreen(navController = navcontroller, uri = data.uri)
             }
 
         }
