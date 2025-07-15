@@ -8,6 +8,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.media3.common.MediaItem
+import androidx.media3.common.util.Log
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import com.example.lhythm.core.LocalNotification.createMusicNotificationChannel
@@ -28,6 +30,17 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         createMusicNotificationChannel(this)
         super.onCreate(savedInstanceState)
+        val dataUri = intent?.data
+        if (dataUri != null) {
+            Log.d("AudioIntent", "Received audio file: $dataUri")
+
+            // You can now pass this to your player
+            // Example:
+            val mediaItem = MediaItem.fromUri(dataUri)
+            exoPlayer.setMediaItem(mediaItem)
+            exoPlayer.prepare()
+            exoPlayer.play()
+        }
         enableEdgeToEdge()
         setContent {
             LhythmCustomTheme {

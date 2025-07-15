@@ -32,62 +32,190 @@ import com.example.lhythm.constants.Constants
 import com.example.lhythm.presentation.Utils.checkPermission
 import com.example.lhythm.presentation.Utils.showToastMessage
 import com.example.lhythm.presentation.ViewModels.AlaramViewModel
+//
+//@Composable
+//fun AlaramSettingScreen(navController: NavController,alaramViewModel: AlaramViewModel= hiltViewModel()) {
+//
+//    Column(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background),
+//        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+//        val timevalue = rememberSaveable { mutableStateOf("") }
+//        val context = LocalContext.current
+//        val permission = Manifest.permission.USE_EXACT_ALARM
+//        val permissionlauncher = rememberLauncherForActivityResult(
+//            ActivityResultContracts.RequestPermission()
+//        ) {
+//            if(it){
+//
+//            }else{
+//                showToastMessage(context = context, text = "Please give permission", type = Constants.TOASTERROR)
+//            }
+//        }
+//        LaunchedEffect(Unit) {
+//            permissionlauncher.launch(permission)
+//        }
+//        OutlinedTextField(
+//            value = timevalue.value,
+//            onValueChange = {it->
+//                timevalue.value = it
+//            },
+//            label = {
+//                Text("time in seconds")
+//            },
+//            modifier = Modifier.fillMaxWidth(0.85f),
+//            colors = OutlinedTextFieldDefaults.colors(
+//                focusedBorderColor = MaterialTheme.colorScheme.primary,
+//                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+//                errorTextColor = MaterialTheme.colorScheme.primary,
+//                focusedLabelColor = MaterialTheme.colorScheme.primary,
+//                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+//            ),textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
+//        )
+//        Button(
+//            onClick = {
+//                val permissioncheck=checkPermission(context = context,permission)
+//                if(permissioncheck) {
+//                    alaramViewModel.scheduleAlaram(time = ((timevalue.value.toLong() * 1000) + System.currentTimeMillis()))
+//                }else{
+//                    permissionlauncher.launch(permission)
+//                }
+//            },
+//            modifier = Modifier
+//                .fillMaxWidth(0.75f),
+//            shape = RoundedCornerShape(12.dp),
+//            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+//        ) {
+//            Text("Alaram", style = MaterialTheme.typography.titleMedium)
+//        }
+//
+//
+//    }
+//
+//}
 
 @Composable
-fun AlaramSettingScreen(navController: NavController,alaramViewModel: AlaramViewModel= hiltViewModel()) {
+fun AlaramSettingScreen(
+    navController: NavController,
+    alaramViewModel: AlaramViewModel = hiltViewModel()
+) {
+    val context = LocalContext.current
 
-    Column(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background),
-        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-        val timevalue = rememberSaveable { mutableStateOf("") }
-        val context = LocalContext.current
-        val permission = Manifest.permission.USE_EXACT_ALARM
-        val permissionlauncher = rememberLauncherForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) {
-            if(it){
+    // Time states
+    val hourValue = rememberSaveable { mutableStateOf("") }
+    val minuteValue = rememberSaveable { mutableStateOf("") }
+    val secondValue = rememberSaveable { mutableStateOf("") }
 
-            }else{
-                showToastMessage(context = context, text = "Please give permission", type = Constants.TOASTERROR)
-            }
+    // Alarm permission
+    val permission = Manifest.permission.USE_EXACT_ALARM
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (!granted) {
+            showToastMessage(
+                context = context,
+                text = "Please give permission",
+                type = Constants.TOASTERROR
+            )
         }
-        LaunchedEffect(Unit) {
-            permissionlauncher.launch(permission)
-        }
+    }
+
+    LaunchedEffect(Unit) {
+        permissionLauncher.launch(permission)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        // HOURS
         OutlinedTextField(
-            value = timevalue.value,
-            onValueChange = {it->
-                timevalue.value = it
-            },
-            label = {
-                Text("time in seconds")
-            },
-            modifier = Modifier.fillMaxWidth(0.85f),
+            value = hourValue.value,
+            onValueChange = { hourValue.value = it.filter { ch -> ch.isDigit() } },
+            label = { Text("Hours") },
+            modifier = Modifier
+                .fillMaxWidth(0.85f),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                errorTextColor = MaterialTheme.colorScheme.primary,
                 focusedLabelColor = MaterialTheme.colorScheme.primary,
                 unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-            ),textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
+            ),
+            textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
         )
+
+        // MINUTES
+        OutlinedTextField(
+            value = minuteValue.value,
+            onValueChange = { minuteValue.value = it.filter { ch -> ch.isDigit() } },
+            label = { Text("Minutes") },
+            modifier = Modifier
+                .fillMaxWidth(0.85f),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            ),
+            textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
+        )
+
+        // SECONDS
+        OutlinedTextField(
+            value = secondValue.value,
+            onValueChange = { secondValue.value = it.filter { ch -> ch.isDigit() } },
+            label = { Text("Seconds") },
+            modifier = Modifier
+                .fillMaxWidth(0.85f),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            ),
+            textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
+        )
+
+        // BUTTON
         Button(
             onClick = {
-                val permissioncheck=checkPermission(context = context,permission)
-                if(permissioncheck) {
-                    alaramViewModel.scheduleAlaram(time = ((timevalue.value.toLong() * 1000) + System.currentTimeMillis()))
-                }else{
-                    permissionlauncher.launch(permission)
+                val permissionCheck = checkPermission(context, permission)
+                if (!permissionCheck) {
+                    permissionLauncher.launch(permission)
+                    return@Button
                 }
+
+                val h = hourValue.value.toIntOrNull() ?: 0
+                val m = minuteValue.value.toIntOrNull() ?: 0
+                val s = secondValue.value.toIntOrNull() ?: 0
+
+                if (h == 0 && m == 0 && s == 0) {
+                    showToastMessage(
+                        context,
+                        "Please enter a valid time ⏰",
+                        Constants.TOASTERROR
+                    )
+                    return@Button
+                }
+
+                val totalMillis = ((h * 3600) + (m * 60) + s) * 1000L
+                val finalTime = System.currentTimeMillis() + totalMillis
+
+                alaramViewModel.scheduleAlaram(finalTime)
+
+                showToastMessage(
+                    context,
+                    "Alarm set successfully! 🔔",
+                    Constants.TOASTSUCCESS
+                )
             },
-            modifier = Modifier
-                .fillMaxWidth(0.75f),
+            modifier = Modifier.fillMaxWidth(0.75f),
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
-            Text("Alaram", style = MaterialTheme.typography.titleMedium)
+            Text("Set Alarm", style = MaterialTheme.typography.titleMedium)
         }
-
-
     }
-
 }
