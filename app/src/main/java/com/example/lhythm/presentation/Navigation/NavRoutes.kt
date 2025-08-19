@@ -25,3 +25,6 @@ object ALARAMSETTINGSCREEN
 
 @Serializable
 data class AUDIOTRIMMERSCREEN(val uri: String , val songDuration : Long)
+
+@Serializable
+object GETALLIMAGESCREEN

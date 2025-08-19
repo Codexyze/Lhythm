@@ -29,6 +29,7 @@ import androidx.navigation.NavController
 import com.example.lhythm.constants.Constants
 import com.example.lhythm.presentation.Navigation.ALARAMSETTINGSCREEN
 import com.example.lhythm.presentation.Navigation.AUDIOTRIMMERSCREEN
+import com.example.lhythm.presentation.Navigation.GETALLIMAGESCREEN
 import com.example.lhythm.presentation.Navigation.SOUNDFXSCREEN
 import com.example.lhythm.presentation.ViewModels.OnBoardingViewModel
 
@@ -92,6 +93,7 @@ fun SettingScreen(
 
         Button(
             onClick = {
+                navController.navigate(GETALLIMAGESCREEN)
 
             },
             modifier = Modifier
