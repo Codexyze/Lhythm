@@ -1,5 +1,6 @@
 package com.example.lhythm.domain.StateHandeling
 
+import com.example.lhythm.data.Image.Images
 import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.PlayListSongMapper
 import com.example.lhythm.data.Local.PlayListTable
@@ -142,4 +143,11 @@ data class AudioTrimmerState(
     val isLoading: Boolean = false,
     val data: String= "",
     val error: String ? = null
+)
+
+data class GetAllImageState(
+    val isLoading: Boolean = false,
+    val data: List<Images> = emptyList(),
+    val error: String ? = null
+
 )

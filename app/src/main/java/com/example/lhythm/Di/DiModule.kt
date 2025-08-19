@@ -27,6 +27,7 @@ import com.example.lhythm.domain.Usecases.CreateUpdateNewPlayListUseCase
 import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
 import com.example.lhythm.domain.Usecases.DeletePlayListSongsUseCase
 import com.example.lhythm.domain.Usecases.DeletePlayListUseCase
+import com.example.lhythm.domain.Usecases.GetAllImagesUseCase
 import com.example.lhythm.domain.Usecases.GetAllPlayListSongsUseCase
 import com.example.lhythm.domain.Usecases.GetAllPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetAllSongComposerASCUseCase
@@ -224,6 +225,11 @@ object DiModule {
     @Provides
     fun provideImageRepository(@ApplicationContext context: Context): ImageRepository{
         return ImageRepoImp(context = context)
+    }
+
+    @Provides
+    fun provideGetAllImageUseCaseObj(repository: ImageRepository): GetAllImagesUseCase{
+        return GetAllImagesUseCase(repository = repository)
     }
 
 }
