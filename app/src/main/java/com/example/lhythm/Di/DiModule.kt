@@ -14,12 +14,14 @@ import com.example.lhythm.data.RepoIMPL.AudioTimmerRepoImpl
 import com.example.lhythm.data.RepoIMPL.FavSongRepoImpl
 import com.example.lhythm.data.RepoIMPL.GetCategoryRepoImpl
 import com.example.lhythm.data.RepoIMPL.GetAllSongsRepoImpl
+import com.example.lhythm.data.RepoIMPL.ImageRepoImp
 import com.example.lhythm.data.RepoIMPL.SongPlayListRepoImpl
 import com.example.lhythm.data.UserPrefrence.UserPrefrence
 import com.example.lhythm.domain.Repository.AudioTrimmerRepository
 import com.example.lhythm.domain.Repository.FavSongRepository
 import com.example.lhythm.domain.Repository.GetAllSongRepository
 import com.example.lhythm.domain.Repository.GetCategoryRepository
+import com.example.lhythm.domain.Repository.ImageRepository
 import com.example.lhythm.domain.Repository.SongPlayListRepository
 import com.example.lhythm.domain.Usecases.CreateUpdateNewPlayListUseCase
 import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
@@ -213,9 +215,15 @@ object DiModule {
         return AudioTimmerRepoImpl()
     }
 
+    @Provides
     fun provideAudioTrimmerUseCaseObj(repository: AudioTrimmerRepository): TrimAudioUseCase{
         return TrimAudioUseCase(repository = repository)
 
+    }
+
+    @Provides
+    fun provideImageRepository(@ApplicationContext context: Context): ImageRepository{
+        return ImageRepoImp(context = context)
     }
 
 }

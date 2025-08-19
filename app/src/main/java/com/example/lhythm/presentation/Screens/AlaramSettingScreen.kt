@@ -1,10 +1,8 @@
 package com.example.lhythm.presentation.Screens
 
 import android.Manifest
-import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,65 +30,6 @@ import com.example.lhythm.constants.Constants
 import com.example.lhythm.presentation.Utils.checkPermission
 import com.example.lhythm.presentation.Utils.showToastMessage
 import com.example.lhythm.presentation.ViewModels.AlaramViewModel
-//
-//@Composable
-//fun AlaramSettingScreen(navController: NavController,alaramViewModel: AlaramViewModel= hiltViewModel()) {
-//
-//    Column(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background),
-//        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-//        val timevalue = rememberSaveable { mutableStateOf("") }
-//        val context = LocalContext.current
-//        val permission = Manifest.permission.USE_EXACT_ALARM
-//        val permissionlauncher = rememberLauncherForActivityResult(
-//            ActivityResultContracts.RequestPermission()
-//        ) {
-//            if(it){
-//
-//            }else{
-//                showToastMessage(context = context, text = "Please give permission", type = Constants.TOASTERROR)
-//            }
-//        }
-//        LaunchedEffect(Unit) {
-//            permissionlauncher.launch(permission)
-//        }
-//        OutlinedTextField(
-//            value = timevalue.value,
-//            onValueChange = {it->
-//                timevalue.value = it
-//            },
-//            label = {
-//                Text("time in seconds")
-//            },
-//            modifier = Modifier.fillMaxWidth(0.85f),
-//            colors = OutlinedTextFieldDefaults.colors(
-//                focusedBorderColor = MaterialTheme.colorScheme.primary,
-//                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-//                errorTextColor = MaterialTheme.colorScheme.primary,
-//                focusedLabelColor = MaterialTheme.colorScheme.primary,
-//                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-//            ),textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
-//        )
-//        Button(
-//            onClick = {
-//                val permissioncheck=checkPermission(context = context,permission)
-//                if(permissioncheck) {
-//                    alaramViewModel.scheduleAlaram(time = ((timevalue.value.toLong() * 1000) + System.currentTimeMillis()))
-//                }else{
-//                    permissionlauncher.launch(permission)
-//                }
-//            },
-//            modifier = Modifier
-//                .fillMaxWidth(0.75f),
-//            shape = RoundedCornerShape(12.dp),
-//            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-//        ) {
-//            Text("Alaram", style = MaterialTheme.typography.titleMedium)
-//        }
-//
-//
-//    }
-//
-//}
 
 @Composable
 fun AlaramSettingScreen(
@@ -105,7 +44,7 @@ fun AlaramSettingScreen(
     val secondValue = rememberSaveable { mutableStateOf("") }
 
     // Alarm permission
-    val permission = Manifest.permission.USE_EXACT_ALARM
+    val permission = Manifest.permission.SCHEDULE_EXACT_ALARM
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->

@@ -35,7 +35,6 @@ private var  exoPlayer: ExoPlayer, private val mediaSession: MediaSession
         releasePlayer()
         exoPlayer.apply {
             setMediaItem(MediaItem.fromUri(uri))
-           // createMusicExoNotification(exoPlayer = exoPlayer, context = context)
             prepare()
             playWhenReady = true
         }
@@ -100,33 +99,7 @@ private var  exoPlayer: ExoPlayer, private val mediaSession: MediaSession
 
     }
 
-//    @OptIn(UnstableApi::class)
-//    fun playPlayListWithIndex(listOfSongsUri: List<Uri>,index: Int=0) {
-//        songList = listOfSongsUri
-//       // releasePlayer()
-//        val mediaItemList = mutableListOf<MediaItem>()
-//        for (uri in listOfSongsUri) {
-//            val mediaItem = MediaItem.fromUri(uri.path!!.toUri())
-//            mediaItemList.add(mediaItem)
-//        }
-//        exoPlayer.apply  {
-//            //createMusicExoNotification(exoPlayer = exoPlayer, context = context)
-//            val intent = Intent(context, PlaybackService::class.java)
-//            ContextCompat.startForegroundService(context, intent)
-//            this.addListener(object : Player.Listener {
-//                override fun onAudioSessionIdChanged(audioSessionId: Int) {
-//                    super.onAudioSessionIdChanged(audioSessionId)
-//                    Log.d("AUDIOSESSION", "Audio session ID: ${audioSessionId}")
-//
-//                }
-//            })
-//            setMediaItems(mediaItemList,index, C.INDEX_UNSET.toLong())
-//            prepare()
-//            playWhenReady = true
-//            showToastMessage(context = context, text = "Playing",type = Constants.TOASTSUCCESS)
-//        }
-//
-//    }
+
 
     @OptIn(UnstableApi::class)
     fun playPlayListWithIndex(listOfSongsUri: List<Uri>, index: Int = 0) {
