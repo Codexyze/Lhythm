@@ -14,6 +14,7 @@ import com.example.lhythm.presentation.Screens.AlaramSettingScreen
 import com.example.lhythm.presentation.Screens.AudioTrimmerScreen
 import com.example.lhythm.presentation.Screens.HomeScreen
 import com.example.lhythm.presentation.Screens.ImageScreen
+import com.example.lhythm.presentation.Screens.ImageToSongMapScreen
 import com.example.lhythm.presentation.Screens.ListOfAllSongsScreen
 import com.example.lhythm.presentation.Screens.LyricsFullScreenView
 import com.example.lhythm.presentation.Screens.OnBoardingScreen
@@ -64,7 +65,11 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
                 AudioTrimmerScreen(navController = navcontroller, uri = data.uri, songDuration = data.songDuration.toLong())
             }
             composable<GETALLIMAGESCREEN> {
-                ImageScreen()
+                ImageScreen(navController = navcontroller)
+            }
+
+            composable<IMAGETOSONGMAPSCREEN> {
+                ImageToSongMapScreen(navController = navcontroller)
             }
 
         }

@@ -2,6 +2,7 @@ package com.example.lhythm.presentation.Screens
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -20,12 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.example.lhythm.presentation.Navigation.IMAGETOSONGMAPSCREEN
 import com.example.lhythm.presentation.ViewModels.ImageViewModel
 
 @Composable
 fun ImageScreen(
-    viewModel: ImageViewModel = hiltViewModel()
+    viewModel: ImageViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val state by viewModel.getAllImageState.collectAsState()
 
@@ -62,8 +66,11 @@ fun ImageScreen(
                         model = image.path.toUri(), // we stored contentUri.toString()
                         contentDescription = image.name,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f) // keep square
+                            .fillMaxWidth().aspectRatio(1f).clickable{
+                                navController.navigate(IMAGETOSONGMAPSCREEN)
+
+                            }
+                             // keep square
                     )
                 }
             }
