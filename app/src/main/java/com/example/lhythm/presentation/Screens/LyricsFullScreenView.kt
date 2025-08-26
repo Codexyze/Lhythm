@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Hub
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -19,7 +23,15 @@ import androidx.compose.ui.unit.dp
 fun LyricsFullScreenView(lyrics: String) {
     Scaffold( modifier = Modifier
         .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background)) {
+        .background(MaterialTheme.colorScheme.background),
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                //Todo AI
+
+            }) {
+                Icon(imageVector = Icons.Filled.Hub, contentDescription = "AI Help")
+            }
+        }) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
