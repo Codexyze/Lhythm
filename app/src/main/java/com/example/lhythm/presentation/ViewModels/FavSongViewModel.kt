@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,13 +38,22 @@ class FavSongViewModel @Inject constructor(
             insertOrUpdateFavSongUseCase.invoke(favSongEntity = favSongEntity).collect {result->
                 when(result){
                     is ResultState.Loading->{
-                        _inserOrUpdateFavSate.value = InsertOrUpdateFavSongState(isLoading = true)
+                        withContext(Dispatchers.Main){
+                            _inserOrUpdateFavSate.value = InsertOrUpdateFavSongState(isLoading = true)
+                        }
+
                     }
                     is ResultState.Success ->{
-                        _inserOrUpdateFavSate.value = InsertOrUpdateFavSongState(isLoading = false, data = result.data)
+                        withContext(Dispatchers.Main){
+                            _inserOrUpdateFavSate.value = InsertOrUpdateFavSongState(isLoading = false, data = result.data)
+                        }
+
                     }
                     is ResultState.Error->{
-                        _inserOrUpdateFavSate.value = InsertOrUpdateFavSongState(isLoading = false, error = result.message)
+                        withContext(Dispatchers.Main){
+                            _inserOrUpdateFavSate.value = InsertOrUpdateFavSongState(isLoading = false, error = result.message)
+                        }
+
                     }
                 }
 
