@@ -18,9 +18,15 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,9 +42,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.lhythm.R
+import com.example.lhythm.constants.Constants
+import com.example.lhythm.data.Local.SongToImage
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.Utils.formatDuration
+import com.example.lhythm.presentation.Utils.showToastMessage
 import com.example.lhythm.presentation.ViewModels.GetSongCategoryViewModel
+import com.example.lhythm.presentation.ViewModels.ImageViewModel
 import com.example.lhythm.presentation.ViewModels.MediaManagerViewModel
 import com.example.lhythm.ui.theme.BlackColor
 import com.example.lhythm.ui.theme.cardColor
@@ -46,7 +56,8 @@ import com.example.lhythm.ui.theme.cardColor
 @Composable
 fun ImageToSongMapScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                          navController: NavController,
-                         mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel()) {
+                         mediaPlayerViewModel: MediaManagerViewModel= hiltViewModel(),
+                         imagePath: String) {
     val getAllSongsASCState = viewmodel.songsInASCOrderState.collectAsState()
     val listOfAscSongUri = remember { mutableListOf<Uri>() }
 
@@ -80,7 +91,9 @@ fun ImageToSongMapScreen(viewmodel: GetSongCategoryViewModel= hiltViewModel(),
                                 albumID = song.albumId,
                                 songUriList = listOfAscSongUri,
                                 index = getAllSongsASCState.value.data.indexOf(song),
-                                navController = navController)
+                                navController = navController,
+                                imagePath = imagePath
+                            )
                         }
 
                     }
@@ -108,13 +121,26 @@ fun EachSongToImgItemLook(songid: String="",  songTitle: String?="", songArtist:
                      songUriList: List<Uri>?=null,
                      index: Int = 0,
                      mediaManagerViewModel: MediaManagerViewModel=hiltViewModel(),
-                     navController: NavController
+                     navController: NavController,
+                     imageViewModel: ImageViewModel = hiltViewModel(),
+                     imagePath: String ?=""
 ) {
 
 
     val context = LocalContext.current
     val showDialogueBox = rememberSaveable { mutableStateOf(false) }
     val  duration = rememberSaveable{ mutableStateOf("0") }
+    val noteText = rememberSaveable { mutableStateOf("") }
+    val imageToSongMapperState = imageViewModel.mapImgToSong.collectAsState()
+    when{
+        imageToSongMapperState.value.isLoading->{
+            LoadingScreen()
+        }
+        !imageToSongMapperState.value.error.isNullOrBlank()->{
+            Text("Error Loading Songs ${imageToSongMapperState.value.error}")
+        }
+
+    }
 
 
     Card (modifier = Modifier
@@ -122,6 +148,7 @@ fun EachSongToImgItemLook(songid: String="",  songTitle: String?="", songArtist:
         .padding(8.dp)
         .clickable {
             //Add to room db
+            showDialogueBox.value = true
 
 
         }, elevation = CardDefaults.elevatedCardElevation(8.dp)
@@ -179,11 +206,65 @@ fun EachSongToImgItemLook(songid: String="",  songTitle: String?="", songArtist:
 
 
                     }
+                    Row(modifier = Modifier.fillMaxWidth()){
+                        Icon(imageVector = Icons.Filled.Delete , contentDescription = null ,
+                            modifier = Modifier.clickable{
+                            //del here
+
+
+                        })
+                    }
 
                 }
 
             }
         }
+    }
+    if (showDialogueBox.value){
+        AlertDialog(
+            onDismissRequest = {
+
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        if(noteText.value.isNotEmpty()){
+                            val songToImg = SongToImage(
+                                songPath = songPath.toString(),
+                                 notes =  noteText.value.toString(),
+                                songTitle = songTitle.toString(),
+                                songAuthor = songArtist.toString(),
+                                imgPath =imagePath.toString()
+                            )
+                            imageViewModel.mapImgToSong(songToImage = songToImg)
+
+                        }
+
+                    }
+                ) {
+                    Text("Save Memory")
+                }
+
+            },
+            title = {
+                Text("ADD A MEMORY NOTE")
+
+            },
+            confirmButton = {
+
+            },
+            text = {
+                OutlinedTextField(value = noteText.value , onValueChange = {
+                    noteText.value = it
+                }, placeholder = {
+                    Text("Add you note")
+                })
+            }
+
+
+
+        )
+
     }
 }
 

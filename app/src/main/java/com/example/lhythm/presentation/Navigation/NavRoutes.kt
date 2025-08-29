@@ -30,4 +30,4 @@ data class AUDIOTRIMMERSCREEN(val uri: String , val songDuration : Long)
 object GETALLIMAGESCREEN
 
 @Serializable
-object IMAGETOSONGMAPSCREEN
+data class IMAGETOSONGMAPSCREEN(val Imgpath: String)

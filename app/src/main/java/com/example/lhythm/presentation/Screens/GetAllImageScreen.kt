@@ -67,7 +67,7 @@ fun ImageScreen(
                         contentDescription = image.name,
                         modifier = Modifier
                             .fillMaxWidth().aspectRatio(1f).clickable{
-                                navController.navigate(IMAGETOSONGMAPSCREEN)
+                                navController.navigate(IMAGETOSONGMAPSCREEN(Imgpath = image.path))
 
                             }
                              // keep square

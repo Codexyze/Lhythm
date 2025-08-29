@@ -68,8 +68,9 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
                 ImageScreen(navController = navcontroller)
             }
 
-            composable<IMAGETOSONGMAPSCREEN> {
-                ImageToSongMapScreen(navController = navcontroller)
+            composable<IMAGETOSONGMAPSCREEN> {backstackEntry->
+                val data: IMAGETOSONGMAPSCREEN = backstackEntry.toRoute()
+                ImageToSongMapScreen(navController = navcontroller, imagePath = data.Imgpath.toString())
             }
 
         }
