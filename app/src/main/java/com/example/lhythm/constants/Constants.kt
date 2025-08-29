@@ -31,4 +31,6 @@ object Constants {
     //PendingIntent name
     const val ALARAMBROADCAST ="Alaram_triggred"
 
+    const val SONGTOIMGTABLE = "song_to_img"
+
 }
