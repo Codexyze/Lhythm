@@ -28,6 +28,7 @@ import com.example.lhythm.domain.Usecases.DeleteClickedPlayListUseCase
 import com.example.lhythm.domain.Usecases.DeletePlayListSongsUseCase
 import com.example.lhythm.domain.Usecases.DeletePlayListUseCase
 import com.example.lhythm.domain.Usecases.GetAllImagesUseCase
+import com.example.lhythm.domain.Usecases.GetAllMappedImgSongUseCase
 import com.example.lhythm.domain.Usecases.GetAllPlayListSongsUseCase
 import com.example.lhythm.domain.Usecases.GetAllPlayListUseCase
 import com.example.lhythm.domain.Usecases.GetAllSongComposerASCUseCase
@@ -40,6 +41,7 @@ import com.example.lhythm.domain.Usecases.GetSongDESCUsecase
 import com.example.lhythm.domain.Usecases.GetSongsByArtistUseCase
 import com.example.lhythm.domain.Usecases.GetSongsFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.InsertSongToPlayListUseCase
+import com.example.lhythm.domain.Usecases.MapImgToSongUseCase
 import com.example.lhythm.domain.Usecases.SearchFromPlayListUseCase
 import com.example.lhythm.domain.Usecases.TrimAudioUseCase
 import com.example.lhythm.domain.Usecases.UpdateLyricsFromPLUseCase
@@ -223,13 +225,23 @@ object DiModule {
     }
 
     @Provides
-    fun provideImageRepository(@ApplicationContext context: Context): ImageRepository{
-        return ImageRepoImp(context = context)
+    fun provideImageRepository(@ApplicationContext context: Context, dataBase: SongPlayListDataBase): ImageRepository{
+        return ImageRepoImp(context = context, dataBase = dataBase)
     }
 
     @Provides
     fun provideGetAllImageUseCaseObj(repository: ImageRepository): GetAllImagesUseCase{
         return GetAllImagesUseCase(repository = repository)
+    }
+
+    @Provides
+    fun provideMapImgToSongUseCase(imageRepository: ImageRepository): MapImgToSongUseCase{
+        return MapImgToSongUseCase(imageRepository = imageRepository)
+    }
+
+    @Provides
+    fun provideGetAllMappedImgSongUseCase(imageRepository: ImageRepository): GetAllMappedImgSongUseCase {
+        return GetAllMappedImgSongUseCase(imageRepository = imageRepository)
     }
 
 }

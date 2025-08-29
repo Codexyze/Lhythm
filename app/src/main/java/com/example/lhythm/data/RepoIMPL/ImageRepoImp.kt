@@ -3,15 +3,19 @@ package com.example.lhythm.data.RepoIMPL
 import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
+import android.util.Log
 import com.example.lhythm.core.StateHandeling.ResultState
 import com.example.lhythm.data.Image.Images
+import com.example.lhythm.data.Local.SongPlayListDataBase
+import com.example.lhythm.data.Local.SongToImage
 import com.example.lhythm.domain.Repository.ImageRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 
-class ImageRepoImp @Inject constructor(private val context: Context) : ImageRepository {
+class ImageRepoImp @Inject constructor(private val context: Context ,
+    private val dataBase: SongPlayListDataBase) : ImageRepository {
     override suspend fun getAllImage(): Flow<ResultState<List<Images>>> = flow {
         val imageList = mutableListOf<Images>()
         val contentResolver = context.contentResolver
@@ -60,5 +64,42 @@ class ImageRepoImp @Inject constructor(private val context: Context) : ImageRepo
         } catch (e: Exception) {
             emit(ResultState.Error(e.toString()))
         }
+    }
+
+    override suspend fun mapImgToSong(songToImage: SongToImage): Flow<ResultState<String>> =flow{
+        try {
+            emit(ResultState.Loading)
+            dataBase.SongToImageDao().upsertSongToImg(songToImage = songToImage)
+            emit(ResultState.Success("SucessFully Updated"))
+            Log.d("mapImgToSong","Sucessfully updated")
+
+        }catch (e: Exception){
+            emit(ResultState.Error(e.message.toString()))
+            Log.d("mapImgToSong","Failed : ${e.message}")
+        }
+
+    }
+
+    override suspend fun getAllMappedImgAndSong(): Flow<ResultState<List<SongToImage>>> =flow{
+        try {
+            emit(ResultState.Loading)
+            val data =dataBase.SongToImageDao().getAllSongsToImg()
+            emit(ResultState.Success(data))
+
+        }catch (e: Exception){
+            emit(ResultState.Error(e.message.toString()))
+        }
+    }
+
+    override suspend fun deleteMappedImgAndSong(songToImage: SongToImage): Flow<ResultState<String>> =flow{
+        try {
+            emit(ResultState.Loading)
+            dataBase.SongToImageDao().deleteSongToImg(songToImage = songToImage)
+            emit(ResultState.Success("SUCESSFULLY DELETED"))
+
+        }catch (e: Exception){
+            emit(ResultState.Error(e.message.toString()))
+        }
+
     }
 }
