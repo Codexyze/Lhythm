@@ -5,6 +5,7 @@ import com.example.lhythm.data.Local.FavSongEntity
 import com.example.lhythm.data.Local.PlayListSongMapper
 import com.example.lhythm.data.Local.PlayListTable
 import com.example.lhythm.data.Local.SongEntity
+import com.example.lhythm.data.Local.SongToImage
 import com.example.lhythm.data.Song.Song
 
 data class GetAllSongState(
@@ -150,4 +151,22 @@ data class GetAllImageState(
     val data: List<Images> = emptyList(),
     val error: String ? = null
 
+)
+
+data class  MapImgToSongState(
+    val isLoading: Boolean = false,
+    val data: String= "",
+    val error: String ? = null
+)
+
+data class GetAllMappedImgAndSongState(
+    val isLoading: Boolean = false,
+    val data:List<SongToImage> = emptyList(),
+    val error: String ? = null
+)
+
+data class DeleteMappedImgAndSongState(
+    val isLoading: Boolean = false,
+    val data: String= "",
+    val error: String ? = null
 )
