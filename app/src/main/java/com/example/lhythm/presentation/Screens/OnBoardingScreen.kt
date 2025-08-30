@@ -59,6 +59,7 @@ fun OnBoardingScreen(
         Manifest.permission.READ_EXTERNAL_STORAGE
     }
     val permission2 = Manifest.permission.POST_NOTIFICATIONS
+    val permission3 = Manifest.permission.READ_MEDIA_IMAGES
 
 
 
@@ -85,7 +86,7 @@ fun OnBoardingScreen(
         if(ContextCompat.checkSelfPermission(context,permission1)== PackageManager.PERMISSION_GRANTED){
 
         }else{
-            launchPermission.launch(arrayOf(permission2,permission2))
+            launchPermission.launch(arrayOf(permission2,permission2,permission3))
             FancyToast.makeText(
                 context, "Grant all permissions",
                 FancyToast.LENGTH_SHORT,
