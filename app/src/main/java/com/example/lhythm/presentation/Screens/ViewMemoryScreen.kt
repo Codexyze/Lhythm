@@ -2,6 +2,7 @@ package com.example.lhythm.presentation.Screens
 
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,6 +35,7 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.lhythm.constants.Constants
 import com.example.lhythm.data.Local.SongToImage
+import com.example.lhythm.presentation.Navigation.MEMORYNOTESSCREEN
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.Utils.showToastMessage
 import com.example.lhythm.presentation.ViewModels.ImageViewModel
@@ -58,7 +60,7 @@ fun ViewMemoryScreen(navController: NavController,
                     .padding(it)) {
                     LazyColumn {
                         items(getAllMapImgState.value.data){songToImage->
-                            MemoryBoxItem(songToImage = songToImage)
+                            MemoryBoxItem(songToImage = songToImage, navController = navController)
 
 
                         }
@@ -86,12 +88,24 @@ fun ViewMemoryScreen(navController: NavController,
 
 }
 @Composable
-fun MemoryBoxItem(songToImage: SongToImage) {
+fun MemoryBoxItem(songToImage: SongToImage,navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
-            .padding(12.dp),
+            .padding(12.dp).clickable{
+                //show notes here
+                navController.navigate(MEMORYNOTESSCREEN(
+                    id = songToImage.id,
+                    songPath = songToImage.songPath,
+                    songTitle = songToImage.songTitle,
+                    notes = songToImage.notes,
+                    songAuthor = songToImage.songAuthor,
+                    imgPath = songToImage.imgPath
+                ))
+
+
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         // 🎵 Song Thumbnail Image

@@ -38,3 +38,13 @@ object MEMEORYBOXSELECTIONSCREEN
 
 @Serializable
 object VIEWMEMORYSCREEN
+
+@Serializable
+data class MEMORYNOTESSCREEN(
+    val id:Int ,
+    val songPath: String,
+    val songTitle: String,
+    val notes: String,
+    val songAuthor: String,
+    val imgPath: String
+)
