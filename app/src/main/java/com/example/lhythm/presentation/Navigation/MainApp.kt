@@ -21,6 +21,7 @@ import com.example.lhythm.presentation.Screens.MemoryBoxSelectionScreen
 import com.example.lhythm.presentation.Screens.OnBoardingScreen
 import com.example.lhythm.presentation.Screens.SoundFXScreen
 import com.example.lhythm.presentation.Screens.UserPlayListScreen
+import com.example.lhythm.presentation.Screens.ViewMemoryScreen
 import com.example.lhythm.presentation.Utils.LoadingScreen
 import com.example.lhythm.presentation.ViewModels.OnBoardingViewModel
 
@@ -76,6 +77,10 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
 
             composable<MEMEORYBOXSELECTIONSCREEN> {
                 MemoryBoxSelectionScreen(navController = navcontroller)
+            }
+
+            composable<VIEWMEMORYSCREEN> {
+                ViewMemoryScreen(navController = navcontroller)
             }
 
         }

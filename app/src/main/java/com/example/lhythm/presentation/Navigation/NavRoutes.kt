@@ -35,3 +35,6 @@ data class IMAGETOSONGMAPSCREEN(val Imgpath: String)
 
 @Serializable
 object MEMEORYBOXSELECTIONSCREEN
+
+@Serializable
+object VIEWMEMORYSCREEN
