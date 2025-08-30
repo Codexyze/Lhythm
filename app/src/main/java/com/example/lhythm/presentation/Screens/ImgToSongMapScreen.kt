@@ -223,6 +223,7 @@ fun EachSongToImgItemLook(songid: String="",  songTitle: String?="", songArtist:
     if (showDialogueBox.value){
         AlertDialog(
             onDismissRequest = {
+                showDialogueBox.value = false
 
             },
             dismissButton = {

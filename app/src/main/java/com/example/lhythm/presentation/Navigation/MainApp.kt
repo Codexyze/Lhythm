@@ -17,6 +17,7 @@ import com.example.lhythm.presentation.Screens.ImageScreen
 import com.example.lhythm.presentation.Screens.ImageToSongMapScreen
 import com.example.lhythm.presentation.Screens.ListOfAllSongsScreen
 import com.example.lhythm.presentation.Screens.LyricsFullScreenView
+import com.example.lhythm.presentation.Screens.MemoryBoxSelectionScreen
 import com.example.lhythm.presentation.Screens.OnBoardingScreen
 import com.example.lhythm.presentation.Screens.SoundFXScreen
 import com.example.lhythm.presentation.Screens.UserPlayListScreen
@@ -71,6 +72,10 @@ fun MainApp(viewmodel: OnBoardingViewModel = hiltViewModel()) {
             composable<IMAGETOSONGMAPSCREEN> {backstackEntry->
                 val data: IMAGETOSONGMAPSCREEN = backstackEntry.toRoute()
                 ImageToSongMapScreen(navController = navcontroller, imagePath = data.Imgpath.toString())
+            }
+
+            composable<MEMEORYBOXSELECTIONSCREEN> {
+                MemoryBoxSelectionScreen(navController = navcontroller)
             }
 
         }
