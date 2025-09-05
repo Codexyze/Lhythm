@@ -32,5 +32,7 @@ object Constants {
     const val ALARAMBROADCAST ="Alaram_triggred"
 
     const val SONGTOIMGTABLE = "song_to_img"
+    //key
+    const val SQLENCRYPTIONKEY = "sql_encryption_key"
 
 }

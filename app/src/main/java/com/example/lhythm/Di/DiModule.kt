@@ -51,6 +51,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import net.sqlcipher.database.SQLiteDatabase
+import net.sqlcipher.database.SupportFactory
 import java.util.UUID
 import javax.inject.Singleton
 
@@ -110,8 +112,12 @@ object DiModule {
     @Singleton
     @Provides
     fun provideDataBaseBuilderObj(@ApplicationContext context: Context): SongPlayListDataBase{
+        val passPharse: ByteArray = SQLiteDatabase.getBytes(Constants.SQLENCRYPTIONKEY.toCharArray())
+        val factory = SupportFactory(passPharse)
         return Room.databaseBuilder(context = context, SongPlayListDataBase::class.java,
-            name = Constants.PLAYLIST) .fallbackToDestructiveMigration().build()
+            name = Constants.PLAYLIST).openHelperFactory (
+                factory = factory
+            ) .fallbackToDestructiveMigration().build()
     }
 
     @Provides

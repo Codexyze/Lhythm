@@ -93,4 +93,8 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-compose:3.1.0")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.1.0")
 
+    //Sql-ciper
+    implementation( "net.zetetic:android-database-sqlcipher:4.5.3")
+    implementation( "androidx.sqlite:sqlite:2.4.0")
+
 }
