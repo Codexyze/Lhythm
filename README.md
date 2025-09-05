@@ -64,7 +64,11 @@ Whether you're curating custom playlists, enjoying ad-free local music, or explo
 - ⌚ **Headphone & WearOS Song Control**  
 - 📚 **Custom Multiple Playlist Support**  
 - ⏰ **Sleep Timer / Alarm** 
-- 📂 **File Manager Integration**  
+- 📂 **File Manager Integration**
+- 🔏 **SQL Ciper For database security**
+- 🤝 **Share song title**
+- 🦒 **open with/ Default player**
+- 📲 **Multi-Screen Support**
 
 ### 🆕 v1.0.0 Features:
 - ⏰ **Sleep Timer / Alarm**  
