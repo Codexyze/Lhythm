@@ -1,0 +1,8 @@
+package com.example.lhythm.domain.Repository
+
+import com.example.lhythm.core.StateHandeling.ResultState
+import kotlinx.coroutines.flow.Flow
+
+interface MusicRepository {
+    suspend fun getAllSongs(): ResultState<Flow<>>
+}

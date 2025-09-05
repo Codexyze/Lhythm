@@ -1,5 +1,8 @@
 package com.example.lhythm.presentation.Screens
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -124,13 +127,15 @@ fun SettingScreen(
                     Text("Change Theme")
                 },
                 text = {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally
+
+                    ) {
                         Text("Pick your favorite color:", style = MaterialTheme.typography.bodyLarge)
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly
+                            horizontalArrangement = Arrangement.SpaceEvenly,
                         ) {
                             ThemeCircleButton(color = Color.Blue) {
                                 themeSelectionViewModel.updateThemeSelection(Constants.BLUETHEME)

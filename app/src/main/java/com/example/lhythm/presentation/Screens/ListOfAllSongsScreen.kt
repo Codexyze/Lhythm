@@ -6,6 +6,8 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -213,6 +215,11 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
     val favSongsState = favSongViewModel.getAllFavSongState.collectAsState()
     val  duration = rememberSaveable{ mutableStateOf("0") }
     val playListSelectionDialog = rememberSaveable { mutableStateOf(false) }
+    val colourAniminationState = rememberSaveable { mutableStateOf(false) }
+    val colourAnimination = animateColorAsState(
+        targetValue = if(colourAniminationState.value) MaterialTheme.colorScheme.primary else cardColor,
+        animationSpec = tween(800)
+    )
 
 
     val createOrUpdatePlayListState = playListViewModel.createOrUpdatePlayListState.collectAsState()
@@ -270,7 +277,7 @@ fun EachSongItemLook(songid: String="",  songTitle: String?="", songArtist: Stri
             }, elevation = CardDefaults.elevatedCardElevation(8.dp)
             , shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = cardColor // Light grey like dark theme cards
+                containerColor = colourAnimination.value // Light grey like dark theme cards
             )
         ){
             Column(modifier = Modifier.padding(8.dp)) {
