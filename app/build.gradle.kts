@@ -44,6 +44,9 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15" //add this
+    }
 }
 
 dependencies {
@@ -96,5 +99,12 @@ dependencies {
     //Sql-ciper
     implementation( "net.zetetic:android-database-sqlcipher:4.5.3")
     implementation( "androidx.sqlite:sqlite:2.4.0")
+
+    // For AppWidgets support
+    implementation("androidx.glance:glance-appwidget:1.1.1")
+   // For interop APIs with Material 3
+    implementation("androidx.glance:glance-material3:1.1.1")
+    // For interop APIs with Material 2
+    implementation("androidx.glance:glance-material:1.1.1")
 
 }
