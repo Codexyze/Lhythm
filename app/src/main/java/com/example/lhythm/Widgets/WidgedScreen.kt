@@ -1,19 +1,21 @@
 package com.example.lhythm.Widgets
 
+
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import androidx.glance.Button
 import androidx.glance.GlanceModifier
+import androidx.glance.Image
+import androidx.glance.ImageProvider
 import androidx.glance.action.actionStartActivity
-import androidx.glance.layout.Alignment
+import androidx.glance.action.clickable
+import androidx.glance.layout.Box
 import androidx.glance.layout.Column
-import androidx.glance.layout.Row
-import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
-import androidx.glance.layout.width
-import androidx.glance.text.Text
+import com.example.lhythm.R
 import com.example.lhythm.presentation.Screens.MainActivity
+
 
 @Composable
 fun WidgetScreen() {
@@ -21,24 +23,18 @@ fun WidgetScreen() {
         modifier = GlanceModifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalAlignment = Alignment.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Where to?" )
 
-        Row(
-            modifier = GlanceModifier.padding(top = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(modifier = GlanceModifier.fillMaxSize().clickable(onClick = actionStartActivity<MainActivity>())
         ) {
-            Button(
-                text = "Home",
-                onClick = actionStartActivity<MainActivity>() // opens app
+            Image(
+                provider = ImageProvider(R.drawable.lythmlogoasset), // put your music logo in res/drawable
+                contentDescription = "Music Logo",
+                modifier = GlanceModifier.fillMaxSize() // adjust size of the icon
             )
-            Spacer(GlanceModifier.width(8.dp))
-            Button(
-                text = "Work",
-                onClick = actionStartActivity<MainActivity>() // or another activity
-            )
+
         }
+
     }
 }
+
