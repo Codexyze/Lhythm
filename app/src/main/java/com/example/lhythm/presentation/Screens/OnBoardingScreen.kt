@@ -7,13 +7,15 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,12 +24,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -41,9 +46,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.lhythm.presentation.Navigation.SAMPLESCREEN
 import com.example.lhythm.presentation.ViewModels.OnBoardingViewModel
 import com.example.lhythm.R
-import com.example.lhythm.presentation.Utils.checkPermission
 import com.example.lhythm.ui.theme.BlackColor
-import com.example.lhythm.ui.theme.RedThemeSuit1
 import com.shashank.sony.fancytoastlib.FancyToast
 
 
@@ -58,41 +61,62 @@ fun OnBoardingScreen(
     }else{
         Manifest.permission.READ_EXTERNAL_STORAGE
     }
-    val permission2 = Manifest.permission.POST_NOTIFICATIONS
-    val permission3 = Manifest.permission.READ_MEDIA_IMAGES
-
-
-
+    val permission2 = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        Manifest.permission.POST_NOTIFICATIONS
+    } else {
+        null
+    }
+    val permission3 = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        Manifest.permission.READ_MEDIA_IMAGES
+    } else {
+        null
+    }
 
     val permissionState = rememberSaveable { mutableStateOf(false) }
-    val launchPermission = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()
-        , onResult = {
-            it.entries.forEach{
-                if(it.value){
-                    permissionState.value = true
-                }else{
-                    permissionState.value = false
-                    FancyToast.makeText(
-                        context, "Grant all permission",
-                        FancyToast.LENGTH_SHORT,
-                        FancyToast.CONFUSING, false
-                    ).show()
-                }
+    val hasRequestedPermissions = remember { mutableStateOf(false) }
 
+    val launchPermission = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = { permissions ->
+            // Check if ALL required permissions are granted
+            val allGranted = permissions.all { it.value }
+            permissionState.value = allGranted
+
+            if (!allGranted) {
+                FancyToast.makeText(
+                    context,
+                    "Please grant all permissions to continue",
+                    FancyToast.LENGTH_SHORT,
+                    FancyToast.CONFUSING,
+                    false
+                ).show()
             }
-        })
-
-    LaunchedEffect(permissionState.value) {
-        if(ContextCompat.checkSelfPermission(context,permission1)== PackageManager.PERMISSION_GRANTED){
-
-        }else{
-            launchPermission.launch(arrayOf(permission2,permission2,permission3))
-            FancyToast.makeText(
-                context, "Grant all permissions",
-                FancyToast.LENGTH_SHORT,
-                FancyToast.WARNING, false
-            ).show()
         }
+    )
+
+    // Check permissions only once on initial composition
+    LaunchedEffect(Unit) {
+        val hasAudioPermission = ContextCompat.checkSelfPermission(
+            context, permission1
+        ) == PackageManager.PERMISSION_GRANTED
+
+        val hasNotificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && permission2 != null) {
+            ContextCompat.checkSelfPermission(
+                context, permission2
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true // Not required for older versions
+        }
+
+        val hasImagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && permission3 != null) {
+            ContextCompat.checkSelfPermission(
+                context, permission3
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true // Not required for older versions
+        }
+
+        permissionState.value = hasAudioPermission && hasNotificationPermission && hasImagePermission
     }
 
     val composition by rememberLottieComposition(
@@ -104,58 +128,139 @@ fun OnBoardingScreen(
         iterations = LottieConstants.IterateForever
     )
 
-                        Column(
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = BlackColor),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp, vertical = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = Modifier.weight(0.5f))
+
+            // Title
+            Text(
+                text = "Welcome to Lhythm",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.secondary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Subtitle
+            Text(
+                text = "Lose yourself in music",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.secondary,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp)
-                    .background(color = BlackColor),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .fillMaxWidth()
+                    .alpha(0.7f)
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // Lottie Animation
+            LottieAnimation(
+                composition = composition,
+                progress = { progress },
+                modifier = Modifier
+                    .size(280.dp)
+                    .background(color = Color.Transparent)
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            // Description text
+            Text(
+                text = "To get started, we need permission to access your music files",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.secondary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .alpha(0.6f)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Get Started Button
+            Button(
+                onClick = {
+                    // Check current permission status
+                    val hasAudioPermission = ContextCompat.checkSelfPermission(
+                        context, permission1
+                    ) == PackageManager.PERMISSION_GRANTED
+
+                    val hasNotificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && permission2 != null) {
+                        ContextCompat.checkSelfPermission(
+                            context, permission2
+                        ) == PackageManager.PERMISSION_GRANTED
+                    } else {
+                        true
+                    }
+
+                    val hasImagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && permission3 != null) {
+                        ContextCompat.checkSelfPermission(
+                            context, permission3
+                        ) == PackageManager.PERMISSION_GRANTED
+                    } else {
+                        true
+                    }
+
+                    val allPermissionsGranted = hasAudioPermission && hasNotificationPermission && hasImagePermission
+
+                    if (allPermissionsGranted) {
+                        // All permissions granted, proceed
+                        viewmodel.upDateOnBoardingPref()
+                        navController.navigate(SAMPLESCREEN) {
+                            popUpTo(0)
+                        }
+                    } else {
+                        // Request missing permissions
+                        val permissionsToRequest = mutableListOf<String>()
+                        if (!hasAudioPermission) permissionsToRequest.add(permission1)
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            if (!hasNotificationPermission && permission2 != null) permissionsToRequest.add(permission2)
+                            if (!hasImagePermission && permission3 != null) permissionsToRequest.add(permission3)
+                        }
+
+                        if (permissionsToRequest.isNotEmpty()) {
+                            hasRequestedPermissions.value = true
+                            launchPermission.launch(permissionsToRequest.toTypedArray())
+                        }
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .padding(horizontal = 32.dp)
             ) {
-                            LazyColumn {
-                                item{
-                                    Text(
-                                        "Welcome to Lhythm",
-                                        fontSize = 24.sp,
-                                        color = MaterialTheme.colorScheme.secondary
-                                    )
-                                    Text(
-                                        "Lose yourself in music",
-                                        fontSize = 24.sp,
-                                        color = MaterialTheme.colorScheme.secondary
-                                    )
-
-                                    LottieAnimation(
-                                        composition = composition,
-                                        progress = { progress },
-                                        modifier = Modifier
-                                            .size(200.dp)
-                                            .background(color = Color.Black)
-                                    )
-
-                                    Spacer(modifier = Modifier.height(16.dp))
-
-                                    Button(onClick = {
-                                        permissionState.value = checkPermission(context = context,permission=permission1)
-                                        if(permissionState.value){
-                                            viewmodel.upDateOnBoardingPref()
-                                            navController.navigate(SAMPLESCREEN) {
-                                                popUpTo(0)
-                                            }
-                                        }else{
-                                            launchPermission.launch(arrayOf(permission1,permission2))
-
-                                        }
-
-                                    }, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)) {
-                                        Text("getting Started", color = MaterialTheme.colorScheme.secondary)
-                                    }
-                                }
-                            }
-
+                Text(
+                    text = "Get Started",
+                    color = MaterialTheme.colorScheme.secondary,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
 
-
+            Spacer(modifier = Modifier.height(32.dp))
+        }
     }
-
-
+}
