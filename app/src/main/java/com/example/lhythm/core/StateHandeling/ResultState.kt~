@@ -1,6 +1,0 @@
-package com.example.lhythm.core.StateHandeling
-
-sealed class ResultState<out T>(){
-    object isLoading: ResultState<Nothing>(),
-        data class (val data:T): ResultState()
-}

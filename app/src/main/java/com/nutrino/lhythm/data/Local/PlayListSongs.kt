@@ -1,0 +1,26 @@
+package com.nutrino.lhythm.data.Local
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Query
+import androidx.room.Upsert
+import com.nutrino.lhythm.constants.Constants
+
+@Dao
+interface PlayListSongs {
+    @Upsert
+    suspend fun upsertPlayListSongs(playListSongMapper: PlayListSongMapper)
+
+    @Delete
+    suspend fun deletePlayListSongs(playListSongMapper: PlayListSongMapper)
+
+    @Query("SELECT * FROM ${ Constants.PLAYLISTSONGTABEL}")
+    suspend fun getAllPlayListSongs(): List<PlayListSongMapper>
+
+    @Query("SELECT * FROM ${Constants.PLAYLISTSONGTABEL} WHERE playListID = :playlistId")
+    suspend fun getSongByPlayListID(playlistId: Int): List<PlayListSongMapper>
+
+    @Query("UPDATE ${Constants.PLAYLISTSONGTABEL} SET lyrics = :lyrics WHERE id = :id")
+    suspend fun updateLyricsFromPlayList(lyrics: String, id: Int)
+
+}
